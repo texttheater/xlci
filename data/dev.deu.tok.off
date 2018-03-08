@@ -1,0 +1,387 @@
+0 4 1001 Mein
+5 11 1002 Koffer
+12 15 1003 ist
+16 22 1004 kaputt
+22 23 1005 .
+
+0 4 1001 Kann
+5 8 1002 ich
+9 14 1003 etwas
+15 17 1004 zu
+18 23 1005 Essen
+24 32 1006 bekommen
+32 33 1007 ?
+
+0 3 1001 Ein
+4 11 1002 Fremder
+12 18 1003 betrat
+19 22 1004 das
+23 30 1005 Gebäude
+30 31 1006 .
+
+0 3 1001 Wie
+4 12 1002 schreibt
+13 16 1003 man
+17 18 1004 "
+18 24 1005 pretty
+24 25 1006 "
+25 26 1007 ?
+
+0 4 1001 Laut
+5 10 1002 Radio
+11 15 1003 wird
+16 18 1004 es
+19 25 1005 morgen
+26 32 1006 regnen
+32 33 1007 .
+
+0 8 1001 Manchmal
+9 15 1002 werden
+16 22 1003 Träume
+23 27 1004 wahr
+27 28 1005 .
+
+0 3 1001 Wie
+4 9 1002 bitte
+9 10 1003 ?
+
+0 2 1001 Es
+3 6 1002 ist
+7 11 1003 drei
+12 17 1004 Jahre
+18 21 1005 her
+21 22 1006 ,
+23 27 1007 dass
+28 31 1008 Tom
+32 38 1009 Boston
+39 48 1010 verlassen
+49 52 1011 hat
+52 53 1012 .
+
+0 6 1001 Jemand
+7 12 1002 steht
+13 19 1003 hinter
+20 23 1004 der
+24 28 1005 Wand
+28 29 1006 .
+
+0 3 1001 Ich
+4 7 1002 bat
+8 11 1003 ihn
+11 12 1004 ,
+13 16 1005 das
+17 19 1006 zu
+20 23 1007 tun
+23 24 1008 .
+
+0 3 1001 Was
+4 10 1002 willst
+11 13 1003 du
+13 14 1004 ,
+15 19 1005 dass
+20 23 1006 ich
+24 29 1007 mache
+29 30 1008 ?
+
+0 6 1001 Könnte
+7 10 1002 ich
+11 14 1003 mir
+15 20 1004 diese
+21 23 1005 CD
+24 30 1006 leihen
+30 31 1007 ?
+
+0 5 1001 Warum
+6 10 1002 bist
+11 13 1003 du
+14 16 1004 um
+17 22 1005 diese
+23 30 1006 Uhrzeit
+31 35 1007 noch
+36 40 1008 wach
+40 41 1009 ?
+
+0 3 1001 Ich
+4 8 1002 habe
+9 14 1003 keine
+15 19 1004 Lust
+20 30 1005 auszugehen
+30 31 1006 .
+
+0 6 1001 Unsere
+7 11 1002 neue
+12 26 1003 Firmenzentrale
+27 30 1004 ist
+31 33 1005 in
+34 39 1006 Tokio
+39 40 1007 .
+
+0 3 1001 Ich
+4 10 1002 glaube
+11 16 1003 schon
+16 17 1004 .
+
+0 2 1001 Wo
+3 7 1002 hast
+8 10 1003 du
+11 17 1004 Blumen
+18 25 1005 gekauft
+25 26 1006 ?
+
+0 3 1001 Sie
+4 10 1002 kommen
+11 16 1003 nicht
+17 22 1004 heute
+22 23 1005 .
+
+0 2 1001 Es
+3 6 1002 war
+7 11 1003 eine
+12 17 1004 lange
+18 23 1005 Nacht
+23 24 1006 .
+
+0 2 1001 Er
+3 11 1002 bemerkte
+12 17 1003 einen
+18 23 1004 Brief
+24 27 1005 auf
+28 31 1006 dem
+32 44 1007 Schreibtisch
+44 45 1008 .
+
+0 8 1001 Englisch
+9 17 1002 sprechen
+18 21 1003 ist
+22 31 1004 schwierig
+31 32 1005 .
+
+0 2 1001 Er
+3 8 1002 hatte
+9 13 1003 drei
+14 19 1004 Söhne
+19 20 1005 .
+
+0 5 1001 Geben
+6 9 1002 Sie
+10 13 1003 mir
+14 19 1004 bitte
+20 24 1005 noch
+25 29 1006 eine
+30 36 1007 Chance
+36 37 1008 !
+
+0 7 1001 Windows
+8 11 1002 ist
+12 15 1003 das
+16 29 1004 meistgenutzte
+30 44 1005 Betriebssystem
+45 48 1006 der
+49 53 1007 Welt
+53 54 1008 .
+
+0 4 1001 Dein
+5 9 1002 Name
+10 15 1003 kommt
+16 19 1004 mir
+20 27 1005 bekannt
+28 31 1006 vor
+31 32 1007 .
+
+0 3 1001 Wie
+4 9 1002 viele
+10 16 1003 Jungen
+17 21 1004 gibt
+22 24 1005 es
+25 27 1006 in
+28 34 1007 dieser
+35 41 1008 Klasse
+41 42 1009 ?
+
+0 3 1001 Ich
+4 8 1002 muss
+9 12 1003 dir
+13 17 1004 eine
+18 23 1005 dumme
+24 29 1006 Frage
+30 37 1007 stellen
+37 38 1008 .
+
+0 3 1001 Der
+4 11 1002 Chirurg
+12 22 1003 amputierte
+23 26 1004 das
+27 34 1005 falsche
+35 39 1006 Bein
+39 40 1007 .
+
+0 3 1001 Ich
+4 8 1002 ess'
+9 12 1003 den
+13 18 1004 Apfel
+18 19 1005 .
+
+0 3 1001 Man
+4 8 1002 kann
+9 15 1003 dieses
+16 20 1004 Buch
+21 26 1005 nicht
+27 32 1006 lesen
+32 33 1007 ,
+34 38 1008 ohne
+39 45 1009 weinen
+46 48 1010 zu
+49 55 1011 müssen
+55 56 1012 .
+
+0 6 1001 Könnte
+7 12 1002 bitte
+13 19 1003 jemand
+20 23 1004 die
+24 27 1005 Tür
+28 34 1006 öffnen
+34 35 1007 ?
+
+0 3 1001 Ich
+4 8 1002 habe
+9 12 1003 ein
+13 21 1004 Flugzeug
+22 29 1005 gesehen
+29 30 1006 .
+
+0 3 1001 Sie
+4 10 1002 machte
+11 20 1003 denselben
+21 27 1004 Fehler
+28 32 1005 noch
+33 39 1006 einmal
+39 40 1007 .
+
+0 8 1001 Harajuku
+9 12 1002 ist
+13 18 1003 einer
+19 22 1004 der
+23 39 1005 meistbelebtesten
+40 46 1006 Plätze
+47 53 1007 Tokyos
+53 54 1008 .
+
+0 7 1001 Gestern
+8 11 1002 war
+12 14 1003 es
+15 21 1004 kühler
+22 25 1005 als
+26 31 1006 heute
+31 32 1007 .
+
+0 7 1001 Letztes
+8 12 1002 Jahr
+13 16 1003 hat
+17 19 1004 er
+20 29 1005 aufgehört
+30 32 1006 zu
+33 40 1007 rauchen
+40 41 1008 .
+
+0 3 1001 Der
+4 12 1002 Polizist
+13 18 1003 trägt
+19 23 1004 eine
+24 32 1005 Gasmaske
+32 33 1006 .
+
+0 2 1001 Du
+3 9 1002 kannst
+10 15 1003 nicht
+16 17 1004 "
+17 21 1005 nein
+21 22 1006 "
+23 28 1007 sagen
+28 29 1008 .
+
+0 13 1001 Interessierst
+14 16 1002 du
+17 21 1003 dich
+22 25 1004 für
+26 31 1005 Musik
+31 32 1006 ?
+
+0 3 1001 Wie
+4 8 1002 geht
+9 11 1003 es
+12 18 1004 deinem
+19 24 1005 Vater
+24 25 1006 ?
+
+0 4 1001 Mein
+5 10 1002 Vater
+11 16 1003 fährt
+17 20 1004 mit
+21 24 1005 dem
+25 28 1006 Rad
+29 32 1007 zur
+33 39 1008 Arbeit
+39 40 1009 .
+
+0 3 1001 Ich
+4 9 1002 freue
+10 14 1003 mich
+14 15 1004 ,
+16 20 1005 dich
+21 34 1006 wiederzusehen
+34 35 1007 .
+
+0 3 1001 Ich
+4 8 1002 will
+8 9 1003 ,
+10 14 1004 dass
+15 18 1005 Tom
+19 28 1006 verhaftet
+29 33 1007 wird
+33 34 1008 .
+
+0 2 1001 Er
+3 8 1002 hatte
+9 13 1003 eine
+14 18 1004 neue
+19 23 1005 Idee
+23 24 1006 .
+
+0 3 1001 Sie
+4 8 1002 sind
+9 13 1003 sehr
+14 16 1004 an
+17 27 1005 Astronomie
+28 40 1006 interessiert
+40 41 1007 .
+
+0 4 1001 Kein
+5 12 1002 Problem
+12 13 1003 .
+
+0 2 1001 Du
+3 9 1002 kannst
+10 15 1003 meine
+16 21 1004 Yacht
+22 30 1005 benutzen
+30 31 1006 .
+
+0 4 1001 Darf
+5 8 1002 ich
+9 12 1003 mir
+13 17 1004 dein
+18 25 1005 Fahrrad
+26 35 1006 ausleihen
+35 36 1007 ?
+
+0 2 1001 Er
+3 8 1002 führt
+9 12 1003 ein
+13 18 1004 Leben
+18 19 1005 ,
+20 23 1006 als
+24 28 1007 wäre
+29 32 1008 er
+32 41 1009 Millionär
+41 42 1010 .
+
