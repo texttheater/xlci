@@ -1,0 +1,6 @@
+*.pyc
+/models
+/out
+/ext
+__pycache__
+/go
