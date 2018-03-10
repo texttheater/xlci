@@ -23,13 +23,13 @@
     write_clause/1,
     write_clause/3]).
 
-:- dynamic source_sentence_catobj/3.
-:- dynamic source_catobj/5. % TODO refactor to source_node/3?
-:- dynamic source_typechanger/3.
-:- dynamic wordalign/3.
-:- dynamic sentalign/4.
-:- dynamic target_catobj/5. % TODO refactor to target_node/3?
-:- dynamic target_typechanger/3.
+:- dynamic source_sentence_catobj/4.
+:- dynamic source_catobj/6. % TODO refactor to source_node/4?
+:- dynamic source_typechanger/4.
+:- dynamic wordalign/4.
+:- dynamic sentalign/5.
+:- dynamic target_catobj/6. % TODO refactor to target_node/4?
+:- dynamic target_typechanger/4.
 
 main :-
   argv([EnglishDerFile, WordAlignFile, SentAlignFile, ForeignTokOffFile, EnglishTokOffFile]),
@@ -57,48 +57,48 @@ main :-
 transfer_categories(ForeignSentences, EnglishSentences) :-
   forall(
       ( member(Sentence, ForeignSentences),
-        member(tokoff(ForFrom, ForTo, _TokID, Token), Sentence)
+        member(tokoff(SID, ForFrom, ForTo, _TokID, Token), Sentence)
       ),
       ( findall(EngFrom-EngTo,
-            ( wordalign(ForFrom, ForTo, EnglishOffsets),
+            ( wordalign(SID, ForFrom, ForTo, EnglishOffsets),
               member(EngFrom-EngTo, EnglishOffsets)
             ), Pairs),
-        (  Pairs = []
-        -> format(user_error, 'nothing aligned to token "~w" (~w, ~w), skipping~n', [Token, ForFrom, ForTo])
-        ;  Pairs = [_, _|_]
+        (  Pairs = [] % nothing aligned
+        -> format(user_error, 'nothing aligned to token "~w" (~w, ~w, ~w), skipping~n', [Token, SID, ForFrom, ForTo])
+        ;  Pairs = [_, _|_] % more than one token aligned, need to combine them
         -> findall(EngTokoff,
                ( member(EngFrom-EngTo, Pairs),
                  once(
                      ( member(EnglishSentence, EnglishSentences),
                        member(EngTokoff, EnglishSentence),
-                       EngTokoff = tokoff(EngFrom, EngTo, _, _)
+                       EngTokoff = tokoff(SID, EngFrom, EngTo, _, _)
                      ) )
                ), EngPhrase),
-           make_item(source_catobj, source_typechanger, EngPhrase, Item),
+           make_item(source_catobj, source_typechanger, SID, EngPhrase, Item),
            parse([Item], Parses),
            (  Parses = []
-           -> format(user_error, 'no parse for phrase aligned to token "~w" (~w, ~w), skipping~n', [Token, ForFrom, ForTo])
+           -> format(user_error, 'no parse for phrase aligned to token "~w" (~w, ~w, ~w), skipping~n', [Token, SID, ForFrom, ForTo])
            ;  Parses = [_, _|_]
-           -> format(user_error, 'WARNING: ambiguous phrase aligned to token "~w" (~w, ~w), skipping~n', [Token, ForFrom, ForTo])
+           -> format(user_error, 'WARNING: ambiguous phrase aligned to token "~w" (~w, ~w, ~w), skipping~n', [Token, SID, ForFrom, ForTo])
            ;  Parses = [item([node(CO, Sem0, _, _)], [], _, true)]
            -> replace_indices(ForFrom, ForTo, Sem0, Sem),
-              assertz(target_catobj(ForFrom, ForTo, CO, Sem, [from:ForFrom, to:ForTo]))
+              assertz(target_catobj(SID, ForFrom, ForTo, CO, Sem, [from:ForFrom, to:ForTo]))
            )
-        ;  Pairs = [EngFrom-EngTo],
-           source_catobj(EngFrom, EngTo, CO, Sem0, Atts)
+        ;  Pairs = [EngFrom-EngTo], % one token aligned, easy
+           source_catobj(SID, EngFrom, EngTo, CO, Sem0, Atts)
         -> replace_indices(ForFrom, ForTo, Sem0, Sem),
-           assertz(target_catobj(ForFrom, ForTo, CO, Sem, [from:ForFrom, to:ForTo|Atts]))
-        ;  format(user_error, 'token "~w" (~w, ~w) one-to-one aligned but no category object found, skipping~n', [Token, ForFrom, ForTo])
+           assertz(target_catobj(SID, ForFrom, ForTo, CO, Sem, [from:ForFrom, to:ForTo|Atts]))
+        ;  format(user_error, 'token "~w" (~w, ~w, ~w) one-to-one aligned but no category object found, skipping~n', [Token, SID, ForFrom, ForTo])
         )
       ) ).
 
 % Asserts target_typechanger/3 facts mapping target tokens to typechangers. This
 % overgenerates a bit as we need each typechanger only once per sentence.
 transfer_typechangers :-
-  findall(target_typechanger(ForFrom, ForTo, TC),
-      ( source_typechanger(TCFrom, TCTo, TC),
-	wordalign(ForFrom, ForTo, EngOffsets),
-	target_catobj(ForFrom, ForTo, _, _, _),
+  findall(target_typechanger(SID, ForFrom, ForTo, TC),
+      ( source_typechanger(SID, TCFrom, TCTo, TC),
+	wordalign(SID, ForFrom, ForTo, EngOffsets),
+	target_catobj(SID, ForFrom, ForTo, _, _, _),
 	member(EngFrom-EngTo, EngOffsets),
 	EngFrom >= TCFrom,
 	EngTo =< TCTo
@@ -116,30 +116,30 @@ flip_slashes :-
 % of modifiers to match the slash directions of the result categories.
 flip_slashes_functors :-
   forall(
-      ( clause(target_catobj(From, To, CO, Sem, Atts), true, Ref)
+      ( clause(target_catobj(SID, From, To, CO, Sem, Atts), true, Ref)
       ),
-      ( (  flip_slashes_functors(CO, From, To, FlipCO)
+      ( (  flip_slashes_functors(CO, SID, From, To, FlipCO)
         -> erase(Ref),
-           assertz(target_catobj(From, To, FlipCO, Sem, Atts))
+           assertz(target_catobj(SID, From, To, FlipCO, Sem, Atts))
         ;  true % TODO Do something more intelligent? Warn?
         )
       ) ).
 
-flip_slashes_functors(X/Y, From, To, FlipCO) :-
-  flip_slashes_functors(X, Y, From, To, FlipCO).
-flip_slashes_functors(X\Y, From, To, FlipCO) :-
-  flip_slashes_functors(X, Y, From, To, FlipCO).
-flip_slashes_functors(co(ID, Cat, UCat), _, _, co(ID, Cat, UCat)).
+flip_slashes_functors(X/Y, SID, From, To, FlipCO) :-
+  flip_slashes_functors(X, Y, SID, From, To, FlipCO).
+flip_slashes_functors(X\Y, SID, From, To, FlipCO) :-
+  flip_slashes_functors(X, Y, SID, From, To, FlipCO).
+flip_slashes_functors(co(ID, Cat, UCat), _, _, _, co(ID, Cat, UCat)).
 
-flip_slashes_functors(X, Y, XFrom, XTo, FlipX/FlipY) :-
-  functor_from_to(Y, YFrom, _),
+flip_slashes_functors(X, Y, SID, XFrom, XTo, FlipX/FlipY) :-
+  functor_from_to(Y, SID, YFrom, _),
   YFrom > XTo, % X before Y -> forward slash
-  flip_slashes_functors(X, XFrom, XTo, FlipX),
+  flip_slashes_functors(X, SID, XFrom, XTo, FlipX),
   flip_slashes_functor_arg(X, Y, FlipX, FlipY).
-flip_slashes_functors(X, Y, XFrom, XTo, FlipX\FlipY) :-
-  functor_from_to(Y, _, YTo),
+flip_slashes_functors(X, Y, SID, XFrom, XTo, FlipX\FlipY) :-
+  functor_from_to(Y, SID, _, YTo),
   YTo < XFrom, % X after Y -> backward slash
-  flip_slashes_functors(X, XFrom, XTo, FlipX),
+  flip_slashes_functors(X, SID, XFrom, XTo, FlipX),
   flip_slashes_functor_arg(X, Y, FlipX, FlipY).
 
 % Adapt the slash directions of arguments of modifiers
@@ -165,56 +165,56 @@ flip_slashes_functor_arg_cat(A\B, C\D, E\F, FlipC\FlipD, FlipE\FlipF) :-
 
 flip_slashes_args :-
   forall(
-      ( retract(target_catobj(From, To, CO, Sem, Atts))
+      ( retract(target_catobj(SID, From, To, CO, Sem, Atts))
       ),
-      ( flip_slashes_args(CO, FlipCO),
-	assertz(target_catobj(From, To, FlipCO, Sem, Atts))
+      ( flip_slashes_args(SID, CO, FlipCO),
+	assertz(target_catobj(SID, From, To, FlipCO, Sem, Atts))
       ) ).
 
-flip_slashes_args(co(ID, _, _), co(ID, Cat, UCat)) :-
-  target_catobj(_, _, CO, _, _),
+flip_slashes_args(SID, co(ID, _, _), co(ID, Cat, UCat)) :-
+  target_catobj(SID, _, _, CO, _, _),
   ( functor_in(_/co(ID, Cat, UCat), CO)
   ; functor_in(_\co(ID, Cat, UCat), CO)
   ),
   !.
-flip_slashes_args(co(ID, Cat, UCat), co(ID, Cat, UCat)).
-flip_slashes_args(X/Y, FlipX/Y) :-
-  flip_slashes_args(X, FlipX).
-flip_slashes_args(X\Y, FlipX\Y) :-
-  flip_slashes_args(X, FlipX).
+flip_slashes_args(_, co(ID, Cat, UCat), co(ID, Cat, UCat)).
+flip_slashes_args(SID, X/Y, FlipX/Y) :-
+  flip_slashes_args(SID, X, FlipX).
+flip_slashes_args(SID, X\Y, FlipX\Y) :-
+  flip_slashes_args(SID, X, FlipX).
 
 parse(ForeignSentences) :-
   forall(
-      ( enumerate(I, member(ForeignSentence, ForeignSentences))
+      ( member(ForeignSentence, ForeignSentences)
       ),
       ( % Determine target category object based on sentence alignments:
-        sentence_from_to(ForeignSentence, ForFrom, ForTo),
-        (  findall(EngFrom-EngTo, sentalign(EngFrom, EngTo, ForFrom, ForTo), [EngFrom-EngTo]),
-           source_sentence_catobj(EngFrom, EngTo, TargetCO)
+        sentence_from_to(ForeignSentence, SID, ForFrom, ForTo),
+        (  findall(EngFrom-EngTo, sentalign(SID, EngFrom, EngTo, ForFrom, ForTo), [EngFrom-EngTo]),
+           source_sentence_catobj(SID, EngFrom, EngTo, TargetCO)
         -> true
-        ;  format(user_error, 'WARNING: no target category object for sentence ~w found (did not find or failed to analyze 1:1 aligned source sentence)~n', [I]),
+        ;  format(user_error, 'WARNING: no target category object for sentence ~w found (did not find or failed to analyze 1:1 aligned source sentence)~n', [SID]),
            TargetCO = dummy
         ),
         % Parse the foreign sentence using projected categories:
-        make_item(target_catobj, target_typechanger, ForeignSentence, Item),
+        make_item(target_catobj, target_typechanger, SID, ForeignSentence, Item),
         catch(
             ( parse([Item], Agenda0)
             ), agenda_limit_exceeded,
-            ( format(user_error, 'WARNING: parser agenda limit exceeded~n', []),
+            ( format(user_error, 'WARNING: parser agenda limit exceeded for sentnece ~w~n', [SID]),
               Agenda0 = []
             ) ),
         include(hits_target(TargetCO), Agenda0, Agenda),
         length(Agenda, Length),
         (  Length = 0
-        -> format(user_error, 'WARNING: no parse projected for sentence ~w~n', [I])
+        -> format(user_error, 'WARNING: no parse projected for sentence ~w~n', [SID])
         ;  (  Length > 1
-           -> format(user_error, 'WARNING: ~w different parses projected for sentence ~w~n', [Length, I])
+           -> format(user_error, 'WARNING: ~w different parses projected for sentence ~w~n', [Length, SID])
            ;  true
            ),
            Agenda = [item([Node], [], _, true)|_],
 	   %with_output_to(user_error, pp_node(Node)),
            node2ccg(Node, CCG),
-           write_clause(current_output, ccg(I, CCG), [module(slashes)])
+           write_clause(current_output, ccg(SID, CCG), [module(slashes)])
         )
       ) ).
 
@@ -224,7 +224,7 @@ parse(ForeignSentences) :-
 % pairs to lexical category objects and to typechangers.
 load_source_derivations(EnglishDerFile) :-
   forall(
-      ( term_in_file(der(ID, Der), EnglishDerFile)
+      ( term_in_file(der(SID, Der), EnglishDerFile)
       ),
       (  der2node(Der, Node)%,with_output_to(user_error, pp_node(Node))
       -> % Get lexical category objects:
@@ -247,7 +247,7 @@ load_source_derivations(EnglishDerFile) :-
          node_from_to(Node, From, To),
          Node = node(CO, _, _, _),
          assertz(source_sentence_catobj(From, To, CO))
-      ;  format(user_error, 'WARNING: failed to analyze English derivation ~w for category projection~n', [ID])
+      ;  format(user_error, 'WARNING: failed to analyze English derivation ~w for category projection~n', [SID])
       ) ).
 
 % Reads the word alignment file and asserts its contents as wordalign/3 facts.
@@ -275,23 +275,23 @@ load_sentalign_file(SentAlignFile) :-
 
 hits_target(TargetCO, item([node(TargetCO, _, _, _)], _, _, _)).
 
-functor_from_to(Functor, From, To) :-
-  target_catobj(From, To, CO, _, _),
+functor_from_to(Functor, SID, From, To) :-
+  target_catobj(SID, From, To, CO, _, _),
   functor_in(Functor, CO).
-functor_from_to(Functor, From, To) :-
-  target_typechanger(From, To, tc(CO, _)),
+functor_from_to(Functor, SID, From, To) :-
+  target_typechanger(SID, From, To, tc(CO, _)),
   functor_in(Functor, CO).
 
-% With target_catobj/5 (source_catobj/5) and target_typechanger/3
-% (source_typechanger/3) facts asserted, creates the initial shift-reduce
+% With target_catobj/6 (source_catobj/6) and target_typechanger/4
+% (source_typechanger/4) facts asserted, creates the initial shift-reduce
 % parser item for the target sentence.
-make_item(_, _, [], item([], [], [], false)).
-make_item(COPred, TCPred, [tokoff(From, To, _TokID, Token)|Sent], item([], [Choices|Queue], TypeChangers, false)) :-
+make_item(_, _, _, [], item([], [], [], false)).
+make_item(COPred, TCPred, SID, [tokoff(SID, From, To, _TokID, Token)|Sent], item([], [Choices|Queue], TypeChangers, false)) :-
   % Recursively generate the initial item for the rest of the sentence:
-  make_item(COPred, TCPred, Sent, item([], Queue, TypeChangers0, false)),
-  findall(node(CO, Sem, t(Token, Atts), []), call(COPred, From, To, CO, Sem, Atts), Choices),
+  make_item(COPred, TCPred, SID, Sent, item([], Queue, TypeChangers0, false)),
+  findall(node(CO, Sem, t(Token, Atts), []), call(COPred, SID, From, To, CO, Sem, Atts), Choices),
   findall(TC,
-      ( call(TCPred, From, To, TC),
+      ( call(TCPred, SID, From, To, TC),
         \+ member(TC, TypeChangers0)
       ), NewTypeChangers),
   append(NewTypeChangers, TypeChangers0, TypeChangers).
@@ -311,33 +311,33 @@ node_from_to(node(_, _, _, Children), From, To) :-
   last(Children, Last),
   node_from_to(Last, _, To).
 
-sentence_from_to(Sentence, From, To) :-
-  Sentence = [tokoff(From, _, _, _)|_],
-  last(Sentence, tokoff(_, To, _, _)).
+sentence_from_to(Sentence, SID, From, To) :-
+  Sentence = [tokoff(SID, From, _, _, _)|_],
+  last(Sentence, tokoff(SID, _, To, _, _)).
 
 replace_indices(ForFrom, ForTo, Sem0, Sem) :-
   substitute_sub_term(P:[_|_]:C, P:[ForFrom, ForTo]:C, Sem0, Sem).
 
 dump_source :-
   forall(
-      ( source_catobj(A, B, C, D, E)
+      ( source_catobj(A, B, C, D, E, F)
       ),
-      ( write_clause(user_error, source_catobj(A, B, C, D, E), [module(slashes)])
+      ( write_clause(user_error, source_catobj(A, B, C, D, E, F), [module(slashes)])
       ) ),
   forall(
-      ( source_typechanger(A, B, C)
+      ( source_typechanger(A, B, C, D)
       ),
-      ( write_clause(user_error, source_typechanger(A, B, C), [module(slashes)])
+      ( write_clause(user_error, source_typechanger(A, B, C, D), [module(slashes)])
       ) ).
 
 dump_target :-
   forall(
-      ( target_catobj(A, B, C, D, E)
+      ( target_catobj(A, B, C, D, E, F)
       ),
-      ( write_clause(user_error, target_catobj(A, B, C, D, E), [module(slashes)])
+      ( write_clause(user_error, target_catobj(A, B, C, D, E, F), [module(slashes)])
       ) ),
   forall(
-      ( target_typechanger(A, B, C)
+      ( target_typechanger(A, B, C, D)
       ),
-      ( write_clause(user_error, target_typechanger(A, B, C), [module(slashes)])
+      ( write_clause(user_error, target_typechanger(A, B, C, D), [module(slashes)])
       ) ).
