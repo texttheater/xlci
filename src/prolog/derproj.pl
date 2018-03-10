@@ -219,7 +219,7 @@ parse(ForeignSentences) :-
 
 %%% LOADERS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Asserts source_catobj/5 and source_typechanger/3 facts mapping source offset
+% Asserts source_catobj/6 and source_typechanger/4 facts mapping source offset
 % pairs to lexical category objects and to typechangers.
 load_source_derivations(EnglishDerFile) :-
   forall(
@@ -232,7 +232,7 @@ load_source_derivations(EnglishDerFile) :-
                select(from:From, Atts0, Atts1),
                select(to:To, Atts1, Atts)
              ),
-             ( assertz(source_catobj(From, To, CO, Sem, Atts))
+             ( assertz(source_catobj(SID, From, To, CO, Sem, Atts))
              ) ),
          % Get type changers:
          forall(
@@ -240,12 +240,12 @@ load_source_derivations(EnglishDerFile) :-
                Child = node(Y, _, _, _)
              ),
              ( node_from_to(Child, From, To),
-               assertz(source_typechanger(From, To, tc(X-Y, TCSem)))
+               assertz(source_typechanger(SID, From, To, tc(X-Y, TCSem)))
              ) ),
          % Get sentence category object:
          node_from_to(Node, From, To),
          Node = node(CO, _, _, _),
-         assertz(source_sentence_catobj(From, To, CO))
+         assertz(source_sentence_catobj(SID, From, To, CO))
       ;  format(user_error, 'WARNING: failed to analyze English derivation ~w for category projection~n', [SID])
       ) ).
 
