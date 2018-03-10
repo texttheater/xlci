@@ -92,8 +92,7 @@ transfer_categories(ForeignSentences, EnglishSentences) :-
         )
       ) ).
 
-% Asserts target_typechanger/3 facts mapping target tokens to typechangers. This
-% overgenerates a bit as we need each typechanger only once per sentence.
+% Asserts target_typechanger/3 facts mapping target tokens to typechangers.
 transfer_typechangers :-
   findall(target_typechanger(SID, ForFrom, ForTo, TC),
       ( source_typechanger(SID, TCFrom, TCTo, TC),
