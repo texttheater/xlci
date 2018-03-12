@@ -16,28 +16,27 @@
     tokoff_read_file/2]).
 :- use_module(util, [
     argv/1,
-    enumerate/2,
+    line_in_file/2,
+    must/1,
     split/4,
     substitute_sub_term/4,
     term_in_file/2,
     write_clause/1,
     write_clause/3]).
 
-:- dynamic source_sentence_catobj/4.
+:- dynamic source_sentence_catobj/2.
 :- dynamic source_catobj/6. % TODO refactor to source_node/4?
 :- dynamic source_typechanger/4.
 :- dynamic wordalign/4.
-:- dynamic sentalign/5.
 :- dynamic target_catobj/6. % TODO refactor to target_node/4?
 :- dynamic target_typechanger/4.
 
 main :-
-  argv([EnglishDerFile, WordAlignFile, SentAlignFile, ForeignTokOffFile, EnglishTokOffFile]),
+  argv([EnglishDerFile, WordAlignFile, ForeignTokOffFile, EnglishTokOffFile]),
   % Load information from various sources:
   load_source_derivations(EnglishDerFile),
   %dump_source,
   load_wordalign_file(WordAlignFile),
-  load_sentalign_file(SentAlignFile),
   tokoff_read_file(ForeignTokOffFile, ForeignSentences),
   tokoff_read_file(EnglishTokOffFile, EnglishSentences),
   % Project:
@@ -48,7 +47,7 @@ main :-
   parse(ForeignSentences),
   halt.
 main :-
-  format(user_error, 'USAGE (example): swipl -l derproj -g main en.der nl.wordalign nl.sentalign nl.tok.off en.tok.off~n', []),
+  format(user_error, 'USAGE (example): swipl -l derproj -g main en.der nl.wordalign nl.tok.off en.tok.off~n', []),
   halt(1).
 
 %%% CORE PROJECTION PREDICATES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -56,8 +55,8 @@ main :-
 % Asserts target_catobj/5 facts mapping target tokens to category objects.
 transfer_categories(ForeignSentences, EnglishSentences) :-
   forall(
-      ( member(Sentence, ForeignSentences),
-        member(tokoff(SID, ForFrom, ForTo, _TokID, Token), Sentence)
+      ( nth1(SID, ForeignSentences, ForeignSentence),
+        member(tokoff(ForFrom, ForTo, _TokID, Token), ForeignSentence)
       ),
       ( findall(EngFrom-EngTo,
             ( wordalign(SID, ForFrom, ForTo, EnglishOffsets),
@@ -69,9 +68,9 @@ transfer_categories(ForeignSentences, EnglishSentences) :-
         -> findall(EngTokoff,
                ( member(EngFrom-EngTo, Pairs),
                  once(
-                     ( member(EnglishSentence, EnglishSentences),
+                     ( nth1(SID, EnglishSentences, EnglishSentence),
                        member(EngTokoff, EnglishSentence),
-                       EngTokoff = tokoff(SID, EngFrom, EngTo, _, _)
+                       EngTokoff = tokoff(EngFrom, EngTo, _, _)
                      ) )
                ), EngPhrase),
            make_item(source_catobj, source_typechanger, SID, EngPhrase, Item),
@@ -184,12 +183,10 @@ flip_slashes_args(SID, X\Y, FlipX\Y) :-
 
 parse(ForeignSentences) :-
   forall(
-      ( member(ForeignSentence, ForeignSentences)
+      ( nth1(SID, ForeignSentences, ForeignSentence)
       ),
-      ( % Determine target category object based on sentence alignments:
-        sentence_from_to(ForeignSentence, SID, ForFrom, ForTo),
-        (  findall(EngFrom-EngTo, sentalign(SID, EngFrom, EngTo, ForFrom, ForTo), [EngFrom-EngTo]),
-           source_sentence_catobj(SID, EngFrom, EngTo, TargetCO)
+      ( % Determine target category object:
+        (  source_sentence_catobj(SID, TargetCO)
         -> true
         ;  format(user_error, 'WARNING: no target category object for sentence ~w found (did not find or failed to analyze 1:1 aligned source sentence)~n', [SID]),
            TargetCO = dummy
@@ -199,7 +196,7 @@ parse(ForeignSentences) :-
         catch(
             ( parse([Item], Agenda0)
             ), agenda_limit_exceeded,
-            ( format(user_error, 'WARNING: parser agenda limit exceeded for sentnece ~w~n', [SID]),
+            ( format(user_error, 'WARNING: parser agenda limit exceeded for sentence ~w~n', [SID]),
               Agenda0 = []
             ) ),
         include(hits_target(TargetCO), Agenda0, Agenda),
@@ -225,50 +222,53 @@ load_source_derivations(EnglishDerFile) :-
   forall(
       ( term_in_file(der(SID, Der), EnglishDerFile)
       ),
-      (  der2node(Der, Node)%,with_output_to(user_error, pp_node(Node))
-      -> % Get lexical category objects:
-         forall(
-             ( sub_node(node(CO, Sem, t(_Form, Atts0), []), Node),
-               select(from:From, Atts0, Atts1),
-               select(to:To, Atts1, Atts)
-             ),
-             ( assertz(source_catobj(SID, From, To, CO, Sem, Atts))
-             ) ),
-         % Get type changers:
-         forall(
-             ( sub_node(node(X, _, tc(TCSem), [Child]), Node),
-               Child = node(Y, _, _, _)
-             ),
-             ( node_from_to(Child, From, To),
-               assertz(source_typechanger(SID, From, To, tc(X-Y, TCSem)))
-             ) ),
-         % Get sentence category object:
-         node_from_to(Node, From, To),
-         Node = node(CO, _, _, _),
-         assertz(source_sentence_catobj(SID, From, To, CO))
-      ;  format(user_error, 'WARNING: failed to analyze English derivation ~w for category projection~n', [SID])
-      ) ).
+      (  catch(
+	     ( der2node(Der, Node),
+               % Get lexical category objects:
+               forall(
+                   ( sub_node(node(CO, Sem, t(_Form, Atts0), []), Node),
+                     select(from:From, Atts0, Atts1),
+                     select(to:To, Atts1, Atts)
+                   ),
+                   ( assertz(source_catobj(SID, From, To, CO, Sem, Atts))
+                   ) ),
+               % Get type changers:
+               forall(
+                   ( sub_node(node(X, _, tc(TCSem), [Child]), Node),
+                     Child = node(Y, _, _, _)
+                   ),
+                   ( node_from_to(Child, From, To),
+                     assertz(source_typechanger(SID, From, To, tc(X-Y, TCSem)))
+                   ) ),
+               % Get sentence category object:
+               Node = node(CO, _, _, _),
+               assertz(source_sentence_catobj(SID, CO))
+	     ), failed(der:der2node_(Const, _)),
+	     ( format(user_error, 'WARNING: failed to analyze English derivation ~w for category projection; problematic constituent: ~w~n', [SID, Const])
+	     ) ) ) ).
 
-% Reads the word alignment file and asserts its contents as wordalign/3 facts.
+% Reads the word alignment file and asserts its contents as wordalign/4 facts.
 load_wordalign_file(WordAlignFile) :-
-  csv_read_file(WordAlignFile, WordAlignRows, [separator(9)]),
-  findall(wordalign(ForeignFrom, ForeignTo, EnglishOffsetsList),
-      ( member(row(ForeignFrom, ForeignTo, EnglishOffsetsAtom), WordAlignRows),
-        atom_codes(EnglishOffsetsAtom, EnglishOffsetsCodes),
-        split(EnglishOffsetsCodes, 32, infinity, PairCodess),
-        findall(EnglishFrom-EnglishTo,
-            ( member(PairCodes, PairCodess),
-              split(PairCodes, 44, infinity, [EnglishFromCodes, EnglishToCodes]),
-              number_codes(EnglishFrom, EnglishFromCodes),
-              number_codes(EnglishTo, EnglishToCodes)
-            ), EnglishOffsetsList)
-      ), WordAlignTerms),
-  maplist(assertz, WordAlignTerms).
-
-% Reads the sentence alignment file and asserts its contents as sentalign/4 facts.
-load_sentalign_file(SentAlignFile) :-
-  csv_read_file(SentAlignFile, SentAlignRows, [separator(9), functor(sentalign)]),
-  maplist(assertz, SentAlignRows).
+  findall(Line, line_in_file(Line, WordAlignFile), Lines),
+  split(Lines, [], infinity, Blocks),
+  forall(
+      ( nth1(SID, Blocks, Block)
+      ),
+      ( forall(
+	    ( member(Line, Block)
+	    ),
+	    ( must(split(Line, 9, infinity, [ForeignFromCodes, ForeignToCodes, EnglishOffsetsCodes])),
+	      number_codes(ForeignFrom, ForeignFromCodes),
+	      number_codes(ForeignTo, ForeignToCodes),
+	      must(split(EnglishOffsetsCodes, 32, infinity, PairCodess)),
+	      findall(EnglishFrom-EnglishTo,
+	          ( member(PairCodes, PairCodess),
+	            must(split(PairCodes, 44, infinity, [EnglishFromCodes, EnglishToCodes])),
+	            number_codes(EnglishFrom, EnglishFromCodes),
+	            number_codes(EnglishTo, EnglishToCodes)
+	          ), EnglishOffsetsList),
+	      assertz(wordalign(SID, ForeignFrom, ForeignTo, EnglishOffsetsList))
+            ) ) ) ).
 
 %%% HELPERS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -285,7 +285,7 @@ functor_from_to(Functor, SID, From, To) :-
 % (source_typechanger/4) facts asserted, creates the initial shift-reduce
 % parser item for the target sentence.
 make_item(_, _, _, [], item([], [], [], false)).
-make_item(COPred, TCPred, SID, [tokoff(SID, From, To, _TokID, Token)|Sent], item([], [Choices|Queue], TypeChangers, false)) :-
+make_item(COPred, TCPred, SID, [tokoff(From, To, _TokID, Token)|Sent], item([], [Choices|Queue], TypeChangers, false)) :-
   % Recursively generate the initial item for the rest of the sentence:
   make_item(COPred, TCPred, SID, Sent, item([], Queue, TypeChangers0, false)),
   findall(node(CO, Sem, t(Token, Atts), []), call(COPred, SID, From, To, CO, Sem, Atts), Choices),
@@ -310,9 +310,9 @@ node_from_to(node(_, _, _, Children), From, To) :-
   last(Children, Last),
   node_from_to(Last, _, To).
 
-sentence_from_to(Sentence, SID, From, To) :-
-  Sentence = [tokoff(SID, From, _, _, _)|_],
-  last(Sentence, tokoff(SID, _, To, _, _)).
+sentence_from_to(Sentence, From, To) :-
+  Sentence = [tokoff(From, _, _, _)|_],
+  last(Sentence, tokoff(_, To, _, _)).
 
 replace_indices(ForFrom, ForTo, Sem0, Sem) :-
   substitute_sub_term(P:[_|_]:C, P:[ForFrom, ForTo]:C, Sem0, Sem).

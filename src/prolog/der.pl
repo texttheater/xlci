@@ -10,6 +10,7 @@
     co_cat_ucat/3]).
 :- use_module(slashes).
 :- use_module(util, [
+    must/1,
     print_indented/3,
     substitute_sub_term/4,
     list_occurrences_of_term/3]).
@@ -41,13 +42,13 @@ der2node(Der, Node) :-
 der2node_(fa(_Cat, Sem, t(TCSem, _/UCat2, 'ø', _), ODer), node(_X, Sem, tc(TCSem), [ONode])) :-
   !,
   node_co(ONode, Y),
-  der2node_(ODer, ONode),
+  must(der2node_(ODer, ONode)),
   der_cat(ODer, Cat2),
   co_cat_ucat(Y, Cat2, UCat2).
 der2node_(tc(_NewCat, _OldCat, Sem, ODer), node(_X, Sem, tc(nil), [ONode])) :- % nil = HACK
   !,
   node_co(ONode, Y),
-  der2node_(ODer, ONode),
+  must(der2node_(ODer, ONode)),
   der_cat(ODer, Cat2),
   co_cat_ucat(Y, Cat2, Cat2).
 der2node_(fa(_Cat, Sem, Der1, Der2), node(Y, Sem, comp(0, f), [Node1, Node2])) :-
@@ -57,23 +58,23 @@ der2node_(fa(_Cat, Sem, Der1, Der2), node(Y, Sem, comp(0, f), [Node1, Node2])) :
   !,
   node_co(Node1, Y/Y),
   node_co(Node2, Y),
-  der2node_(Der1, Node1),
-  der2node_(Der2, Node2),
+  must(der2node_(Der1, Node1)),
+  must(der2node_(Der2, Node2)),
   der_cat(Der2, Cat2),
   der_cat(Node1, _/UCat2),
   co_cat_ucat(Y, Cat2, UCat2).
 der2node_(fa(_Cat, Sem, Der1, Der2), node(X, Sem, comp(0, f), [Node1, Node2])) :-
   node_co(Node1, X/Y),
   node_co(Node2, Y),
-  der2node_(Der1, Node1),
-  der2node_(Der2, Node2),
+  must(der2node_(Der1, Node1)),
+  must(der2node_(Der2, Node2)),
   der_cat(Der2, Cat2),
   der_cat(Der1, _/UCat2),
   co_cat_ucat(Y, Cat2, UCat2).
 der2node_(ba(_Cat, Sem, ODer, t(TCSem, _\UCat2, 'ø', _)), node(_X, Sem, tc(TCSem), [ONode])) :-
   !,
   node_co(ONode, Y),
-  der2node_(ODer, ONode),
+  must(der2node_(ODer, ONode)),
   der_cat(ODer, Cat2),
   co_cat_ucat(Y, Cat2, UCat2).
 der2node_(ba(_Cat, Sem, Der2, Der1), node(Y, Sem, comp(0, b), [Node2, Node1])) :-
@@ -83,33 +84,33 @@ der2node_(ba(_Cat, Sem, Der2, Der1), node(Y, Sem, comp(0, b), [Node2, Node1])) :
   !,
   node_co(Node2, Y),
   node_co(Node1, Y\Y),
-  der2node_(Der2, Node2),
-  der2node_(Der1, Node1),
+  must(der2node_(Der2, Node2)),
+  must(der2node_(Der1, Node1)),
   der_cat(Der2, Cat2),
   der_cat(Der1, _\UCat2),
   co_cat_ucat(Y, Cat2, UCat2).
 der2node_(ba(_Cat, Sem, Der2, Der1), node(X, Sem, comp(0, b), [Node2, Node1])) :-
   node_co(Node2, Y),
   node_co(Node1, X\Y),
-  der2node_(Der2, Node2),
-  der2node_(Der1, Node1),
+  must(der2node_(Der2, Node2)),
+  must(der2node_(Der1, Node1)),
   der_cat(Der2, Cat2),
   der_cat(Der1, _\UCat2),
   co_cat_ucat(Y, Cat2, UCat2).
 der2node_(fc(_Cat, Sem, Der1, Der2), node(X/Z, Sem, comp(1, f), [Node1, Node2])) :-
   node_co(Node1, X/Y),
   node_co(Node2, Y/Z),
-  der2node_(Der1, Node1),
-  der2node_(Der2, Node2),
+  must(der2node_(Der1, Node1)),
+  must(der2node_(Der2, Node2)),
   der_cat(Der2, Cat2),
   topcat(1, Cat2, TopCat),
   der_cat(Der1, _/UCat2),
-  co_cat_ucat(Y, TopCat, UCat2).
+  co_cat_ucat(Y, TopCat, UCat2). % FIXME: Y can be a functor??
 der2node_(bc(_Cat, Sem, Der2, Der1), node(X\Z, Sem, comp(1, b), [Node2, Node1])) :-
   node_co(Node2, Y\Z),
   node_co(Node1, X\Y),
-  der2node_(Der2, Node2),
-  der2node_(Der1, Node1),
+  must(der2node_(Der2, Node2)),
+  must(der2node_(Der1, Node1)),
   der_cat(Der2, Cat2),
   topcat(1, Cat2, TopCat),
   der_cat(Der1, _\UCat2),
@@ -117,8 +118,8 @@ der2node_(bc(_Cat, Sem, Der2, Der1), node(X\Z, Sem, comp(1, b), [Node2, Node1]))
 der2node_(fxc(_Cat, Sem, Der1, Der2), node(X\Z, Sem, comp(1, f), [Node1, Node2])) :-
   node_co(Node1, X/Y),
   node_co(Node2, Y\Z),
-  der2node_(Der1, Node1),
-  der2node_(Der2, Node2),
+  must(der2node_(Der1, Node1)),
+  must(der2node_(Der2, Node2)),
   der_cat(Der2, Cat2),
   topcat(1, Cat2, TopCat),
   der_cat(Der1, _/UCat2),
@@ -126,29 +127,38 @@ der2node_(fxc(_Cat, Sem, Der1, Der2), node(X\Z, Sem, comp(1, f), [Node1, Node2])
 der2node_(bxc(_Cat, Sem, Der2, Der1), node(X/Z, Sem, comp(1, b), [Node2, Node1])) :-
   node_co(Node2, Y/Z),
   node_co(Node1, X\Y),
-  der2node_(Der2, Node2),
-  der2node_(Der1, Node1),
+  must(der2node_(Der2, Node2)),
+  must(der2node_(Der1, Node1)),
   der_cat(Der2, Cat2),
   topcat(1, Cat2, TopCat),
   der_cat(Der1, _\UCat2),
   co_cat_ucat(Y, TopCat, UCat2).
 % TODO generalized harmonic/crossed composition
 der2node_(conj(Cat\Cat, CSem, t(TSem, conj:Cat, Form, Atts), Der2), Node) :-
-  der2node_(fa(Cat\Cat, CSem, t(TSem, (Cat\Cat)/Cat, Form, Atts), Der2), Node). % HACK
-der2node_(ftr(_Cat, Sem, Der), node(X/(X\Y), Sem, ftr, [Node])) :-
+  must(der2node_(fa(Cat\Cat, CSem, t(TSem, (Cat\Cat)/Cat, Form, Atts), Der2), Node)). % HACK
+der2node_(ftr(_Cat, _OldCat, Sem, Der), node(X/(X\Y), Sem, ftr, [Node])) :-
   node_co(Node, Y),
-  der2node_(Der, Node).
-der2node_(btr(_Cat, Sem, Der), node(X\(X/Y), Sem, btr, [Node])) :-
+  must(der2node_(Der, Node)).
+der2node_(btr(_Cat, _OldCat, Sem, Der), node(X\(X/Y), Sem, btr, [Node])) :-
   node_co(Node, Y),
-  der2node_(Der, Node).
+  must(der2node_(Der, Node)).
 der2node_(t(Sem, _Cat, Form, Atts), node(_, Sem, t(Form, Atts), [])).
 
 der_cat(t(_, Cat0, _, _), Cat) :-
   !,
-  strip_var_features(Cat0, Cat).
+  %strip_var_features(Cat0, Cat).
+  Cat0 = Cat.
 der_cat(Der, Cat) :-
   arg(1, Der, Cat0),
-  strip_var_features(Cat0, Cat).
+  %strip_var_features(Cat0, Cat).
+  Cat0 = Cat.
+% HACK: there are two kinds of categories that can have variable features in the output:
+% (1) type-raised categories
+% (2) modifier categories
+% We want to get rid of the variable features for (2) but not for (1).
+% parse2der does not add the variables to modifiers, so we're good.
+% Boxer does add the variables to modifiers, so if we want to use Boxer output again,
+% we'll have to do something more clever.
 
 node_co(node(CO, _, _, _), CO).
 

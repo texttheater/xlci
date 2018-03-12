@@ -12,8 +12,14 @@
 %	Reads a PMB-style .tok.off file into a list of lists of =|tokoff/4|=
 %	terms. Each list corresponds to a sentence.
 tokoff_read_file(FileName, Sentences) :-
+  findall(Line, line_in_file(Line, FileName), Lines),
+  split(Lines, [], infinity, Blocks),
+  maplist(block2sentences, Blocks, Sentencess),
+  append(Sentencess, Sentences).
+
+block2sentences(Block, Sentences) :-
   findall(tokoff(From, To, TokID, Token),
-      ( line_in_file(Line, FileName),
+      ( member(Line, Block),
         split(Line, 32, 3, [FromCodes, ToCodes, TokIDCodes, TokenCodes0]),
         number_codes(From, FromCodes),
         number_codes(To, ToCodes),

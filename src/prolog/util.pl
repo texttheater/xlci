@@ -7,6 +7,7 @@
     funsort/3,
     line_in_file/2,
     line_in_stream/2,
+    must/1,
     print_indented/2,
     print_indented/3,
     rsplit/4,
@@ -137,6 +138,8 @@ substitute_sub_term(_, Term, Term).
 split([], _Sep, _Max, []) :-
   !.
 split(List, _Sep, 0, [List]) :-
+  !.
+split([Sep], Sep, _Max, [[]]) :-
   !.
 split([Sep|List], Sep, Max, Lists) :-
   !,
@@ -378,3 +381,11 @@ atom_upper(Atom, ATOM) :-
   atom_string(Atom, String),
   string_upper(String, STRING),
   atom_string(ATOM, STRING).
+
+:- meta_predicate must(0).
+
+must(Goal) :-
+  once(Goal),
+  !.
+must(Goal) :-
+  throw(failed(Goal)).
