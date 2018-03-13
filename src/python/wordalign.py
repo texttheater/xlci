@@ -48,15 +48,29 @@ def trgid_list2english_offsets(trgid_list, english_sentence):
 
 
 def read_offset_file(path):
-    """Returns a flat list of offset pairs."""
+    """Returns a list of lists of offset pairs."""
     result = []
     with open(path) as f:
-        for line in f:
-            if line.rstrip():
-                fr, to, tokid, token = line.split(maxsplit=3)
-                fr = int(fr)
-                to = int(to)
-                result.append((fr, to))
+        for block in util.blocks(f):
+            result.append([])
+            for line in block.splitlines():
+                if line.rstrip():
+                    fr, to, tokid, token = line.split(maxsplit=3)
+                    fr = int(fr)
+                    to = int(to)
+                    result[-1].append((fr, to))
+    return result
+
+
+def read_dict_file(path):
+    """Returns a list of pairs (eng_token_count, eng_id_lists)."""
+    result = []
+    with open(path) as f:
+        for comment_line, eng_line, alignment_line in util.chunk(3, f):
+            eng_token_count = len(eng_line.split())
+            eng_id_lists = [[int(i) for i in l.split()] for l
+                            in ALIGN_PATTERN.findall(alignment_line)][1:]
+            result.append((eng_token_count, eng_id_lists))
     return result
 
 
@@ -67,28 +81,19 @@ if __name__ == '__main__':
         print('USAGE (example): python3 wordalign.py nld-eng.dict eng.tok.off nld.tok.off',
               file=sys.stderr)
         sys.exit(1)
-    eng_pairs = read_offset_file(engoff_path)
-    for_pairs = read_offset_file(foroff_path)
-    with open(dict_path) as f:
-        for comment_line, eng_line, alignment_line in util.chunk(3, f):
-            eng_tokens_count = len(eng_line.split())
-            if eng_tokens_count > 100:
-                print('WARNING: sentence too long for GIZA++, skipping', file=sys.stderr)
-            else:
-                # Get a list of lists of target token IDs aligned to each
-                # source token ID. The first element is the list of unaligned
-                # target token IDs, so we ignore that.
-                eng_id_lists = [[int(i) for i in l.split()] for l
-                                in ALIGN_PATTERN.findall(alignment_line)][1:]
-                for_tokens_count = len(eng_id_lists)
-                eng_pairs_sentence = eng_pairs[:eng_tokens_count]
-                del eng_pairs[:eng_tokens_count]
-                for_pairs_sentence = for_pairs[:for_tokens_count]
-                del for_pairs[:for_tokens_count]
-                for for_pair, eng_id_list in zip(for_pairs_sentence, eng_id_lists):
-                    print(for_pair[0], for_pair[1], 
-                          trgid_list2english_offsets(eng_id_list, eng_pairs_sentence),
-                          sep ='\t')
-            print()
-    assert len(eng_pairs) == 0
-    assert len(for_pairs) == 0
+    dict_data = read_dict_file(dict_path)
+    eng_sentences = read_offset_file(engoff_path)
+    for_sentences = read_offset_file(foroff_path)
+    assert len(dict_data) == len(eng_sentences)
+    assert len(dict_data) == len(for_sentences)
+    for (eng_token_count, eng_id_lists), eng_sentence, for_sentence in \
+            zip(dict_data, eng_sentences, for_sentences):
+        if eng_token_count != len(eng_sentence) or \
+                len(eng_id_lists) != len(for_sentence):
+            print('WARNING: token counts don\'t match, skipping', file=sys.stderr)
+        else:
+            for (for_from, for_to), eng_id_list in zip(for_sentence, eng_id_lists):
+                print(for_from, for_to, 
+                      trgid_list2english_offsets(eng_id_list, eng_sentence),
+                      sep ='\t')
+        print()
