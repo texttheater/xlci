@@ -207,6 +207,7 @@ parse(ForeignSentences) :-
            -> format(user_error, 'WARNING: ~w different parses projected for sentence ~w~n', [Length, SID])
            ;  true
            ),
+	   format(user_error, 'INFO: parse projected for sentence ~w~n', [SID]),
            Agenda = [item([Node], [], _, true)|_],
 	   %with_output_to(user_error, pp_node(Node)),
            node2ccg(Node, CCG),
@@ -224,6 +225,7 @@ load_source_derivations(EnglishDerFile) :-
       ),
       (  catch(
 	     ( der2node(Der, Node),
+	       format(user_error, 'INFO: analyzed English derivation ~w for category projection~n', [SID]),
                % Get lexical category objects:
                forall(
                    ( sub_node(node(CO, Sem, t(_Form, Atts0), []), Node),
