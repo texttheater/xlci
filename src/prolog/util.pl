@@ -135,23 +135,24 @@ substitute_sub_term(_, Term, Term).
 %
 %	Splits List at element Sep into Lists. At most Max splits are made. Max
 %	can be infinity.
-split([], _Sep, _Max, []) :-
+split([], _Sep, _Max, []) :- % empty list -> no blocks
   !.
-split(List, _Sep, 0, [List]) :-
+split(List, _Sep, 0, [List]) :- % no more splits -> rest is one block
   !.
-split([Sep], Sep, _Max, [[]]) :-
-  !.
-split([Sep|List], Sep, Max, Lists) :-
+split(List, Sep, Max, [Block|Blocks]) :-
+  list_sep_block_rest(List, Sep, Block, Rest), % a split is made
   !,
   dec(Max, NewMax),
-  split(List, Sep, NewMax, Lists).
-split([Elem], _Sep, _Max,[[Elem]]) :-
+  (  Rest = []
+  -> Blocks = [[]] % separator was at the end -> last block is empty
+  ;  split(Rest, Sep, NewMax, Blocks) % separator was not at the end -> recursion
+  ).
+split(List, _Sep, _Max, [List]). % no separator left -> rest is one block
+
+list_sep_block_rest([Sep|Rest], Sep, [], Rest) :-
   !.
-split([Elem, Sep|List], Sep, Max,[[Elem]|Rest]) :-
-  !,
-  split([Sep|List], Sep, Max, Rest).
-split([Elem|List], Sep, Max, [[Elem|First]|Rest]) :-
-  split(List, Sep, Max, [First|Rest]).
+list_sep_block_rest([First|Rest0], Sep, [First|Block], Rest) :-
+  list_sep_block_rest(Rest0, Sep, Block, Rest).
 
 %%	rsplit(+List, +Sep, +Max, -Lists)
 %
