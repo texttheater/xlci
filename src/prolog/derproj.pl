@@ -323,8 +323,7 @@ sentence_from_to(Sentence, From, To) :-
 
 replace_indices(ForFrom, ForTo, Sem0, Sem, boxer) :-
   substitute_sub_term(P:[_|_]:C, P:[ForFrom, ForTo]:C, Sem0, Sem).
-replace_indices(ForFrom, ForTo, _Sem0, Atom, offsets) :-
-  term_to_atom(ForFrom-ForTo, Atom).
+replace_indices(ForFrom, ForTo, _Sem0, ForFrom-ForTo, offsets).
 
 dump_source :-
   forall(

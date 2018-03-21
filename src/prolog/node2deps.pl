@@ -6,6 +6,7 @@
 :- use_module(slashes).
 :- use_module(util, [
     argv/1,
+    substitute_sub_term/3,
     term_in_file/3,
     write_term_vars/2]).
 
@@ -29,7 +30,7 @@ node2deps(Rest, SID) :-
   node2deps(Rest, NewSID).
 
 node2deps(node(_, Sem0, _, _Children)) :-
-  betaConvert(Sem0, Sem),
+  beta_convert(Sem0, Sem),
   sem_head_deps(Sem, _, Deps),
   write_term_vars(Deps, [quoted(true)]).
 
@@ -49,3 +50,17 @@ sem_head_deps(lam(_, Scope), Head, Deps) :-
   !,
   sem_head_deps(Scope, Head, Deps).
 sem_head_deps(Sem, Sem, []).
+
+beta_convert(Sem0, Sem) :-
+  substitute_sub_term(pair_atom, Sem0, Sem1),
+  betaConvert(Sem1, Sem2),
+  substitute_sub_term(atom_pair, Sem2, Sem).
+
+pair_atom(Pair, Atom) :-
+  nonvar(Pair),
+  Pair = _-_,
+  term_to_atom(Pair, Atom).
+
+atom_pair(Atom, From-To) :-
+  atom(Atom),
+  read_term_from_atom(Atom, From-To, []).
