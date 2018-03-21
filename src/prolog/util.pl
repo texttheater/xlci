@@ -24,7 +24,9 @@
     write_atom_quoted/1,
     write_clause/1,
     write_clause/2,
-    write_clause/3]).
+    write_clause/3,
+    write_term_vars/2,
+    write_term_vars/3]).
 
 %%	argv(-List) is det.
 %
@@ -175,7 +177,7 @@ dec(Int, Dec) :-
 %
 %	Utility for writing Prolog database clauses to files etc. Writes the given
 %	Term to Stream (=current_output= for the 1-arg version), followed by a
-%	period and a newline. The Options are passed to =|write_term/3|=.
+%	period and a newline. The Options are passed to =|write_term_vars/3|=.
 write_clause(Term) :-
   write_clause(current_output, Term).
 
@@ -183,10 +185,19 @@ write_clause(Stream, Term) :-
   write_clause(Stream, Term, []).
 
 write_clause(Stream, Term, Options) :-
-  numbervars(Term, 0, _, [singletons(true)]),
-  write_term(Stream, Term, [numbervars(true), quoted(true)|Options]),
-  write(Stream, '.'),
-  nl(Stream).
+  write_term_vars(Stream, Term, [quoted(true), fullstop(true), nl(true)|Options]).
+
+%%	write_term_vars(+Term, +Options)
+%%	write_term_vars(+Stream, +Term, +Options)
+%
+%	Like =|write_term/2|=, but automatically assigns variable names.
+write_term_vars(Term, Options) :-
+  write_term_vars(current_output, Term, Options).
+
+write_term_vars(Stream, Term, Options) :-
+  \+ \+ ( numbervars(Term, 0, _, [singletons(true)]),
+          write_term(Stream, Term, [numbervars(true)|Options])
+        ).
 
 %%	subsumed_sub_term(?Template,+Term)
 %
