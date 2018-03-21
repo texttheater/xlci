@@ -205,8 +205,8 @@ write_term_vars(Stream, Term, Options) :-
 %	more specific. In other words, succeeds once for every subterm of
 %	Term that is subsumed by Template.
 subsumed_sub_term(Template,Term) :-
-  sub_term(Sub,Term),
-  subsumes_term(Template,Sub),
+  sub_term(Sub, Term),
+  subsumes_term(Template, Sub),
   Template = Sub.
 
 :- meta_predicate enumerate(-, 0).

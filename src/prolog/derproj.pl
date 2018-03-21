@@ -7,7 +7,9 @@
 :- use_module(ccg, [
     node2ccg/2]).
 :- use_module(der, [
-    der2node/2,
+    der2node/2]).
+:- use_module(node, [
+    node_from_to/3,
     pp_node/1]).
 :- use_module(slashes).
 :- use_module(sr, [
@@ -306,16 +308,6 @@ sub_node(Node, Node).
 sub_node(Sub, node(_, _, _, Children)) :-
   member(Child, Children),
   sub_node(Sub, Child).
-
-node_from_to(node(_, _, t(_, Atts), []), From, To) :-
-  !,
-  member(from:From, Atts),
-  member(to:To, Atts).
-node_from_to(node(_, _, _, Children), From, To) :-
-  Children = [First|_],
-  node_from_to(First, From, _),
-  last(Children, Last),
-  node_from_to(Last, _, To).
 
 sentence_from_to(Sentence, From, To) :-
   Sentence = [tokoff(From, _, _, _)|_],

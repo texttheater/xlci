@@ -1,13 +1,13 @@
 :- module(der, [
     der2node/2,
-    node_co/2,
-    pp_der/1,
-    pp_node/1]).
+    pp_der/1]).
 
 :- use_module(cat, [
     strip_var_features/2]).
 :- use_module(catobj, [
     co_cat_ucat/3]).
+:- use_module(node, [
+    node_co/2]).
 :- use_module(slashes).
 :- use_module(util, [
     must/1,
@@ -160,8 +160,6 @@ der_cat(Der, Cat) :-
 % Boxer does add the variables to modifiers, so if we want to use Boxer output again,
 % we'll have to do something more clever.
 
-node_co(node(CO, _, _, _), CO).
-
 topcat(0, Cat, Cat) :-
   !.
 topcat(N, X/_, TopCat) :-
@@ -173,6 +171,3 @@ topcat(N, X\_, TopCat) :-
 
 pp_der(Der) :-
   print_indented(Der, [t(_, _, _, _), lam(_, _), _\_, _/_], [module(slashes)]).
-
-pp_node(Node) :-
-  print_indented(Node, [node(_, _, t(_, _), _), lam(_, _), app(_, _), _\_, _/_, co(_, _, _), comp(_, _), comp(_, _, _), tc(_)], [module(slashes), fullstop(true)]).

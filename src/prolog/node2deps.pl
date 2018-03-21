@@ -3,6 +3,16 @@
 
 :- use_module(boxer(betaConversionDRT), [
     betaConvert/2]).
+:- use_module(catobj, [
+    co2cat/2]).
+:- use_module(ccgbank, [
+    cat//1]).
+:- use_module(node, [
+    node_co/2,
+    node_rule/2,
+    node_sem/2,
+    node_from_to/3,
+    token_in_node/2]).
 :- use_module(slashes).
 :- use_module(util, [
     argv/1,
@@ -29,10 +39,28 @@ node2deps(Rest, SID) :-
   NewSID is SID + 1,
   node2deps(Rest, NewSID).
 
-node2deps(node(_, Sem0, _, _Children)) :-
+node2deps(Node) :-
+  node_sem(Node, Sem0),
   beta_convert(Sem0, Sem),
   sem_head_deps(Sem, _, Deps),
-  write_term_vars(Deps, [quoted(true)]).
+  sort(Deps, SortedDeps),
+  forall(
+      ( member((DFrom-DTo)-(HFrom-HTo), SortedDeps)
+      ),
+      ( token_in_node(DToken, Node),
+        node_from_to(DToken, DFrom, DTo),
+	node_rule(DToken, t(DForm, _)),
+	node_co(DToken, DCO),
+	co2cat(DCO, DCat),
+	phrase(cat(DCat), DCatCodes),
+	token_in_node(HToken, Node),
+	node_from_to(HToken, HFrom, HTo),
+	node_rule(HToken, t(HForm, _)),
+	node_co(HToken, HCO),
+	co2cat(HCO, HCat),
+	phrase(cat(HCat), HCatCodes),
+	format('~w\t~w\t~w\t~s\t~w\t~w\t~w\t~s~n', [DFrom, DTo, DForm, DCatCodes, HFrom, HTo, HForm, HCatCodes])
+      ) ).
 
 % TODO invert for modifiers? How?
 sem_head_deps(app(nil, B), BHead, BDeps) :-

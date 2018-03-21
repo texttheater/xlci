@@ -6,7 +6,7 @@
 
 :- use_module(catobj, [
     co2cat/2]).
-:- use_module(der, [
+:- use_module(node, [
     node_co/2]).
 :- use_module(slashes).
 :- use_module(util, [
