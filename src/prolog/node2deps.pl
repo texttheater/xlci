@@ -30,5 +30,22 @@ node2deps(Rest, SID) :-
 
 node2deps(node(_, Sem0, _, _Children)) :-
   betaConvert(Sem0, Sem),
-  write_term_vars(Sem, [fullstop(true), quoted(true)]).
+  sem_head_deps(Sem, _, Deps),
+  write_term_vars(Deps, [quoted(true)]).
 
+% TODO invert for modifiers? How?
+sem_head_deps(app(nil, B), BHead, BDeps) :-
+  !,
+  sem_head_deps(B, BHead, BDeps).
+sem_head_deps(app(A, B), AHead, Deps) :-
+  !,
+  sem_head_deps(A, AHead, ADeps),
+  (  var(B)
+  -> ADeps = Deps
+  ;  sem_head_deps(B, BHead, BDeps),
+     append([[BHead-AHead], ADeps, BDeps], Deps)
+  ).
+sem_head_deps(lam(_, Scope), Head, Deps) :-
+  !,
+  sem_head_deps(Scope, Head, Deps).
+sem_head_deps(Sem, Sem, []).
