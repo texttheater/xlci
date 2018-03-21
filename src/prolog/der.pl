@@ -175,4 +175,4 @@ pp_der(Der) :-
   print_indented(Der, [t(_, _, _, _), lam(_, _), _\_, _/_], [module(slashes)]).
 
 pp_node(Node) :-
-  print_indented(Node, [node(_, _, t(_, _), _), lam(_, _), app(_, _), _\_, _/_, co(_, _, _), comp(_, _), comp(_, _, _), tc(_)], [module(slashes)]).
+  print_indented(Node, [node(_, _, t(_, _), _), lam(_, _), app(_, _), _\_, _/_, co(_, _, _), comp(_, _), comp(_, _, _), tc(_)], [module(slashes), fullstop(true)]).

@@ -32,7 +32,9 @@
 :- dynamic target_typechanger/4.
 
 main :-
-  argv([EnglishDerFile, WordAlignFile, ForeignTokOffFile, EnglishTokOffFile]),
+  argv([EnglishDerFile, WordAlignFile, ForeignTokOffFile, EnglishTokOffFile, SemanticsFormat, OutputFormat]),
+  assertion(member(SemanticsFormat, ['boxer', 'offsets'])),
+  assertion(member(OutputFormat, ['parse.tags', 'node'])),
   % Load information from various sources:
   load_source_derivations(EnglishDerFile),
   %dump_source,
@@ -40,20 +42,20 @@ main :-
   tokoff_read_file(ForeignTokOffFile, ForeignSentences),
   tokoff_read_file(EnglishTokOffFile, EnglishSentences),
   % Project:
-  transfer_categories(ForeignSentences, EnglishSentences),
+  transfer_categories(ForeignSentences, EnglishSentences, SemanticsFormat),
   transfer_typechangers,
   flip_slashes,
   %dump_target,
-  parse(ForeignSentences),
+  create_derivations(ForeignSentences, OutputFormat),
   halt.
 main :-
-  format(user_error, 'USAGE (example): swipl -l derproj -g main en.der nl.wordalign nl.tok.off en.tok.off~n', []),
+  format(user_error, 'USAGE (example): swipl -l derproj -g main en.der nl.wordalign nl.tok.off en.tok.off boxer parse.tags~n', []),
   halt(1).
 
 %%% CORE PROJECTION PREDICATES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Asserts target_catobj/5 facts mapping target tokens to category objects.
-transfer_categories(ForeignSentences, EnglishSentences) :-
+transfer_categories(ForeignSentences, EnglishSentences, SemanticsFormat) :-
   forall(
       ( nth1(SID, ForeignSentences, ForeignSentence),
         member(tokoff(ForFrom, ForTo, _TokID, Token), ForeignSentence)
@@ -80,12 +82,12 @@ transfer_categories(ForeignSentences, EnglishSentences) :-
            ;  Parses = [_, _|_]
            -> format(user_error, 'WARNING: ambiguous phrase aligned to token "~w" (~w, ~w, ~w), skipping~n', [Token, SID, ForFrom, ForTo])
            ;  Parses = [item([node(CO, Sem0, _, _)], [], _, true)]
-           -> replace_indices(ForFrom, ForTo, Sem0, Sem),
+           -> replace_indices(ForFrom, ForTo, Sem0, Sem, SemanticsFormat),
               assertz(target_catobj(SID, ForFrom, ForTo, CO, Sem, [from:ForFrom, to:ForTo]))
            )
         ;  Pairs = [EngFrom-EngTo], % one token aligned, easy
            source_catobj(SID, EngFrom, EngTo, CO, Sem0, Atts)
-        -> replace_indices(ForFrom, ForTo, Sem0, Sem),
+        -> replace_indices(ForFrom, ForTo, Sem0, Sem, SemanticsFormat),
            assertz(target_catobj(SID, ForFrom, ForTo, CO, Sem, [from:ForFrom, to:ForTo|Atts]))
         ;  format(user_error, 'token "~w" (~w, ~w, ~w) one-to-one aligned but no category object found, skipping~n', [Token, SID, ForFrom, ForTo])
         )
@@ -181,7 +183,7 @@ flip_slashes_args(SID, X/Y, FlipX/Y) :-
 flip_slashes_args(SID, X\Y, FlipX\Y) :-
   flip_slashes_args(SID, X, FlipX).
 
-parse(ForeignSentences) :-
+create_derivations(ForeignSentences, Format) :-
   forall(
       ( nth1(SID, ForeignSentences, ForeignSentence)
       ),
@@ -210,8 +212,11 @@ parse(ForeignSentences) :-
 	   format(user_error, 'INFO: parse projected for sentence ~w~n', [SID]),
            Agenda = [item([Node], [], _, true)|_],
 	   %with_output_to(user_error, pp_node(Node)),
-           node2ccg(Node, CCG),
-           write_clause(current_output, ccg(SID, CCG), [module(slashes)])
+	   (  Format == node
+	   -> pp_node(node(SID, Node))
+	   ;  node2ccg(Node, CCG),
+              write_clause(current_output, ccg(SID, CCG), [module(slashes)])
+	   )
         )
       ) ).
 
@@ -316,8 +321,9 @@ sentence_from_to(Sentence, From, To) :-
   Sentence = [tokoff(From, _, _, _)|_],
   last(Sentence, tokoff(_, To, _, _)).
 
-replace_indices(ForFrom, ForTo, Sem0, Sem) :-
+replace_indices(ForFrom, ForTo, Sem0, Sem, boxer) :-
   substitute_sub_term(P:[_|_]:C, P:[ForFrom, ForTo]:C, Sem0, Sem).
+replace_indices(ForFrom, ForTo, _Sem0, ForFrom-ForTo, offsets).
 
 dump_source :-
   forall(
