@@ -4,7 +4,9 @@
 :- use_module(boxer(betaConversionDRT), [
     betaConvert/2]).
 :- use_module(catobj, [
-    co2cat/2]).
+    co2cat/2,
+    co_res_arg/3,
+    is_modifier_co/1]).
 :- use_module(ccgbank, [
     cat//1]).
 :- use_module(node, [
@@ -61,6 +63,42 @@ node2deps(Node) :-
 	phrase(cat(HCat), HCatCodes),
 	format('~w\t~w\t~w\t~s\t~w\t~w\t~w\t~s~n', [DFrom, DTo, DForm, DCatCodes, HFrom, HTo, HForm, HCatCodes])
       ) ).
+
+% TODO add argument to record dependencies
+node_head_stack_tr(node(_, _, tc(_), [D]), Head, [], no) :-
+  node_head_stack_tr(D, Head, [], no). % TODO nonempty stack or type raising possible?
+node_head_stack_tr(node(CO, Sem, t(Form, Atts), []), node(CO, Sem, t(Form, Atts), []), [], no).
+node_head_stack_tr(node(_, _, TR, [D]), Head, [], yes) :-
+  member(TR, [ftr, btr]),
+  node_head_stack_tr(D, Head, [], no). % TODO nonempty stack or type raising possible?
+node_head_stack_tr(node(CO, _, comp(N, Dir), Daughters), Head, Stack, no) :-
+  dir_daughters_d1_d2(Dir, Daughters, D1, D2),
+  node_head_stack_tr(D1, Head1, Stack1, _),
+  node_head_stack_tr(D2, Head2, Stack2, _),
+  (  is_modifier_co(CO)
+  -> Head = Head1
+  ;  Head = Head2
+  ),
+  node_co(D2, CO2),
+  n_co2_head2_stack2_stackargs(N, CO2, Head2, Stack2, StackArgs),
+  append(StackArgs, Stack1, Stack).
+
+dir_daughters_d1_d2(f, [D1, D2], D1, D2).
+dir_daughters_d1_d2(b, [D2, D1], D1, D2).
+
+n_co2_head2_stack2_stackargs(0, _, _, _, []) :-
+  !.
+n_co2_head2_stack2_stackargs(N, CO2, Head2, [StackArg|Stack2], [StackArg|StackArgs]) :-
+  M is N - 1,
+  n_co2_head2_stack2_stackargs(M, CO2, Head2, Stack2, StackArgs).
+n_co2_head2_stack2_stackargs(N, CO2, Head2, [], [Head2-Modifier|StackArgs]) :-
+  M is N - 1,
+  (  is_modifier_co(CO2)
+  -> Modifier = yes
+  ;  Modifier = no
+  ),
+  co_res_arg(CO2, ResCO, _),
+  n_co2_head2_stack2_stackargs(M, ResCO, Head2, [], StackArgs).
 
 % TODO invert for modifiers? How?
 sem_head_deps(app(nil, B), BHead, BDeps) :-

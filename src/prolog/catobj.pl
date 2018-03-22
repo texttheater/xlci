@@ -1,7 +1,9 @@
 :- module(catobj, [
     co2cat/2,
     co_cat_ucat/3,
-    functor_in/2]).
+    co_res_arg/3,
+    functor_in/2,
+    is_modifier_co/1]).
 
 /** <module> CCG category objects
 
@@ -68,3 +70,12 @@ co_cat_ucat(A/B, C/D, E/F) :-
 co_cat_ucat(A\B, C\D, E\F) :-
   co_cat_ucat(A, C, E),
   co_cat_ucat(B, D, F).
+
+is_modifier_co(CO) :-
+  co2cat(CO, X/X),
+  !.
+is_modifier_co(CO) :-
+  co2cat(CO, X\X).
+
+co_res_arg(Res/Arg, Res, Arg).
+co_res_arg(Res\Arg, Res, Arg).
