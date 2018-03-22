@@ -65,23 +65,36 @@ node2deps(Node) :-
       ) ).
 
 % TODO add argument to record dependencies
-node_head_stack_tr(node(_, _, tc(_), [D]), Head, [], no) :-
-  node_head_stack_tr(D, Head, [], no). % TODO nonempty stack or type raising possible?
-node_head_stack_tr(node(CO, Sem, t(Form, Atts), []), node(CO, Sem, t(Form, Atts), []), [], no).
-node_head_stack_tr(node(_, _, TR, [D]), Head, [], yes) :-
+node_head_stack_tr_deps(node(_, _, tc(_), [D]), Head, [], no, Deps) :-
+  node_head_stack_tr(D, Head, [], no, Deps). % TODO nonempty stack or type raising possible?
+node_head_stack_tr_deps(node(CO, Sem, t(Form, Atts), []), node(CO, Sem, t(Form, Atts), []), [], no, []).
+node_head_stack_tr_deps(node(_, _, TR, [D]), Head, [], yes, Deps) :-
   member(TR, [ftr, btr]),
-  node_head_stack_tr(D, Head, [], no). % TODO nonempty stack or type raising possible?
-node_head_stack_tr(node(CO, _, comp(N, Dir), Daughters), Head, Stack, no) :-
+  node_head_stack_tr_deps(D, Head, [], no, Deps). % TODO nonempty stack or type raising possible?
+node_head_stack_tr_deps(node(CO, _, comp(N, Dir), Daughters), Head, Stack, no, Deps) :-
   dir_daughters_d1_d2(Dir, Daughters, D1, D2),
-  node_head_stack_tr(D1, Head1, Stack1, _),
-  node_head_stack_tr(D2, Head2, Stack2, _),
-  (  is_modifier_co(CO)
-  -> Head = Head1
-  ;  Head = Head2
+  node_head_stack_tr_deps(D1, Head1, Stack1, TR1, Deps1),
+  node_head_stack_tr_deps(D2, Head2, Stack2, _, Deps2),
+  (  TR1 = yes
+  -> ( co_res_arg(CO, _, ArgCO),
+       (  is_modifier_cat(ArgCO)
+       -> Head = Head1,
+	  Dep = Head2-Head1
+       ;  Head = Head2,
+	  Dep = Head1-Head2
+       )
+     )
+  ;  (  is_modifier_cat(CO)
+     -> Head = Head2,
+        Dep = Head1-Head2
+     ;  Head = Head1,
+        Dep = Head2-Head1
+     )
   ),
   node_co(D2, CO2),
   n_co2_head2_stack2_stackargs(N, CO2, Head2, Stack2, StackArgs),
-  append(StackArgs, Stack1, Stack).
+  append(StackArgs, Stack1, Stack),
+  append([Deps1, [Dep], Deps2], Deps).
 
 dir_daughters_d1_d2(f, [D1, D2], D1, D2).
 dir_daughters_d1_d2(b, [D2, D1], D1, D2).
