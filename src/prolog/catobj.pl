@@ -84,7 +84,7 @@ co_res_arg(Res/Arg, Res, Arg).
 co_res_arg(Res\Arg, Res, Arg).
 
 cos_heads_deps(COs, Heads, Deps) :-
-  maplist(co_head_target_deps, COs, Heads, Heads, Depss),
+  maplist(co_head_target_deps, COs, Heads, Heads, TargetHeads, Depss),
   append(Depss, Deps).
 
 % FIXME When detecting modification, we use Arg as the new target head and pass
@@ -92,13 +92,13 @@ cos_heads_deps(COs, Heads, Deps) :-
 % to the modifier, not to the head. For example, in "Heather è una ragazza
 % molto bella", the CO for "una" thinks its argument's head is "molto" while
 % it's actually "ragazza".
-co_head_target_deps(CO, Head, TargetHead, [TargetHead-Arg|Deps]) :-
+co_head_target_deps(CO, Head, TargetHead0, TargetHead, [TargetHead0-Arg|Deps]) :-
   is_modifier_co(CO),
   co_res_arg(CO, Res, Arg),
   !,
-  co_head_target_deps(Res, Head, Arg, Deps).
-co_head_target_deps(CO, Head, TargetHead, [Arg-TargetHead|Deps]) :-
+  co_head_target_deps(Res, Head, Arg, TargetHead, Deps).
+co_head_target_deps(CO, Head, TargetHead0, TargetHead, [Arg-TargetHead0|Deps]) :-
   co_res_arg(CO, Res, Arg),
   !,
-  co_head_target_deps(Res, Head, TargetHead, Deps).
-co_head_target_deps(CO, CO, _, []).
+  co_head_target_deps(Res, Head, TargetHead0, TargetHead, Deps).
+co_head_target_deps(CO, CO, CO, CO, []).
