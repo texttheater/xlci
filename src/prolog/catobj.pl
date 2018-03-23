@@ -2,6 +2,7 @@
     co2cat/2,
     co_cat_ucat/3,
     co_res_arg/3,
+    cos_heads_deps/3,
     functor_in/2,
     is_modifier_co/1]).
 
@@ -23,6 +24,8 @@ object. For example, Cat might be =|s:dcl\np|= while UCat is =|s\np|=.
 */
 
 :- use_module(slashes).
+:- use_module(util, [
+    substitute_sub_term/3]).
 
 functor_in(CO, CO).
 functor_in(CO, X/_) :-
@@ -79,3 +82,23 @@ is_modifier_co(CO) :-
 
 co_res_arg(Res/Arg, Res, Arg).
 co_res_arg(Res\Arg, Res, Arg).
+
+cos_heads_deps(COs, Heads, Deps) :-
+  maplist(co_head_target_deps, COs, Heads, Heads, Depss),
+  append(Depss, Deps).
+
+% FIXME When detecting modification, we use Arg as the new target head and pass
+% it down, but not yet up. So CO's that take this CO as an argument still refer
+% to the modifier, not to the head. For example, in "Heather è una ragazza
+% molto bella", the CO for "una" thinks its argument's head is "molto" while
+% it's actually "ragazza".
+co_head_target_deps(CO, Head, TargetHead, [TargetHead-Arg|Deps]) :-
+  is_modifier_co(CO),
+  co_res_arg(CO, Res, Arg),
+  !,
+  co_head_target_deps(Res, Head, Arg, Deps).
+co_head_target_deps(CO, Head, TargetHead, [Arg-TargetHead|Deps]) :-
+  co_res_arg(CO, Res, Arg),
+  !,
+  co_head_target_deps(Res, Head, TargetHead, Deps).
+co_head_target_deps(CO, CO, _, []).

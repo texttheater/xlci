@@ -4,7 +4,8 @@
     node_rule/2,
     node_sem/2,
     pp_node/1,
-    token_in_node/2]).
+    token_in_node/2,
+    typechanger_in_node/2]).
 
 /** <module> Utilities for our =|node/4|= CCG derivation representation format
 */
@@ -35,6 +36,10 @@ token_in_node(Token, node(_, _, _, Children)) :-
   member(Child, Children),
   token_in_node(Token, Child).
 
+typechanger_in_node(NewCO-OldCO, node(NewCO, _, tc(_), [node(OldCO, _, _, _)])).
+typechanger_in_node(TC, node(_, _, _, Children)) :-
+  member(Child, Children),
+  typechanger_in_node(TC, Child).
+
 pp_node(Node) :-
   print_indented(Node, [node(_, _, t(_, _), _), lam(_, _), app(_, _), _\_, _/_, co(_, _, _), comp(_, _), comp(_, _, _), tc(_)], [module(slashes), fullstop(true)]).
-
