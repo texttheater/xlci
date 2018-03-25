@@ -86,7 +86,18 @@ co_res_arg(Res\Arg, Res, Arg).
 
 cos_tops_deps(COs, TopCOs, Deps) :-
   maplist(co_top_target_deps, COs, TopCOs, TopCOs, TargetTopCOs, Depss),
-  append(Depss, Deps).
+  append(Depss, Deps0),
+  maplist(target4top(TopCOs, TargetTopCOs), Deps0, Deps).
+
+target4top(TopCOs, TargetTopCOs, target(TopCO)-Head, TargetTopCO-Head) :-
+  !,
+  nth1(N, TopCOs, TopCO),
+  nth1(N, TargetTopCOs, TargetTopCO).
+target4top(TopCOs, TargetTopCOs, Dependent-target(TopCO), Dependent-TargetTopCO) :-
+  !,
+  nth1(N, TopCOs, TopCO),
+  nth1(N, TargetTopCOs, TargetTopCO).
+target4top(_, _, Dep, Dep).
 
 % FIXME When detecting modification, we use Arg as the new target head and pass
 % it down, but not yet up. So CO's that take this CO as an argument still refer
