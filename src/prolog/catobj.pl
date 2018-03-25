@@ -102,4 +102,4 @@ co_head_target_deps(CO, Head, TargetHead0, TargetHead, [Arg-TargetHead0|Deps]) :
   co_res_arg(CO, Res, Arg),
   !,
   co_head_target_deps(Res, Head, TargetHead0, TargetHead, Deps).
-co_head_target_deps(CO, CO, CO, CO, []).
+co_head_target_deps(CO, CO, TargetHead, TargetHead, []).
