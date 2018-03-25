@@ -4,7 +4,7 @@
 :- use_module(catobj, [
     co2cat/2,
     co_res_arg/3,
-    cos_heads_deps/3,
+    cos_tops_deps/3,
     is_modifier_co/1]).
 :- use_module(ccgbank, [
     cat//1]).
@@ -47,7 +47,7 @@ node2deps(Node) :-
   maplist(node_co, Tokens, TokenCOs),
   maplist(tc_newco_oldco, TCs, TCNewCOs, TCOldCOs),
   append(TokenCOs, TCNewCOs, COs),
-  cos_heads_deps(COs, TopCOs, Deps0),
+  cos_tops_deps(COs, TopCOs, Deps0),
   length(TokenCOs, L),
   length(TokenTopCOs, L),
   append(TokenTopCOs, TCTopCOs, TopCOs),
