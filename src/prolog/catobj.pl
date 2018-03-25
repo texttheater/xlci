@@ -104,12 +104,12 @@ target4top(_, _, Dep, Dep).
 % to the modifier, not to the head. For example, in "Heather è una ragazza
 % molto bella", the CO for "una" thinks its argument's head is "molto" while
 % it's actually "ragazza".
-co_top_target_deps(CO, TopCO, TargetTopCO0, TargetTopCO, [TargetTopCO0-Arg|Deps]) :-
+co_top_target_deps(CO, TopCO, TargetTopCO0, TargetTopCO, [TargetTopCO0-target(Arg)|Deps]) :-
   is_modifier_co(CO),
   co_res_arg(CO, Res, Arg),
   !,
   co_top_target_deps(Res, TopCO, Arg, TargetTopCO, Deps).
-co_top_target_deps(CO, TopCO, TargetTopCO0, TargetTopCO, [Arg-TargetTopCO0|Deps]) :-
+co_top_target_deps(CO, TopCO, TargetTopCO0, TargetTopCO, [target(Arg)-TargetTopCO0|Deps]) :-
   co_res_arg(CO, Res, Arg),
   !,
   co_top_target_deps(Res, TopCO, TargetTopCO0, TargetTopCO, Deps).
