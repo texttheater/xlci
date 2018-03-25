@@ -1,8 +1,6 @@
 :- module(node2deps, [
     main/0]).
 
-:- use_module(boxer(betaConversionDRT), [
-    betaConvert/2]).
 :- use_module(catobj, [
     co2cat/2,
     co_res_arg/3,
