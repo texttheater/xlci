@@ -7,6 +7,7 @@
     funsort/3,
     line_in_file/2,
     line_in_stream/2,
+    maplist/6,
     must/1,
     print_indented/2,
     print_indented/3,
@@ -401,3 +402,18 @@ must(Goal) :-
   !.
 must(Goal) :-
   throw(failed(Goal)).
+
+:- meta_predicate maplist(5, ?, ?, ?, ?, ?).
+
+%!  maplist(:Goal, ?List1, ?List2, ?List3, ?List4, ?List5)
+%
+%   As maplist/2, operating on  quintuples   of  elements  from five
+%   lists.
+
+maplist(Goal, List1, List2, List3, List4, List5) :-
+    maplist_(List1, List2, List3, List4, List5, Goal).
+
+maplist_([], [], [], [], [], _).
+maplist_([Elem1|Tail1], [Elem2|Tail2], [Elem3|Tail3], [Elem4|Tail4], [Elem5|Tail5], Goal) :-
+    call(Goal, Elem1, Elem2, Elem3, Elem4, Elem5),
+    maplist_(Tail1, Tail2, Tail3, Tail4, Tail5, Goal).

@@ -25,6 +25,7 @@ object. For example, Cat might be =|s:dcl\np|= while UCat is =|s\np|=.
 
 :- use_module(slashes).
 :- use_module(util, [
+    maplist/6,
     substitute_sub_term/3]).
 
 functor_in(CO, CO).
