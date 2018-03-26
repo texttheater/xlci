@@ -75,7 +75,7 @@ idle(item(Stack, Queue, TC, true), item(Stack, Queue, TC, true)).
 % Rule schemas are represented as comp(Degree, Direction, Crossed) where
 % Direction is f for forward or b for backward. Crossed is x if it's a
 % crossed compostion rule, h otherwise. Following EasyCCG, we do not allow
-% mixed-direction generalized composition.
+% mixed-direction generalized crossed composition.
 binary_rule(comp(0, f, h), X/Y, Y, X, Sem1, Sem2, app(Sem1, Sem2)).
 binary_rule(comp(0, b, h), Y, X\Y, X, Sem2, Sem1, app(Sem1, Sem2)).
 binary_rule(comp(1, f, h), X/Y, Y/Z, X/Z, Sem1, Sem2, lam(A, app(Sem1, app(Sem2, A)))).
@@ -103,7 +103,7 @@ binary_rule(comp(N, b, x), Y_/Z, X\Y, X_/Z, Sem1, Sem2, lam(A, Sem)) :-
   M is N - 1,
   binary_rule(comp(M, b, x), Y_, X\Y, X_, Sem1, app(Sem2, A), Sem).
 
-max_composition_degree(1). % TODO allow generalized composition?
+max_composition_degree(2). % Like EasyCCG
 
 %%	normal_form(+LRule, +RRule, +Rule)
 %
@@ -162,15 +162,3 @@ violates_nfc4(btr, SecondaryInputRule, Rule) :-
   
 violates_nfc5(ftr, comp(0, f, h)).
 violates_nfc5(btr, comp(0, b, h)).
-
-%%	node_span(+Node, -From, -To)
-%
-%	Measures the span of the node, relying on token attributes.
-node_span(node(_, _, t(_, Atts), []), From, To) :-
-  once(member(from:From, Atts)),
-  once(member(to:To, Atts)).
-node_span(node(_, _, _, Children), From, To) :-
-  Children = [FirstChild|_],
-  node_span(FirstChild, From, _),
-  last(Children, LastChild),
-  node_span(LastChild, _, To).

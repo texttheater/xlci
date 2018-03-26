@@ -14,6 +14,12 @@
     times/2,
     write_atom_quoted/1]).
 
+%%	node2ccg(+Node, -CCG)
+%
+%	Converts derivations from our internal format to EasyCCG's =boxer=
+%	output format. Does not support punctuation or coordination rules.
+%	Also, like EasyCCG, supports generalized composition only up to degree
+%	2.
 node2ccg(node(CO, _, comp(0, f, h), [Node1, Node2]), fa(Cat, Der1, Der2)) :-
   co2cat(CO, Cat),
   node2ccg(Node1, Der1),
@@ -35,6 +41,22 @@ node2ccg(node(CO, _, comp(1, b, h), [Node2, Node1]), bc(Cat, Der2, Der1)) :-
   node2ccg(Node2, Der2),
   node2ccg(Node1, Der1).
 node2ccg(node(CO, _, comp(1, b, x), [Node2, Node1]), bxc(Cat, Der2, Der1)) :-
+  co2cat(CO, Cat),
+  node2ccg(Node2, Der2),
+  node2ccg(Node1, Der1).
+node2ccg(node(CO, _, comp(2, f, h), [Node1, Node2]), gfc(Cat, Der1, Der2)) :-
+  co2cat(CO, Cat),
+  node2ccg(Node2, Der2),
+  node2ccg(Node1, Der1).
+node2ccg(node(CO, _, comp(2, f, x), [Node1, Node2]), gfxc(Cat, Der1, Der2)) :-
+  co2cat(CO, Cat),
+  node2ccg(Node2, Der2),
+  node2ccg(Node1, Der1).
+node2ccg(node(CO, _, comp(2, b, h), [Node2, Node1]), gbc(Cat, Der2, Der1)) :-
+  co2cat(CO, Cat),
+  node2ccg(Node2, Der2),
+  node2ccg(Node1, Der1).
+node2ccg(node(CO, _, comp(2, b, x), [Node2, Node1]), gbxc(Cat, Der2, Der1)) :-
   co2cat(CO, Cat),
   node2ccg(Node2, Der2),
   node2ccg(Node1, Der1).
