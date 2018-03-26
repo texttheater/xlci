@@ -45,6 +45,7 @@ node2deps(Node) :-
   findall(Token, token_in_node(Token, Node), Tokens),
   findall(TC, typechanger_in_node(TC, Node), TCs),
   maplist(node_co, Tokens, TokenCOs),
+  %forall(member(TokenCO, TokenCOs), write_term_vars(TokenCO, [nl(true), module(slashes)])),
   maplist(tc_newco_oldco, TCs, TCNewCOs, TCOldCOs),
   append(TokenCOs, TCNewCOs, COs),
   cos_tops_deps(COs, TopCOs, Deps0),
@@ -87,5 +88,10 @@ write_dep(Tokens, TopCOs, Deps, DToken, TopCO) :-
   co2cat(HCO, HCat),
   phrase(cat(HCat), HCatCodes),
   format('~w\t~w\t~w\t~s\t~w\t~w\t~w\t~s~n', [DFrom, DTo, DForm, DCatCodes, HFrom, HTo, HForm, HCatCodes]).
-write_dep(_, _, _, _, _) :-
-  write('***'),nl.
+write_dep(_, _, _, DToken, _) :-
+  node_from_to(DToken, DFrom, DTo),
+  node_rule(DToken, t(DForm, _)),
+  node_co(DToken, DCO),
+  co2cat(DCO, DCat),
+  phrase(cat(DCat), DCatCodes),
+  format('~w\t~w\t~w\t~s~n', [DFrom, DTo, DForm, DCatCodes]).

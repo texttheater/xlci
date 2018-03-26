@@ -26,7 +26,8 @@ object. For example, Cat might be =|s:dcl\np|= while UCat is =|s\np|=.
 :- use_module(slashes).
 :- use_module(util, [
     maplist/6,
-    substitute_sub_term/3]).
+    substitute_sub_term/3,
+    write_term_vars/2]).
 
 functor_in(CO, CO).
 functor_in(CO, X/_) :-
@@ -87,30 +88,56 @@ co_res_arg(Res\Arg, Res, Arg).
 cos_tops_deps(COs, TopCOs, Deps) :-
   maplist(co_top_target_deps, COs, TopCOs, TopCOs, TargetTopCOs, Depss),
   append(Depss, Deps0),
-  maplist(target4top(TopCOs, TargetTopCOs), Deps0, Deps).
+  %nl,
+  %forall(member(TopCO, TopCOs), write_term_vars(TopCO, [nl(true), module(slashes)])),
+  %nl,
+  %forall(member(TargetTopCO, TargetTopCOs), write_term_vars(TargetTopCO, [nl(true), module(slashes)])),
+  %nl,
+  %forall(member(Deps, Depss), write_term_vars(Deps, [nl(true), module(slashes)])),
+  %nl,
+  resolve_targets(Deps0, TopCOs, TargetTopCOs, Deps).
 
-target4top(TopCOs, TargetTopCOs, target(TopCO)-Head, TargetTopCO-Head) :-
-  !,
+% Resolve dependent:
+resolve_targets([target(TopCO)-Head|Deps0], TopCOs, TargetTopCOs, [TargetTopCO-Head|Deps]) :-
   nth1(N, TopCOs, TopCO),
-  nth1(N, TargetTopCOs, TargetTopCO).
-target4top(TopCOs, TargetTopCOs, Dependent-target(TopCO), Dependent-TargetTopCO) :-
   !,
+  nth1(N, TargetTopCOs, TargetTopCO),
+  resolve_targets(Deps0, TopCOs, TargetTopCOs, Deps).
+% Dependent is not the TopCO of any word - happens with complex arguments. Skip.
+resolve_targets([target(_)-_|Deps0], TopCOs, TargetTopCOs, Deps) :-
+  !,
+  resolve_targets(Deps0, TopCOs, TargetTopCOs, Deps).
+% Resolve head:
+resolve_targets([Dependent-target(TopCO)|Deps0], TopCOs, TargetTopCOs, [Dependent-TargetTopCO|Deps]) :-
   nth1(N, TopCOs, TopCO),
-  nth1(N, TargetTopCOs, TargetTopCO).
-target4top(_, _, Dep, Dep).
+  !,
+  nth1(N, TargetTopCOs, TargetTopCO),
+  resolve_targets(Deps0, TopCOs, TargetTopCOs, Deps).
+% Head is not the TopCO of any word - happens with complex arguments. Skip.
+resolve_targets([_-target(_)|Deps0], TopCOs, TargetTopCOs, Deps) :-
+  !,
+  resolve_targets(Deps0, TopCOs, TargetTopCOs, Deps).
+% Dependency already resolved:
+resolve_targets([Dep|Deps0], TopCOs, TargetTopCOs, [Dep|Deps]) :-
+  resolve_targets(Deps0, TopCOs, TargetTopCOs, Deps).
+% End of recursion:
+resolve_targets([], _, _, []).
 
-% FIXME When detecting modification, we use Arg as the new target head and pass
-% it down, but not yet up. So CO's that take this CO as an argument still refer
-% to the modifier, not to the head. For example, in "Heather è una ragazza
-% molto bella", the CO for "una" thinks its argument's head is "molto" while
-% it's actually "ragazza".
-co_top_target_deps(CO, TopCO, TargetTopCO0, TargetTopCO, [TargetTopCO0-target(Arg)|Deps]) :-
+co_top_target_deps(CO, TopCO, TargetTopCO0, TargetTopCO, [TargetTopCO0-target(ArgTopCO)|Deps]) :-
   is_modifier_co(CO),
-  co_res_arg(CO, Res, Arg),
+  co_res_arg(CO, ResCO, ArgCO),
   !,
-  co_top_target_deps(Res, TopCO, Arg, TargetTopCO, Deps).
-co_top_target_deps(CO, TopCO, TargetTopCO0, TargetTopCO, [target(Arg)-TargetTopCO0|Deps]) :-
-  co_res_arg(CO, Res, Arg),
+  co_top(ArgCO, ArgTopCO), % TODO should we do target calculations here??
+  co_top_target_deps(ResCO, TopCO, ArgTopCO, TargetTopCO, Deps).
+co_top_target_deps(CO, TopCO, TargetTopCO0, TargetTopCO, [target(ArgTopCO)-TargetTopCO0|Deps]) :-
+  co_res_arg(CO, ResCO, ArgCO),
   !,
-  co_top_target_deps(Res, TopCO, TargetTopCO0, TargetTopCO, Deps).
+  co_top(ArgCO, ArgTopCO), % TODO should we do target calculations here??
+  co_top_target_deps(ResCO, TopCO, TargetTopCO0, TargetTopCO, Deps).
 co_top_target_deps(CO, CO, TargetTopCO, TargetTopCO, []).
+
+co_top(CO, TopCO) :-
+  co_res_arg(CO, ResCO, _),
+  !,
+  co_top(ResCO, TopCO).
+co_top(CO, CO).

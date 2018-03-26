@@ -7,6 +7,8 @@
     funsort/3,
     line_in_file/2,
     line_in_stream/2,
+    log/1,
+    log/2,
     maplist/6,
     must/1,
     print_indented/2,
@@ -26,6 +28,7 @@
     write_clause/1,
     write_clause/2,
     write_clause/3,
+    write_term_vars/1,
     write_term_vars/2,
     write_term_vars/3]).
 
@@ -188,10 +191,15 @@ write_clause(Stream, Term) :-
 write_clause(Stream, Term, Options) :-
   write_term_vars(Stream, Term, [quoted(true), fullstop(true), nl(true)|Options]).
 
+%%	write_term_vars(+Term)
 %%	write_term_vars(+Term, +Options)
 %%	write_term_vars(+Stream, +Term, +Options)
 %
-%	Like =|write_term/2|=, but automatically assigns variable names.
+%	Like =|write_term/[1,2,3]|=, but automatically assigns variable names.
+
+write_term_vars(Term) :-
+  write_term_vars(Term, []).
+
 write_term_vars(Term, Options) :-
   write_term_vars(current_output, Term, Options).
 
@@ -417,3 +425,14 @@ maplist_([], [], [], [], [], _).
 maplist_([Elem1|Tail1], [Elem2|Tail2], [Elem3|Tail3], [Elem4|Tail4], [Elem5|Tail5], Goal) :-
     call(Goal, Elem1, Elem2, Elem3, Elem4, Elem5),
     maplist_(Tail1, Tail2, Tail3, Tail4, Tail5, Goal).
+
+%%	log(+Format, +Args)
+%%	log(+Term)
+%
+%	Quick and dirty logging facility.
+
+log(Format, Args) :-
+  format(user_error, Format, Args).
+
+log(Term) :-
+  write_term_vars(user_error, Term, [quoted(true), nl(true)]).
