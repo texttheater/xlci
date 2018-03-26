@@ -220,4 +220,4 @@ topcat(N, X\_, TopCat) :-
   topcat(M, X, TopCat).
 
 pp_der(Der) :-
-  print_indented(Der, [t(_, _, _, _), lam(_, _), _\_, _/_], [module(slashes)]).
+  print_indented(Der, [t(_, _, _, _), lam(_, _), _\_, _/_], [module(slashes), fullstop(true)]).

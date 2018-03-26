@@ -22,7 +22,7 @@
     must/1,
     split/4,
     substitute_sub_term/4,
-    term_in_file/2,
+    term_in_file/3,
     write_clause/1,
     write_clause/3]).
 
@@ -228,7 +228,7 @@ create_derivations(ForeignSentences, Format) :-
 % pairs to lexical category objects and to typechangers.
 load_source_derivations(EnglishDerFile) :-
   forall(
-      ( term_in_file(der(SID, Der), EnglishDerFile)
+      ( term_in_file(der(SID, Der), EnglishDerFile, [module(slashes)])
       ),
       (  catch(
 	     ( der2node(Der, Node),

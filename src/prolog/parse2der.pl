@@ -5,6 +5,8 @@
 :- module(parse2boxer, [
     main/0]).
 
+:- use_module(der, [
+    pp_der/1]).
 :- use_module(slashes).
 :- use_module(util, [
     argv/1,
@@ -19,7 +21,7 @@ main :-
       ( term_in_file(ccg(ID, CCG), ParseFile, [module(slashes)])
       ),
       ( substitute_sub_term(translate, CCG, Der),
-	write_clause(der(ID, Der))
+	pp_der(der(ID, Der))
       ) ),	
   halt(0).
 main :-
