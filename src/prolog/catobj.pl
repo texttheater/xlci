@@ -88,6 +88,7 @@ co_res_arg(Res\Arg, Res, Arg).
 cos_tops_deps(COs, TopCOs, Deps) :-
   maplist(co_top_target_deps, COs, TopCOs, TopCOs, TargetTopCOs, Depss),
   append(Depss, Deps0),
+  %forall(member(CO, COs), write_term_vars(CO, [nl(true), module(slashes)])),
   %nl,
   %forall(member(TopCO, TopCOs), write_term_vars(TopCO, [nl(true), module(slashes)])),
   %nl,
@@ -97,31 +98,28 @@ cos_tops_deps(COs, TopCOs, Deps) :-
   %nl,
   resolve_targets(Deps0, TopCOs, TargetTopCOs, Deps).
 
-% Resolve dependent:
 resolve_targets([target(TopCO)-Head|Deps0], TopCOs, TargetTopCOs, [TargetTopCO-Head|Deps]) :-
-  nth1(N, TopCOs, TopCO),
-  !,
-  nth1(N, TargetTopCOs, TargetTopCO),
-  resolve_targets(Deps0, TopCOs, TargetTopCOs, Deps).
-% Dependent is not the TopCO of any word - happens with complex arguments. Skip.
-resolve_targets([target(_)-_|Deps0], TopCOs, TargetTopCOs, Deps) :-
+  resolve_target(TopCO, TopCOs, TargetTopCOs, TargetTopCO),
   !,
   resolve_targets(Deps0, TopCOs, TargetTopCOs, Deps).
-% Resolve head:
 resolve_targets([Dependent-target(TopCO)|Deps0], TopCOs, TargetTopCOs, [Dependent-TargetTopCO|Deps]) :-
+  resolve_target(TopCO, TopCOs, TargetTopCOs, TargetTopCO),
+  !,
+  resolve_targets(Deps0, TopCOs, TargetTopCOs, Deps).
+% TODO skip dependencies that are marked as to be resolved but can't be resolved?
+resolve_targets([_|Deps0], TopCOs, TargetTopCOs, Deps) :-
+  resolve_targets(Deps0, TopCOs, TargetTopCOs, Deps).
+resolve_targets([], _, _, []).
+
+resolve_target(TopCO, TopCOs, TargetTopCOs, TargetTopCO) :-
   nth1(N, TopCOs, TopCO),
   !,
-  nth1(N, TargetTopCOs, TargetTopCO),
-  resolve_targets(Deps0, TopCOs, TargetTopCOs, Deps).
-% Head is not the TopCO of any word - happens with complex arguments. Skip.
-resolve_targets([_-target(_)|Deps0], TopCOs, TargetTopCOs, Deps) :-
-  !,
-  resolve_targets(Deps0, TopCOs, TargetTopCOs, Deps).
-% Dependency already resolved:
-resolve_targets([Dep|Deps0], TopCOs, TargetTopCOs, [Dep|Deps]) :-
-  resolve_targets(Deps0, TopCOs, TargetTopCOs, Deps).
-% End of recursion:
-resolve_targets([], _, _, []).
+  nth1(N, TargetTopCOs, TargetTopCO0),
+  (  TopCO == TargetTopCO0 % fixpoint reached
+  -> TargetTopCO0 = TargetTopCO
+  ;  resolve_target(TargetTopCO0, TopCOs, TargetTopCOs, TargetTopCO)
+  ).
+resolve_target(TopCO, _, _, TopCO).
 
 co_top_target_deps(CO, TopCO, TargetTopCO0, TargetTopCO, [TargetTopCO0-target(ArgTopCO)|Deps]) :-
   is_modifier_co(CO),
