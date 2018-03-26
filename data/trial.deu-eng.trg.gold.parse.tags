@@ -1,0 +1,17 @@
+ccg(1,
+ ba(s:dcl,
+  fa(s:dcl,
+   fa(s/s,
+    t((s/s)/np, 'Laut', [lemma:'laut', from:0, to:4]),
+    lx(np, n,
+     t(n, 'Radio', [lemma:'radio', from:5, to:10]))),
+   fa(s:dcl,
+    bxc(s:dcl/(s:b\np),
+     t((s:dcl/np)/(s:b\np), 'wird', [lemma:'wird', from:11, to:15]),
+     lx(s:dcl\(s:dcl/np), np,
+      t(np, 'es', [lemma:'es', from:16, to:18]))),
+    fa(s:b\np,
+     t((s\np)/(s\np), 'morgen', [lemma:'morgen', from:19, to:25]),
+     t(s:b\np, 'regnen', [lemma:'regnen', from:26, to:32])))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:32, to:33]))).
+

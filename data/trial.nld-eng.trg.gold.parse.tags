@@ -1,0 +1,17 @@
+ccg(1,
+ ba(s:wq,
+  fa(s:wq,
+   t(s:wq/s:q, 'Waarom', [lemma:'waarom', from:0, to:6]),
+   fa(s:q,
+    bxc(s:q/(s:adj\np),
+     bxc(s:q/(s:adj\np),
+      fa(s:q/(s:adj\np),
+       t((s:q/(s:adj\np))/np, 'ben', [lemma:'ben', from:7, to:10]),
+       t(np, 'je', [lemma:'je', from:11, to:13])),
+      fa(s\s,
+       t((s\s)/(s\s), 'zo', [lemma:'zo', from:14, to:16]),
+       t(s\s, 'laat', [lemma:'laat', from:17, to:21]))),
+     t(s\s, 'nog', [lemma:'nog', from:22, to:25])),
+    t(s:adj\np, 'op', [lemma:'op', from:26, to:28]))),
+  t(s:wq\s:wq, '?', [lemma:'?', from:28, to:29]))).
+
