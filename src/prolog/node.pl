@@ -42,4 +42,4 @@ typechanger_in_node(TC, node(_, _, _, Children)) :-
   typechanger_in_node(TC, Child).
 
 pp_node(Node) :-
-  print_indented(Node, [node(_, _, t(_, _), _), lam(_, _), app(_, _), _\_, _/_, co(_, _, _), comp(_, _), comp(_, _, _), tc(_)], [module(slashes), fullstop(true)]).
+  print_indented(Node, [node(_, _, t(_, _), _), lam(_, _), app(_, _), _\_, _/_, co(_, _, _), comp(_, _, _), tc(_)], [module(slashes), fullstop(true)]).

@@ -51,7 +51,7 @@ der2node_(tc(_NewCat, _OldCat, Sem, ODer), node(_X, Sem, tc(nil), [ONode])) :- %
   must(der2node_(ODer, ONode)),
   der_cat(ODer, Cat2),
   co_cat_ucat(Y, Cat2, Cat2).
-der2node_(fa(_Cat, Sem, Der1, Der2), node(Y, Sem, comp(0, f), [Node1, Node2])) :-
+der2node_(fa(_Cat, Sem, Der1, Der2), node(Y, Sem, comp(0, f, h), [Node1, Node2])) :-
   Der1 = t(lam(A, B), C/D, _, _),
   A == B,
   C == D,
@@ -63,7 +63,7 @@ der2node_(fa(_Cat, Sem, Der1, Der2), node(Y, Sem, comp(0, f), [Node1, Node2])) :
   der_cat(Der2, Cat2),
   der_cat(Node1, _/UCat2),
   co_cat_ucat(Y, Cat2, UCat2).
-der2node_(fa(_Cat, Sem, Der1, Der2), node(X, Sem, comp(0, f), [Node1, Node2])) :-
+der2node_(fa(_Cat, Sem, Der1, Der2), node(X, Sem, comp(0, f, h), [Node1, Node2])) :-
   node_co(Node1, X/Y),
   node_co(Node2, Y),
   must(der2node_(Der1, Node1)),
@@ -77,7 +77,7 @@ der2node_(ba(_Cat, Sem, ODer, t(TCSem, _\UCat2, 'ø', _)), node(_X, Sem, tc(TCSe
   must(der2node_(ODer, ONode)),
   der_cat(ODer, Cat2),
   co_cat_ucat(Y, Cat2, UCat2).
-der2node_(ba(_Cat, Sem, Der2, Der1), node(Y, Sem, comp(0, b), [Node2, Node1])) :-
+der2node_(ba(_Cat, Sem, Der2, Der1), node(Y, Sem, comp(0, b, h), [Node2, Node1])) :-
   Der1 = t(lam(A, B), C\D, _, _),
   A == B,
   C == D,
@@ -89,7 +89,7 @@ der2node_(ba(_Cat, Sem, Der2, Der1), node(Y, Sem, comp(0, b), [Node2, Node1])) :
   der_cat(Der2, Cat2),
   der_cat(Der1, _\UCat2),
   co_cat_ucat(Y, Cat2, UCat2).
-der2node_(ba(_Cat, Sem, Der2, Der1), node(X, Sem, comp(0, b), [Node2, Node1])) :-
+der2node_(ba(_Cat, Sem, Der2, Der1), node(X, Sem, comp(0, b, h), [Node2, Node1])) :-
   node_co(Node2, Y),
   node_co(Node1, X\Y),
   must(der2node_(Der2, Node2)),
@@ -97,7 +97,7 @@ der2node_(ba(_Cat, Sem, Der2, Der1), node(X, Sem, comp(0, b), [Node2, Node1])) :
   der_cat(Der2, Cat2),
   der_cat(Der1, _\UCat2),
   co_cat_ucat(Y, Cat2, UCat2).
-der2node_(fc(_Cat, Sem, Der1, Der2), node(X/Z, Sem, comp(1, f), [Node1, Node2])) :-
+der2node_(fc(_Cat, Sem, Der1, Der2), node(X/Z, Sem, comp(1, f, h), [Node1, Node2])) :-
   node_co(Node1, X/Y),
   node_co(Node2, Y/Z),
   must(der2node_(Der1, Node1)),
@@ -106,7 +106,7 @@ der2node_(fc(_Cat, Sem, Der1, Der2), node(X/Z, Sem, comp(1, f), [Node1, Node2]))
   topcat(1, Cat2, TopCat),
   der_cat(Der1, _/UCat2),
   co_cat_ucat(Y, TopCat, UCat2). % FIXME: Y can be a functor??
-der2node_(bc(_Cat, Sem, Der2, Der1), node(X\Z, Sem, comp(1, b), [Node2, Node1])) :-
+der2node_(bc(_Cat, Sem, Der2, Der1), node(X\Z, Sem, comp(1, b, h), [Node2, Node1])) :-
   node_co(Node2, Y\Z),
   node_co(Node1, X\Y),
   must(der2node_(Der2, Node2)),
@@ -115,7 +115,7 @@ der2node_(bc(_Cat, Sem, Der2, Der1), node(X\Z, Sem, comp(1, b), [Node2, Node1]))
   topcat(1, Cat2, TopCat),
   der_cat(Der1, _\UCat2),
   co_cat_ucat(Y, TopCat, UCat2).
-der2node_(fxc(_Cat, Sem, Der1, Der2), node(X\Z, Sem, comp(1, f), [Node1, Node2])) :-
+der2node_(fxc(_Cat, Sem, Der1, Der2), node(X\Z, Sem, comp(1, f, x), [Node1, Node2])) :-
   node_co(Node1, X/Y),
   node_co(Node2, Y\Z),
   must(der2node_(Der1, Node1)),
@@ -124,7 +124,7 @@ der2node_(fxc(_Cat, Sem, Der1, Der2), node(X\Z, Sem, comp(1, f), [Node1, Node2])
   topcat(1, Cat2, TopCat),
   der_cat(Der1, _/UCat2),
   co_cat_ucat(Y, TopCat, UCat2).
-der2node_(bxc(_Cat, Sem, Der2, Der1), node(X/Z, Sem, comp(1, b), [Node2, Node1])) :-
+der2node_(bxc(_Cat, Sem, Der2, Der1), node(X/Z, Sem, comp(1, b, x), [Node2, Node1])) :-
   node_co(Node2, Y/Z),
   node_co(Node1, X\Y),
   must(der2node_(Der2, Node2)),
