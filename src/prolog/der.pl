@@ -101,7 +101,7 @@ der2node_(ba(_Cat, Sem, Der2, Der1), node(X, Sem, comp(0, b, h), [Node2, Node1])
   der_cat(Der2, Cat2),
   der_ucat(Der1, _\UCat2),
   co_cat_ucat(Y, Cat2, UCat2).
-der2node_(fc(_Cat, Sem, Der1, Der2), node(X/Z, Sem, comp(1, f, h), [Node1, Node2])) :-
+der2node_(fc(_/_, Sem, Der1, Der2), node(X/Z, Sem, comp(1, f, h), [Node1, Node2])) :-
   node_co(Node1, X/Y),
   node_co(Node2, Y/Z),
   must(der2node_(Der1, Node1)),
@@ -110,7 +110,7 @@ der2node_(fc(_Cat, Sem, Der1, Der2), node(X/Z, Sem, comp(1, f, h), [Node1, Node2
   topcat(1, Cat2, TopCat),
   der_ucat(Der1, _/UCat2),
   co_cat_ucat(Y, TopCat, UCat2).
-der2node_(bc(_Cat, Sem, Der2, Der1), node(X\Z, Sem, comp(1, b, h), [Node2, Node1])) :-
+der2node_(bc(_\_, Sem, Der2, Der1), node(X\Z, Sem, comp(1, b, h), [Node2, Node1])) :-
   node_co(Node2, Y\Z),
   node_co(Node1, X\Y),
   must(der2node_(Der2, Node2)),
@@ -119,7 +119,7 @@ der2node_(bc(_Cat, Sem, Der2, Der1), node(X\Z, Sem, comp(1, b, h), [Node2, Node1
   topcat(1, Cat2, TopCat),
   der_ucat(Der1, _\UCat2),
   co_cat_ucat(Y, TopCat, UCat2).
-der2node_(gfc(_Cat, Sem, Der1, Der2), node((X/Z2)/Z1, Sem, comp(2, f, h), [Node1, Node2])) :-
+der2node_(gfc((_/_)/_, Sem, Der1, Der2), node((X/Z2)/Z1, Sem, comp(2, f, h), [Node1, Node2])) :-
   node_co(Node1, X/Y),
   node_co(Node2, (Y/Z2)/Z1),
   must(der2node_(Der1, Node1)),
@@ -128,7 +128,8 @@ der2node_(gfc(_Cat, Sem, Der1, Der2), node((X/Z2)/Z1, Sem, comp(2, f, h), [Node1
   topcat(2, Cat2, TopCat),
   der_ucat(Der1, _/UCat2),
   co_cat_ucat(Y, TopCat, UCat2).
-der2node_(gbc(_Cat, Sem, Der2, Der1), node((X\Z2)\Z1, Sem, comp(2, b, h), [Node2, Node1])) :-
+% TODO additional clause for deviant middle slash?
+der2node_(gbc((_\_)\_, Sem, Der2, Der1), node((X\Z2)\Z1, Sem, comp(2, b, h), [Node2, Node1])) :-
   node_co(Node2, (Y\Z2)\Z1),
   node_co(Node1, X\Y),
   must(der2node_(Der2, Node2)),
@@ -137,7 +138,8 @@ der2node_(gbc(_Cat, Sem, Der2, Der1), node((X\Z2)\Z1, Sem, comp(2, b, h), [Node2
   topcat(2, Cat2, TopCat),
   der_ucat(Der1, _\UCat2),
   co_cat_ucat(Y, TopCat, UCat2).
-der2node_(fxc(_Cat, Sem, Der1, Der2), node(X\Z, Sem, comp(1, f, x), [Node1, Node2])) :-
+% TODO additional clause for deviant middle slash?
+der2node_(fxc(_\_, Sem, Der1, Der2), node(X\Z, Sem, comp(1, f, x), [Node1, Node2])) :-
   node_co(Node1, X/Y),
   node_co(Node2, Y\Z),
   must(der2node_(Der1, Node1)),
@@ -146,7 +148,7 @@ der2node_(fxc(_Cat, Sem, Der1, Der2), node(X\Z, Sem, comp(1, f, x), [Node1, Node
   topcat(1, Cat2, TopCat),
   der_ucat(Der1, _/UCat2),
   co_cat_ucat(Y, TopCat, UCat2).
-der2node_(bxc(_Cat, Sem, Der2, Der1), node(X/Z, Sem, comp(1, b, x), [Node2, Node1])) :-
+der2node_(bxc(_/_, Sem, Der2, Der1), node(X/Z, Sem, comp(1, b, x), [Node2, Node1])) :-
   node_co(Node2, Y/Z),
   node_co(Node1, X\Y),
   must(der2node_(Der2, Node2)),
@@ -155,7 +157,7 @@ der2node_(bxc(_Cat, Sem, Der2, Der1), node(X/Z, Sem, comp(1, b, x), [Node2, Node
   topcat(1, Cat2, TopCat),
   der_ucat(Der1, _\UCat2),
   co_cat_ucat(Y, TopCat, UCat2).
-der2node_(gfxc(_Cat, Sem, Der1, Der2), node((X\Z2)\Z1, Sem, comp(2, f, x), [Node1, Node2])) :-
+der2node_(gfxc((_\_)\_, Sem, Der1, Der2), node((X\Z2)\Z1, Sem, comp(2, f, x), [Node1, Node2])) :-
   node_co(Node1, X/Y),
   node_co(Node2, (Y\Z2)\Z1),
   must(der2node_(Der1, Node1)),
@@ -164,7 +166,8 @@ der2node_(gfxc(_Cat, Sem, Der1, Der2), node((X\Z2)\Z1, Sem, comp(2, f, x), [Node
   topcat(2, Cat2, TopCat),
   der_ucat(Der1, _/UCat2),
   co_cat_ucat(Y, TopCat, UCat2).
-der2node_(gbxc(_Cat, Sem, Der2, Der1), node((X/Z2)/Z1, Sem, comp(2, b, x), [Node2, Node1])) :-
+% TODO additional clause for deviant middle slash?
+der2node_(gbxc((_/_)/_, Sem, Der2, Der1), node((X/Z2)/Z1, Sem, comp(2, b, x), [Node2, Node1])) :-
   node_co(Node2, (Y/Z2)/Z1),
   node_co(Node1, X\Y),
   must(der2node_(Der2, Node2)),
@@ -173,6 +176,7 @@ der2node_(gbxc(_Cat, Sem, Der2, Der1), node((X/Z2)/Z1, Sem, comp(2, b, x), [Node
   topcat(2, Cat2, TopCat),
   der_ucat(Der1, _\UCat2),
   co_cat_ucat(Y, TopCat, UCat2).
+% TODO additional clause for deviant middle slash?
 %der2node_(conj(Cat\Cat, CSem, t(TSem, conj:Cat, Form, Atts), Der2), Node) :-
 %  must(der2node_(fa(Cat\Cat, CSem, t(TSem, (Cat\Cat)/Cat, Form, Atts), Der2), Node)). % HACK
 der2node_(ftr(_Cat, _OldCat, Sem, Der), node(X/(X\Y), Sem, ftr, [Node])) :-
