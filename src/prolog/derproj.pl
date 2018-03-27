@@ -266,18 +266,21 @@ load_wordalign_file(WordAlignFile) :-
       ( forall(
 	    ( member(Line, Block)
 	    ),
-	    ( must(split(Line, 9, infinity, [ForeignFromCodes, ForeignToCodes, EnglishOffsetsCodes])),
-	      number_codes(ForeignFrom, ForeignFromCodes),
-	      number_codes(ForeignTo, ForeignToCodes),
-	      must(split(EnglishOffsetsCodes, 32, infinity, PairCodess)),
-	      findall(EnglishFrom-EnglishTo,
-	          ( member(PairCodes, PairCodess),
-	            must(split(PairCodes, 44, infinity, [EnglishFromCodes, EnglishToCodes])),
-	            number_codes(EnglishFrom, EnglishFromCodes),
-	            number_codes(EnglishTo, EnglishToCodes)
-	          ), EnglishOffsetsList),
+	    ( line_wordalign(Line, ForeignFrom, ForeignTo, EnglishOffsetsList),
 	      assertz(wordalign(SID, ForeignFrom, ForeignTo, EnglishOffsetsList))
             ) ) ) ).
+
+line_wordalign(Line, ForeignFrom, ForeignTo, EnglishOffsetsList) :-
+  must(split(Line, 9, infinity, [ForeignFromCodes, ForeignToCodes, EnglishOffsetsCodes])),
+  number_codes(ForeignFrom, ForeignFromCodes),
+  number_codes(ForeignTo, ForeignToCodes),
+  must(split(EnglishOffsetsCodes, 32, infinity, PairCodess)),
+  findall(EnglishFrom-EnglishTo,
+      ( member(PairCodes, PairCodess),
+        must(split(PairCodes, 44, infinity, [EnglishFromCodes, EnglishToCodes])),
+        number_codes(EnglishFrom, EnglishFromCodes),
+        number_codes(EnglishTo, EnglishToCodes)
+      ), EnglishOffsetsList).
 
 %%% HELPERS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
