@@ -128,7 +128,15 @@ der2node_(gfc((_/_)/_, Sem, Der1, Der2), node((X/Z2)/Z1, Sem, comp(2, f, h), [No
   topcat(2, Cat2, TopCat),
   der_ucat(Der1, _/UCat2),
   co_cat_ucat(Y, TopCat, UCat2).
-% TODO additional clause for deviant middle slash?
+der2node_(gfc((_/_)\_, Sem, Der1, Der2), node((X/Z2)\Z1, Sem, comp(2, f, h), [Node1, Node2])) :-
+  node_co(Node1, X/Y),
+  node_co(Node2, (Y/Z2)\Z1),
+  must(der2node_(Der1, Node1)),
+  must(der2node_(Der2, Node2)),
+  der_cat(Der2, Cat2),
+  topcat(2, Cat2, TopCat),
+  der_ucat(Der1, _/UCat2),
+  co_cat_ucat(Y, TopCat, UCat2).
 der2node_(gbc((_\_)\_, Sem, Der2, Der1), node((X\Z2)\Z1, Sem, comp(2, b, h), [Node2, Node1])) :-
   node_co(Node2, (Y\Z2)\Z1),
   node_co(Node1, X\Y),
@@ -138,7 +146,15 @@ der2node_(gbc((_\_)\_, Sem, Der2, Der1), node((X\Z2)\Z1, Sem, comp(2, b, h), [No
   topcat(2, Cat2, TopCat),
   der_ucat(Der1, _\UCat2),
   co_cat_ucat(Y, TopCat, UCat2).
-% TODO additional clause for deviant middle slash?
+der2node_(gbc((_\_)/_, Sem, Der2, Der1), node((X\Z2)/Z1, Sem, comp(2, b, h), [Node2, Node1])) :-
+  node_co(Node2, (Y\Z2)/Z1),
+  node_co(Node1, X\Y),
+  must(der2node_(Der2, Node2)),
+  must(der2node_(Der1, Node1)),
+  der_cat(Der2, Cat2),
+  topcat(2, Cat2, TopCat),
+  der_ucat(Der1, _\UCat2),
+  co_cat_ucat(Y, TopCat, UCat2).
 der2node_(fxc(_\_, Sem, Der1, Der2), node(X\Z, Sem, comp(1, f, x), [Node1, Node2])) :-
   node_co(Node1, X/Y),
   node_co(Node2, Y\Z),
@@ -166,7 +182,15 @@ der2node_(gfxc((_\_)\_, Sem, Der1, Der2), node((X\Z2)\Z1, Sem, comp(2, f, x), [N
   topcat(2, Cat2, TopCat),
   der_ucat(Der1, _/UCat2),
   co_cat_ucat(Y, TopCat, UCat2).
-% TODO additional clause for deviant middle slash?
+der2node_(gfxc((_\_)/_, Sem, Der1, Der2), node((X\Z2)/Z1, Sem, comp(2, f, x), [Node1, Node2])) :-
+  node_co(Node1, X/Y),
+  node_co(Node2, (Y\Z2)/Z1),
+  must(der2node_(Der1, Node1)),
+  must(der2node_(Der2, Node2)),
+  der_cat(Der2, Cat2),
+  topcat(2, Cat2, TopCat),
+  der_ucat(Der1, _/UCat2),
+  co_cat_ucat(Y, TopCat, UCat2).
 der2node_(gbxc((_/_)/_, Sem, Der2, Der1), node((X/Z2)/Z1, Sem, comp(2, b, x), [Node2, Node1])) :-
   node_co(Node2, (Y/Z2)/Z1),
   node_co(Node1, X\Y),
@@ -176,7 +200,15 @@ der2node_(gbxc((_/_)/_, Sem, Der2, Der1), node((X/Z2)/Z1, Sem, comp(2, b, x), [N
   topcat(2, Cat2, TopCat),
   der_ucat(Der1, _\UCat2),
   co_cat_ucat(Y, TopCat, UCat2).
-% TODO additional clause for deviant middle slash?
+der2node_(gbxc((_/_)\_, Sem, Der2, Der1), node((X/Z2)\Z1, Sem, comp(2, b, x), [Node2, Node1])) :-
+  node_co(Node2, (Y/Z2)\Z1),
+  node_co(Node1, X\Y),
+  must(der2node_(Der2, Node2)),
+  must(der2node_(Der1, Node1)),
+  der_cat(Der2, Cat2),
+  topcat(2, Cat2, TopCat),
+  der_ucat(Der1, _\UCat2),
+  co_cat_ucat(Y, TopCat, UCat2).
 %der2node_(conj(Cat\Cat, CSem, t(TSem, conj:Cat, Form, Atts), Der2), Node) :-
 %  must(der2node_(fa(Cat\Cat, CSem, t(TSem, (Cat\Cat)/Cat, Form, Atts), Der2), Node)). % HACK
 der2node_(ftr(_Cat, _OldCat, Sem, Der), node(X/(X\Y), Sem, ftr, [Node])) :-
