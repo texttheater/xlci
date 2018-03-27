@@ -5,14 +5,15 @@
     der2node/2]).
 :- use_module(node, [
     pp_node/1]).
+:- use_module(slashes).
 :- use_module(util, [
     argv/1,
-    term_in_file/2]).
+    term_in_file/3]).
 
 main :-
   argv([DerFile]),
   forall(
-      ( term_in_file(der(SID, Der), DerFile)
+      ( term_in_file(der(SID, Der), DerFile, [module(slashes)])
       ),
       ( der2node(Der, Node),
         pp_node(node(SID, Node))
