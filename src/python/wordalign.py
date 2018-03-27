@@ -62,38 +62,51 @@ def read_offset_file(path):
     return result
 
 
-def read_dict_file(path):
+def read_dict_file(path, nbest_out):
     """Returns a list of pairs (eng_token_count, eng_id_lists)."""
     result = []
+    old_sentence_number = 0
     with open(path) as f:
         for comment_line, eng_line, alignment_line in util.chunk(3, f):
-            eng_token_count = len(eng_line.split())
-            eng_id_lists = [[int(i) for i in l.split()] for l
-                            in ALIGN_PATTERN.findall(alignment_line)][1:]
-            result.append((eng_token_count, eng_id_lists))
+            assert comment_line.startswith('# Sentence pair (')
+            index = comment_line.index(')')
+            sentence_number = int(comment_line[17:index])
+            if sentence_number != old_sentence_number:
+                assert sentence_number == old_sentence_number + 1
+                if sentence_number > 1:
+                    result.append(sentence_alignments)
+                sentence_alignments = []
+            if len(sentence_alignments) < nbest_out:
+                old_sentence_number = sentence_number
+                eng_token_count = len(eng_line.split())
+                eng_id_lists = [[int(i) for i in l.split()] for l
+                                in ALIGN_PATTERN.findall(alignment_line)][1:]
+                sentence_alignments.append((eng_token_count, eng_id_lists))
+    result.append(sentence_alignments)
     return result
 
 
 if __name__ == '__main__':
     try:
-        _, dict_path, engoff_path, foroff_path = sys.argv
+        _, dict_path, engoff_path, foroff_path, nbest_out = sys.argv
+        nbest_out = int(nbest_out)
     except ValueError:
-        print('USAGE (example): python3 wordalign.py nld-eng.dict eng.tok.off nld.tok.off',
+        print('USAGE (example): python3 wordalign.py nld-eng.dict eng.tok.off nld.tok.off 3',
               file=sys.stderr)
         sys.exit(1)
-    dict_data = read_dict_file(dict_path)
+    dict_data = read_dict_file(dict_path, nbest_out)
     eng_sentences = read_offset_file(engoff_path)
     for_sentences = read_offset_file(foroff_path)
     assert len(dict_data) == len(eng_sentences)
     assert len(dict_data) == len(for_sentences)
-    for (eng_token_count, eng_id_lists), eng_sentence, for_sentence in \
-            zip(dict_data, eng_sentences, for_sentences):
-        if eng_token_count != len(eng_sentence) or \
-                len(eng_id_lists) != len(for_sentence):
-            print('WARNING: token counts don\'t match, skipping', file=sys.stderr)
-        else:
-            for (for_from, for_to), eng_id_list in zip(for_sentence, eng_id_lists):
-                print(for_from, for_to, 
-                      trgid_list2english_offsets(eng_id_list, eng_sentence),
-                      sep ='\t')
+    for alignments, eng_sentence, for_sentence in zip(dict_data, eng_sentences, for_sentences):
+        for eng_token_count, eng_id_lists in alignments:
+            if eng_token_count != len(eng_sentence) or \
+                    len(eng_id_lists) != len(for_sentence):
+                print('WARNING: token counts don\'t match, skipping', file=sys.stderr)
+            else:
+                for (for_from, for_to), eng_id_list in zip(for_sentence, eng_id_lists):
+                    print(for_from, for_to, 
+                          trgid_list2english_offsets(eng_id_list, eng_sentence),
+                          sep ='\t')
         print()
