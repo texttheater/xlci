@@ -2,6 +2,7 @@
     argv/1,
     atom_upper/2,
     codes//2,
+    dedup/2,
     enumerate/2,
     enumerate/3,
     funsort/3,
@@ -413,7 +414,7 @@ must(Goal) :-
 
 :- meta_predicate maplist(5, ?, ?, ?, ?, ?).
 
-%!  maplist(:Goal, ?List1, ?List2, ?List3, ?List4, ?List5)
+%%  maplist(:Goal, ?List1, ?List2, ?List3, ?List4, ?List5)
 %
 %   As maplist/2, operating on  quintuples   of  elements  from five
 %   lists.
@@ -436,3 +437,21 @@ log(Format, Args) :-
 
 log(Term) :-
   write_term_vars(user_error, Term, [quoted(true), nl(true)]).
+
+%%	dedup(+List, -Deduplicated)
+%
+%	Takes a ground list as input and outputs the same list, but with all
+%	2nd and up occurrences of the same element removed. Does not change the
+%	order of the remaining elements.
+%
+%	Behavior on non-ground terms is undefined.
+dedup(List, Deduplicated) :-
+  dedup(List, [], Deduplicated).
+
+dedup([], _, []).
+dedup([First|Rest0], Seen, Rest) :-
+  member(First, Seen),
+  !,
+  dedup(Rest0, Seen, Rest).
+dedup([First|Rest0], Seen, [First|Rest]) :-
+  dedup(Rest0, [First|Seen], Rest).

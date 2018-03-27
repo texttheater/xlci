@@ -18,12 +18,13 @@
     tokoff_read_file/2]).
 :- use_module(util, [
     argv/1,
+    dedup/2,
     line_in_file/2,
     must/1,
     split/4,
     substitute_sub_term/4,
     term_in_file/3,
-    write_clause/1,
+    write_clause/2,
     write_clause/3]).
 
 :- dynamic source_sentence_catobj/2.
@@ -39,15 +40,16 @@ main :-
   assertion(member(OutputFormat, ['parse.tags', 'node'])),
   % Load information from various sources:
   load_source_derivations(EnglishDerFile),
-  %dump_source,
+  dump_source,
   load_wordalign_file(WordAlignFile),
+  dump_wordalign,
   tokoff_read_file(ForeignTokOffFile, ForeignSentences),
   tokoff_read_file(EnglishTokOffFile, EnglishSentences),
   % Project:
   transfer_categories(ForeignSentences, EnglishSentences, SemanticsFormat),
   transfer_typechangers,
   flip_slashes,
-  %dump_target,
+  dump_target,
   create_derivations(ForeignSentences, OutputFormat),
   halt.
 main :-
@@ -62,38 +64,41 @@ transfer_categories(ForeignSentences, EnglishSentences, SemanticsFormat) :-
       ( nth1(SID, ForeignSentences, ForeignSentence),
         member(tokoff(ForFrom, ForTo, _TokID, Token), ForeignSentence)
       ),
-      ( findall(EngFrom-EngTo,
-            ( wordalign(SID, ForFrom, ForTo, EnglishOffsets),
-              member(EngFrom-EngTo, EnglishOffsets)
-            ), Pairs),
-        (  Pairs = [] % nothing aligned
-        -> format(user_error, 'nothing aligned to token "~w" (~w, ~w, ~w), skipping~n', [Token, SID, ForFrom, ForTo])
-        ;  Pairs = [_, _|_] % more than one token aligned, need to combine them
-        -> findall(EngTokoff,
-               ( member(EngFrom-EngTo, Pairs),
-                 once(
-                     ( nth1(SID, EnglishSentences, EnglishSentence),
-                       member(EngTokoff, EnglishSentence),
-                       EngTokoff = tokoff(EngFrom, EngTo, _, _)
-                     ) )
-               ), EngPhrase),
-           make_item(source_catobj, source_typechanger, SID, EngPhrase, Item),
-           parse([Item], Parses),
-           (  Parses = []
-           -> format(user_error, 'no parse for phrase aligned to token "~w" (~w, ~w, ~w), skipping~n', [Token, SID, ForFrom, ForTo])
-           ;  Parses = [_, _|_]
-           -> format(user_error, 'WARNING: ambiguous phrase aligned to token "~w" (~w, ~w, ~w), skipping~n', [Token, SID, ForFrom, ForTo])
-           ;  Parses = [item([node(CO, Sem0, _, _)], [], _, true)]
-           -> replace_indices(ForFrom, ForTo, Sem0, Sem, SemanticsFormat),
-              assertz(target_catobj(SID, ForFrom, ForTo, CO, Sem, [from:ForFrom, to:ForTo]))
-           )
-        ;  Pairs = [EngFrom-EngTo], % one token aligned, easy
-           source_catobj(SID, EngFrom, EngTo, CO, Sem0, Atts)
-        -> replace_indices(ForFrom, ForTo, Sem0, Sem, SemanticsFormat),
-           assertz(target_catobj(SID, ForFrom, ForTo, CO, Sem, [from:ForFrom, to:ForTo|Atts]))
-        ;  format(user_error, 'token "~w" (~w, ~w, ~w) one-to-one aligned but no category object found, skipping~n', [Token, SID, ForFrom, ForTo])
-        )
-      ) ).
+      ( forall(
+	    ( wordalign(SID, ForFrom, ForTo, EnglishOffsets)
+	    ),
+	    ( findall(EngFrom-EngTo,
+                ( wordalign(SID, ForFrom, ForTo, EnglishOffsets),
+                  member(EngFrom-EngTo, EnglishOffsets)
+                ), Pairs),
+              (  Pairs = [] % nothing aligned
+              -> true % TODO warn when nothing is aligned to a token in *any* alignment?
+              ;  Pairs = [_, _|_] % more than one token aligned, need to combine them
+              -> findall(EngTokoff,
+                     ( member(EngFrom-EngTo, Pairs),
+                       once(
+                           ( nth1(SID, EnglishSentences, EnglishSentence),
+                             member(EngTokoff, EnglishSentence),
+                             EngTokoff = tokoff(EngFrom, EngTo, _, _)
+                           ) )
+                     ), EngPhrase),
+                 make_item(source_catobj, source_typechanger, SID, EngPhrase, Item),
+                 parse([Item], Parses),
+                 (  Parses = []
+                 -> format(user_error, 'no parse for phrase aligned to token "~w" (~w, ~w, ~w), skipping~n', [Token, SID, ForFrom, ForTo])
+                 ;  Parses = [_, _|_]
+                 -> format(user_error, 'WARNING: ambiguous phrase aligned to token "~w" (~w, ~w, ~w), skipping~n', [Token, SID, ForFrom, ForTo])
+                 ;  Parses = [item([node(CO, Sem0, _, _)], [], _, true)]
+                 -> replace_indices(ForFrom, ForTo, Sem0, Sem, SemanticsFormat),
+                    assertz(target_catobj(SID, ForFrom, ForTo, CO, Sem, [from:ForFrom, to:ForTo]))
+                 )
+              ;  Pairs = [EngFrom-EngTo], % one token aligned, easy
+                 source_catobj(SID, EngFrom, EngTo, CO, Sem0, Atts)
+              -> replace_indices(ForFrom, ForTo, Sem0, Sem, SemanticsFormat),
+                 assertz(target_catobj(SID, ForFrom, ForTo, CO, Sem, [from:ForFrom, to:ForTo|Atts]))
+              ;  format(user_error, 'token "~w" (~w, ~w, ~w) one-to-one aligned but no category object found, skipping~n', [Token, SID, ForFrom, ForTo])
+              )
+	    ) ) ) ).
 
 % Asserts target_typechanger/3 facts mapping target tokens to typechangers.
 transfer_typechangers :-
@@ -263,12 +268,13 @@ load_wordalign_file(WordAlignFile) :-
   forall(
       ( nth1(SID, Blocks, Block)
       ),
-      ( forall(
-	    ( member(Line, Block)
-	    ),
-	    ( line_wordalign(Line, ForeignFrom, ForeignTo, EnglishOffsetsList),
-	      assertz(wordalign(SID, ForeignFrom, ForeignTo, EnglishOffsetsList))
-            ) ) ) ).
+      ( findall(wordalign(SID, ForeignFrom, ForeignTo, EnglishOffsetsList),
+	    ( member(Line, Block),
+	      line_wordalign(Line, ForeignFrom, ForeignTo, EnglishOffsetsList)
+	    ), Clauses0),
+	dedup(Clauses0, Clauses),
+	maplist(assertz, Clauses)
+      ) ).
 
 line_wordalign(Line, ForeignFrom, ForeignTo, EnglishOffsetsList) :-
   must(split(Line, 9, infinity, [ForeignFromCodes, ForeignToCodes, EnglishOffsetsCodes])),
@@ -319,6 +325,13 @@ sentence_from_to(Sentence, From, To) :-
 replace_indices(ForFrom, ForTo, Sem0, Sem, boxer) :-
   substitute_sub_term(P:[_|_]:C, P:[ForFrom, ForTo]:C, Sem0, Sem).
 replace_indices(ForFrom, ForTo, _Sem0, ForFrom-ForTo, offsets).
+
+dump_wordalign :-
+  forall(
+      ( wordalign(SID, ForeignFrom, ForeignTo, EnglishOffsetsList)
+      ),
+      ( write_clause(user_error, wordalign(SID, ForeignFrom, ForeignTo, EnglishOffsetsList))
+      ) ).
 
 dump_source :-
   forall(
