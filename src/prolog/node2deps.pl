@@ -31,7 +31,8 @@ main :-
   format(user_error, 'USAGE: swipl -l node2deps -g main NODEFILE~n', []),
   halt(1).
 
-node2deps([], _).
+node2deps([], _) :-
+  nl.
 node2deps([node(SID, Node)|Rest], SID) :-
   !,
   node2deps(Node),
