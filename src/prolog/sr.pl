@@ -74,36 +74,20 @@ idle(item(Stack, Queue, TC, true), item(Stack, Queue, TC, true)).
 
 % Rule schemas are represented as comp(Degree, Direction, Crossed) where
 % Direction is f for forward or b for backward. Crossed is x if it's a
-% crossed compostion rule, h otherwise. Following EasyCCG, we do not allow
-% mixed-direction generalized crossed composition.
+% crossed compostion rule, h otherwise. Following EasyCCG, we limit the
+% composition degree to 2.
 binary_rule(comp(0, f, h), X/Y, Y, X, Sem1, Sem2, app(Sem1, Sem2)).
 binary_rule(comp(0, b, h), Y, X\Y, X, Sem2, Sem1, app(Sem1, Sem2)).
 binary_rule(comp(1, f, h), X/Y, Y/Z, X/Z, Sem1, Sem2, lam(A, app(Sem1, app(Sem2, A)))).
 binary_rule(comp(1, b, h), Y\Z, X\Y, X\Z, Sem2, Sem1, lam(A, app(Sem1, app(Sem2, A)))).
 binary_rule(comp(1, f, x), X/Y, Y\Z, X\Z, Sem1, Sem2, lam(A, app(Sem1, app(Sem2, A)))).
 binary_rule(comp(1, b, x), Y/Z, X\Y, X/Z, Sem2, Sem1, lam(A, app(Sem1, app(Sem2, A)))).
-binary_rule(comp(N, f, h), X/Y, Y_/Z, X_/Z, Sem1, Sem2, lam(A, Sem)) :-
-  max_composition_degree(Max),
-  between(2, Max, N),
-  M is N - 1,
-  binary_rule(comp(M, f, h), X/Y, Y_, X_, Sem1, app(Sem2, A), Sem).
-binary_rule(comp(N, b, h), Y_\Z, X\Y, X_\Z, Sem1, Sem2, lam(A, Sem)) :-
-  max_composition_degree(Max),
-  between(2, Max, N),
-  M is N - 1,
-  binary_rule(comp(M, b, h), Y_, X\Y, X_, Sem1, app(Sem2, A), Sem).
-binary_rule(comp(N, f, x), X/Y, Y_\Z, X_\Z, Sem1, Sem2, lam(A, Sem)) :-
-  max_composition_degree(Max),
-  between(2, Max, N),
-  M is N - 1,
-  binary_rule(comp(M, f, x), X/Y, Y_, X_, Sem1, app(Sem2, A), Sem).
-binary_rule(comp(N, b, x), Y_/Z, X\Y, X_/Z, Sem1, Sem2, lam(A, Sem)) :-
-  max_composition_degree(Max),
-  between(2, Max, N),
-  M is N - 1,
-  binary_rule(comp(M, b, x), Y_, X\Y, X_, Sem1, app(Sem2, A), Sem).
-
-max_composition_degree(2). % Like EasyCCG
+binary_rule(comp(2, f, h), X/Y, (Y/Z2)/Z1, (X/Z2)/Z1, Sem1, Sem2, lam(A, lam(B, app(Sem1, app(app(Sem2, A), B))))).
+binary_rule(comp(2, b, h), (Y\Z2)\Z1, X\Y, (X\Z2)\Z1, Sem2, Sem1, lam(A, lam(B, app(Sem1, app(app(Sem2, A), B))))).
+binary_rule(comp(2, f, x), X/Y, (Y\Z2)\Z1, (X\Z2)\Z1, Sem1, Sem2, lam(A, lam(B, app(Sem1, app(app(Sem2, A), B))))).
+binary_rule(comp(2, b, x), (Y/Z2)/Z1, X\Y, (X/Z2)/Z1, Sem2, Sem1, lam(A, lam(B, app(Sem1, app(app(Sem2, A), B))))).
+binary_rule(comp(2, f, x), X/Y, (Y\Z2)/Z1, (X\Z2)/Z1, Sem1, Sem2, lam(A, lam(B, app(Sem1, app(app(Sem2, A), B))))).
+binary_rule(comp(2, b, x), (Y/Z2)\Z1, X\Y, (X/Z2)\Z1, Sem2, Sem1, lam(A, lam(B, app(Sem1, app(app(Sem2, A), B))))).
 
 %%	normal_form(+LRule, +RRule, +Rule)
 %
