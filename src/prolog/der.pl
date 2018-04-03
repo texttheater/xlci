@@ -243,6 +243,17 @@ der_ucat(ftr(_, _, _, _), _) :-
   !.
 der_ucat(btr(_, _, _, _), _) :-
   !.
+der_ucat(fxc(_, _, ftr(_, _, _, _), _), _) :-
+  !.
+der_ucat(fxc(_, _, _, btr(_, _, _, _)), _) :-
+  !.
+der_ucat(gfxc(_, _, _, btr(_, _, _, _)), _) :-
+  !.
+der_ucat(bxc(_, _, ftr(_, _, _, _), _), _) :-
+  !.
+% TODO Does this work?
+% TODO Why does this work?
+% TODO Are there further cases we need to consider?
 der_ucat(Der, Cat) :-
   arg(1, Der, Cat).
 
