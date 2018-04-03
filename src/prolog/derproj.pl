@@ -6,8 +6,6 @@
     functor_in/2]).
 :- use_module(ccg, [
     node2ccg/2]).
-:- use_module(der, [
-    der2node/2]).
 :- use_module(node, [
     node_from_to/3,
     pp_node/1]).
@@ -40,16 +38,16 @@ main :-
   assertion(member(OutputFormat, ['parse.tags', 'node'])),
   % Load information from various sources:
   load_source_derivations(EnglishDerFile),
-  dump_source,
+  %dump_source,
   load_wordalign_file(WordAlignFile),
-  dump_wordalign,
+  %dump_wordalign,
   tokoff_read_file(ForeignTokOffFile, ForeignSentences),
   tokoff_read_file(EnglishTokOffFile, EnglishSentences),
   % Project:
   transfer_categories(ForeignSentences, EnglishSentences, SemanticsFormat),
   transfer_typechangers,
   flip_slashes,
-  dump_target,
+  %dump_target,
   create_derivations(ForeignSentences, OutputFormat),
   halt.
 main :-
@@ -231,35 +229,30 @@ create_derivations(ForeignSentences, Format) :-
 
 % Asserts source_catobj/6 and source_typechanger/4 facts mapping source offset
 % pairs to lexical category objects and to typechangers.
-load_source_derivations(EnglishDerFile) :-
+load_source_derivations(EnglishNodeFile) :-
   forall(
-      ( term_in_file(der(SID, Der), EnglishDerFile, [module(slashes)])
+      ( term_in_file(node(SID, Node), EnglishNodeFile, [module(slashes)])
       ),
-      (  catch(
-	     ( der2node(Der, Node),
-	       format(user_error, 'INFO: analyzed English derivation ~w for category projection~n', [SID]),
-               % Get lexical category objects:
-               forall(
-                   ( sub_node(node(CO, Sem, t(_Form, Atts0), []), Node),
-                     select(from:From, Atts0, Atts1),
-                     select(to:To, Atts1, Atts)
-                   ),
-                   ( assertz(source_catobj(SID, From, To, CO, Sem, Atts))
-                   ) ),
-               % Get type changers:
-               forall(
-                   ( sub_node(node(X, _, tc(TCSem), [Child]), Node),
-                     Child = node(Y, _, _, _)
-                   ),
-                   ( node_from_to(Child, From, To),
-                     assertz(source_typechanger(SID, From, To, tc(X-Y, TCSem)))
-                   ) ),
-               % Get sentence category object:
-               Node = node(CO, _, _, _),
-               assertz(source_sentence_catobj(SID, CO))
-	     ), failed(der:der2node_(Const, _)),
-	     ( format(user_error, 'WARNING: failed to analyze English derivation ~w for category projection; problematic constituent: ~w~n', [SID, Const])
-	     ) ) ) ).
+      ( % Get lexical category objects:
+        forall(
+            ( sub_node(node(CO, Sem, t(_Form, Atts0), []), Node),
+              select(from:From, Atts0, Atts1),
+              select(to:To, Atts1, Atts)
+            ),
+            ( assertz(source_catobj(SID, From, To, CO, Sem, Atts))
+            ) ),
+        % Get type changers:
+        forall(
+            ( sub_node(node(X, _, tc(TCSem), [Child]), Node),
+              Child = node(Y, _, _, _)
+            ),
+            ( node_from_to(Child, From, To),
+              assertz(source_typechanger(SID, From, To, tc(X-Y, TCSem)))
+            ) ),
+        % Get sentence category object:
+        Node = node(CO, _, _, _),
+        assertz(source_sentence_catobj(SID, CO))
+      ) ).
 
 % Reads the word alignment file and asserts its contents as wordalign/4 facts.
 load_wordalign_file(WordAlignFile) :-
