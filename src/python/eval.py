@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 
+import collections
 import sys
 import util
 
@@ -19,6 +20,8 @@ def read_file(path):
                 fields = line.split()
                 assert len(fields) == 4 or len(fields) == 8
                 dep_from, dep_to, dep_token, dep_cat = fields[:4]
+                dep_from = int(dep_from)
+                dep_to = int(dep_to)
                 cats.add((i, dep_from, dep_to, dep_cat))
                 if len(fields) == 8:
                     head_from, head_to, head_token, head_cat = fields[4:]
@@ -33,6 +36,26 @@ def compute(gold, pred):
     return prec, rec
 
 
+def set2dict(cats):
+    result = {}
+    for snum, fr, to, cat in cats:
+        result[(snum, fr, to)] = cat
+    return result
+
+
+def compute_confusion(gold_cats, pred_cats):
+    gold_dict = set2dict(gold_cats)
+    pred_dict = set2dict(pred_cats)
+    counter = collections.Counter()
+    for coords, gold_cat in gold_dict.items():
+        if not coords in pred_dict:
+            continue
+        pred_cat = pred_dict[coords]
+        if gold_cat != pred_cat:
+            counter[(gold_cat, pred_cat)] += 1
+    return counter
+
+
 if __name__ == '__main__':
     try:
         _, gold_path, pred_path = sys.argv
@@ -43,9 +66,12 @@ if __name__ == '__main__':
     coverage = len(pred_sids) / len(gold_sids)
     cats_prec, cats_rec = compute(gold_cats, pred_cats)
     deps_prec, deps_rec = compute(gold_deps, pred_deps)
+    cat_confusion = compute_confusion(gold_cats, pred_cats)
     print('Sentence coverage:', coverage)
     print('Category precision:', cats_prec)
     print('Category recall:', cats_rec)
     print('Dependency precision:', deps_prec)
     print('Dependency recall:', deps_rec)
-
+    print()
+    for (gold_cat, pred_cat), frequency in cat_confusion.most_common():
+        print('{} {} → {}'.format(frequency, gold_cat, pred_cat))
