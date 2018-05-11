@@ -6,6 +6,9 @@ import sys
 import util
 
 
+PUNCTUATION = (',', ':', '!', '?', '.', '"', '“', '”', '„')
+
+
 def read_file(path):
     sentence_numbers = set()
     cats = set()
@@ -20,6 +23,8 @@ def read_file(path):
                 fields = line.split()
                 assert len(fields) == 4 or len(fields) == 8
                 dep_from, dep_to, dep_token, dep_cat = fields[:4]
+                if dep_token in PUNCTUATION:
+                    continue
                 dep_from = int(dep_from)
                 dep_to = int(dep_to)
                 cats.add((i, dep_from, dep_to, dep_cat))
