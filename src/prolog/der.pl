@@ -12,6 +12,7 @@
 :- use_module(util, [
     must/1,
     print_indented/3,
+    substitute_sub_term/3,
     substitute_sub_term/4,
     list_occurrences_of_term/3]).
 
@@ -33,7 +34,13 @@ der2node(Der, Node) :-
   % Bind each such variable to a unique integer ID (by slightly abusing
   % numbervars/1 and then replacing the '$VAR'/1 terms by just the integers):
   numbervars(IDs),
-  substitute_sub_term('$VAR'(N), N, Node0, Node).
+  substitute_sub_term('$VAR'(N), N, Node0, Node1),
+  % HACK: bind UCats that are still variable:
+  substitute_sub_term(bind_ucat, Node1, Node).
+
+bind_ucat(co(ID, Cat, UCat), co(ID, Cat, Cat)) :-
+  nonvar(Cat),
+  var(UCat).
 
 %%	der2node_(+Der, -Node)
 %
