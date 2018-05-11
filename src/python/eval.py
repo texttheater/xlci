@@ -33,7 +33,8 @@ def compute(gold, pred):
     tp = gold & pred
     prec = len(tp) / len(pred)
     rec = len(tp) / len(gold)
-    return prec, rec
+    f1 = 2 * prec * rec / (prec + rec)
+    return prec, rec, f1
 
 
 def set2dict(cats):
@@ -64,14 +65,16 @@ if __name__ == '__main__':
     gold_sids, gold_cats, gold_deps = read_file(gold_path)
     pred_sids, pred_cats, pred_deps = read_file(pred_path)
     coverage = len(pred_sids) / len(gold_sids)
-    cats_prec, cats_rec = compute(gold_cats, pred_cats)
-    deps_prec, deps_rec = compute(gold_deps, pred_deps)
+    cats_prec, cats_rec, cats_f1 = compute(gold_cats, pred_cats)
+    deps_prec, deps_rec, deps_f1 = compute(gold_deps, pred_deps)
     cat_confusion = compute_confusion(gold_cats, pred_cats)
     print('Sentence coverage:', coverage)
     print('Category precision:', cats_prec)
     print('Category recall:', cats_rec)
+    print('Category f1:', cats_f1)
     print('Dependency precision:', deps_prec)
     print('Dependency recall:', deps_rec)
+    print('Dependency f1:', deps_f1)
     print()
     for (gold_cat, pred_cat), frequency in cat_confusion.most_common():
         print('{} {} → {}'.format(frequency, gold_cat, pred_cat))
