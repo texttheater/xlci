@@ -235,11 +235,11 @@ load_source_derivations(EnglishNodeFile) :-
       ),
       ( % Get lexical category objects:
         forall(
-            ( sub_node(node(CO, Sem, t(_Form, Atts0), []), Node),
-              select(from:From, Atts0, Atts1),
-              select(to:To, Atts1, Atts)
+            ( sub_node(node(CO, Sem, t(_Form, Atts0), []), Node)
             ),
-            ( assertz(source_catobj(SID, From, To, CO, Sem, Atts))
+            ( select(from:From, Atts0, Atts1),
+              select(to:To, Atts1, Atts),
+              assertz(source_catobj(SID, From, To, CO, Sem, Atts))
             ) ),
         % Get type changers:
         forall(
