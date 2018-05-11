@@ -263,7 +263,11 @@ load_source_derivations(EnglishNodeFile, StripFeatures) :-
               assertz(source_typechanger(SID, From, To, tc(X-Y, TCSem)))
             ) ),
         % Get sentence category object:
-        Node = node(CO, _, _, _),
+        Node = node(CO0, _, _, _),
+	(  StripFeatures
+	-> strip_features(CO0, CO)
+	;  CO0 = CO
+	),
         assertz(source_sentence_catobj(SID, CO))
       ) ).
 
