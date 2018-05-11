@@ -71,11 +71,11 @@ ccg(1,
      t(np, 'you', [lemma:'you', from:7, to:10])),
     fa(s:b\np,
      t((s:b\np)/np, 'spell', [lemma:'spell', from:11, to:16]),
-     ba(np,
-      fa(np,
-       t(np/np, '\"', [lemma:'\"', from:17, to:18]),
-       t(np, 'pretty', [lemma:'pretty', from:18, to:24])),
-      t(np\np, '\"', [lemma:'\"', from:24, to:25]))))),
+     fa(np,
+      t(np/np, '\"', [lemma:'\"', from:17, to:18]),
+      ba(np,
+       t(s:adj\np, 'pretty', [lemma:'pretty', from:18, to:24]),
+       t(np\(s:adj\np), '\"', [lemma:'\"', from:24, to:25])))))),
   t(s:wq\s:wq, '?', [lemma:'?', from:25, to:26]))).
 
 :- op(601, xfx, (/)).
@@ -461,9 +461,9 @@ ccg(1,
 
 ccg(1,
  ba(s:dcl,
-  lx(np, n,
-   t(n, 'Windows', [lemma:'windows', from:0, to:7])),
-  rp(s:dcl\np,
+  ba(s:dcl,
+   lx(np, n,
+    t(n, 'Windows', [lemma:'windows', from:0, to:7])),
    fa(s:dcl\np,
     t((s:dcl\np)/np, 'is', [lemma:'is', from:8, to:10]),
     fa(np,
@@ -480,8 +480,8 @@ ccg(1,
         t((n\n)/np, 'in', [lemma:'in', from:42, to:44]),
         fa(np,
          t(np/n, 'the', [lemma:'the', from:45, to:48]),
-         t(n, 'world', [lemma:'world', from:49, to:54]))))))),
-   t(., '.', [lemma:'.', from:54, to:55])))).
+         t(n, 'world', [lemma:'world', from:49, to:54])))))))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:54, to:55]))).
 
 :- op(601, xfx, (/)).
 :- op(601, xfx, (\)).
@@ -511,17 +511,17 @@ ccg(1,
 ccg(1,
  ba(s:wq,
   fa(s:wq,
-   fa(s:wq/(s:q\np),
-    fa((s:wq/(s:q\np))/n,
-     t(((s:wq/(s:q\np))/n)/(s:adj\np), 'How', [lemma:'how', from:0, to:3]),
+   fa(s:wq/(s:q/np),
+    fa((s:wq/(s:q/np))/n,
+     t(((s:wq/(s:q/np))/n)/(s:adj\np), 'How', [lemma:'how', from:0, to:3]),
      t(s:adj\np, 'many', [lemma:'many', from:4, to:8])),
     t(n, 'boys', [lemma:'boys', from:9, to:13])),
-   ba(s:q\np,
-    fa(s:q\np,
-     t((s:q\np)/np:thr, 'are', [lemma:'are', from:14, to:17]),
+   bxc(s:q/np,
+    fa(s:q/np,
+     t((s:q/np)/np:thr, 'are', [lemma:'are', from:14, to:17]),
      t(np:thr, 'there', [lemma:'there', from:18, to:23])),
-    fa((s\np)\(s\np),
-     t(((s\np)\(s\np))/np, 'in', [lemma:'in', from:24, to:26]),
+    fa(s\s,
+     t((s\s)/np, 'in', [lemma:'in', from:24, to:26]),
      fa(np,
       t(np/n, 'this', [lemma:'this', from:27, to:31]),
       t(n, 'class', [lemma:'class', from:32, to:37]))))),
@@ -621,16 +621,16 @@ ccg(1,
 ccg(1,
  ba(s:q,
   fa(s:q,
-   bxc(s:q/(s:b\np),
-    fa(s:q/(s:b\np),
-     t((s:q/(s:b\np))/np, 'Could', [lemma:'could', from:0, to:5]),
-     t(np, 'somebody', [lemma:'somebody', from:6, to:14])),
-    t(s\s, 'please', [lemma:'please', from:15, to:21])),
+   fa(s:q/(s:b\np),
+    t((s:q/(s:b\np))/np, 'Could', [lemma:'could', from:0, to:5]),
+    t(np, 'somebody', [lemma:'somebody', from:6, to:14])),
    fa(s:b\np,
-    t((s:b\np)/np, 'open', [lemma:'open', from:22, to:26]),
-    fa(np,
-     t(np/n, 'the', [lemma:'the', from:27, to:30]),
-     t(n, 'door', [lemma:'door', from:31, to:35])))),
+    t((s\np)/(s\np), 'please', [lemma:'please', from:15, to:21]),
+    fa(s:b\np,
+     t((s:b\np)/np, 'open', [lemma:'open', from:22, to:26]),
+     fa(np,
+      t(np/n, 'the', [lemma:'the', from:27, to:30]),
+      t(n, 'door', [lemma:'door', from:31, to:35]))))),
   t(s:q\s:q, '?', [lemma:'?', from:35, to:36]))).
 
 :- op(601, xfx, (/)).
@@ -713,8 +713,8 @@ ccg(1,
       t(s:adj\np, 'colder', [lemma:'colder', from:7, to:13])),
      t((s\np)\(s\np), 'yesterday', [lemma:'yesterday', from:14, to:23])),
     fa((s\np)\(s\np),
-     t(((s\np)\(s\np))/((s\np)\(s\np)), 'than', [lemma:'than', from:24, to:28]),
-     t((s\np)\(s\np), 'today', [lemma:'today', from:29, to:34])))),
+     t(((s\np)\(s\np))/(s:adj\np), 'than', [lemma:'than', from:24, to:28]),
+     t(s:adj\np, 'today', [lemma:'today', from:29, to:34])))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:34, to:35]))).
 
 :- op(601, xfx, (/)).
@@ -730,11 +730,9 @@ ccg(1,
     fa(s:dcl\np,
      t((s:dcl\np)/(s:ng\np), 'stopped', [lemma:'stopped', from:3, to:10]),
      t(s:ng\np, 'smoking', [lemma:'smoking', from:11, to:18])),
-    lx((s\np)\(s\np), np,
-     lx(np, n,
-      fa(n,
-       t(n/n, 'last', [lemma:'last', from:19, to:23]),
-       t(n, 'year', [lemma:'year', from:24, to:28])))))),
+    fa((s\np)\(s\np),
+     t(((s\np)\(s\np))/((s\np)\(s\np)), 'last', [lemma:'last', from:19, to:23]),
+     t((s\np)\(s\np), 'year', [lemma:'year', from:24, to:28])))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:28, to:29]))).
 
 :- op(601, xfx, (/)).
@@ -772,14 +770,14 @@ ccg(1,
     t((s:dcl\np)/(s:b\np), 'ca', [lemma:'ca', from:4, to:6]),
     t((s\np)\(s\np), 'n\'t', [lemma:'n\'t', from:6, to:9])),
    fa(s:b\np,
-    t((s:b\np)/s, 'say', [lemma:'say', from:10, to:13]),
-    ba(s:intj,
+    t((s:b\np)/s:intj, 'say', [lemma:'say', from:10, to:13]),
+    fa(s:intj,
+     t(s:intj/s:intj, '\"', [lemma:'\"', from:14, to:15]),
      ba(s:intj,
-      fa(s:intj,
-       t(s:intj/s:intj, '\"', [lemma:'\"', from:14, to:15]),
-       t(s:intj, 'No', [lemma:'no', from:15, to:17])),
-      t(s:intj\s:intj, '.', [lemma:'.', from:17, to:18])),
-     t(s:intj\s:intj, '\"', [lemma:'\"', from:18, to:19])))))).
+      ba(s:intj,
+       t(s:intj, 'No', [lemma:'no', from:15, to:17]),
+       t(s:intj\s:intj, '.', [lemma:'.', from:17, to:18])),
+      t(s:intj\s:intj, '\"', [lemma:'\"', from:18, to:19]))))))).
 
 :- op(601, xfx, (/)).
 :- op(601, xfx, (\)).
@@ -808,9 +806,9 @@ ccg(1,
 ccg(1,
  ba(s:wq,
   fa(s:wq,
-   t(s:wq/s:q, 'How', [lemma:'how', from:0, to:3]),
-   fa(s:q,
-    t(s:q/np, 'is', [lemma:'is', from:4, to:6]),
+   t(s:wq/(s:q/(s:adj\np)), 'How', [lemma:'how', from:0, to:3]),
+   fa(s:q/(s:adj\np),
+    t((s:q/(s:adj\np))/np, 'is', [lemma:'is', from:4, to:6]),
     fa(np,
      t(np/(n/pp), 'your', [lemma:'your', from:7, to:11]),
      t(n/pp, 'dad', [lemma:'dad', from:12, to:15])))),
@@ -928,11 +926,11 @@ ccg(1,
 :- discontiguous ccg/2, id/2.
 
 ccg(1,
- rp(np,
+ ba(np,
   fa(np,
    t(np/n, 'No', [lemma:'no', from:0, to:2]),
    t(n, 'problem', [lemma:'problem', from:3, to:10])),
-  t(., '.', [lemma:'.', from:10, to:11]))).
+  t(np\np, '.', [lemma:'.', from:10, to:11]))).
 
 :- op(601, xfx, (/)).
 :- op(601, xfx, (\)).
@@ -1001,4 +999,20 @@ ccg(1,
          t(np/n, 'a', [lemma:'a', from:23, to:24]),
          t(n, 'millionaire', [lemma:'millionaire', from:25, to:36])))))))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:36, to:37]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:dcl,
+  ba(s:dcl,
+   t(np, 'It', [lemma:'it', from:0, to:2]),
+   fa(s:dcl\np,
+    t((s:dcl\np)/(s:adj\np), '\'s', [lemma:'\'s', from:2, to:4]),
+    fa(s:adj\np,
+     t((s:adj\np)/(s:adj\np), 'very', [lemma:'very', from:5, to:9]),
+     t(s:adj\np, 'romantic', [lemma:'romantic', from:10, to:18])))),
+  t(s:dcl\s:dcl, '!', [lemma:'!', from:18, to:19]))).
 
