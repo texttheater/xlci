@@ -3,6 +3,7 @@
     co_cat_ucat/3,
     co_res_arg/3,
     cos_tops_deps/3,
+    co_top/2,
     functor_in/2,
     is_modifier_co/1]).
 

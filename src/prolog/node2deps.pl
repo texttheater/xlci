@@ -5,6 +5,7 @@
     co2cat/2,
     co_res_arg/3,
     cos_tops_deps/3,
+    co_top/2,
     is_modifier_co/1]).
 :- use_module(ccgbank, [
     cat//1]).
@@ -20,6 +21,7 @@
     argv/1,
     substitute_sub_term/3,
     term_in_file/3,
+    write_clause/1,
     write_term_vars/2]).
 
 main :-
@@ -46,16 +48,21 @@ node2deps(Node) :-
   findall(Token, token_in_node(Token, Node), Tokens),
   findall(TC, typechanger_in_node(TC, Node), TCs),
   maplist(node_co, Tokens, TokenCOs),
-  %forall(member(TokenCO, TokenCOs), write_term_vars(TokenCO, [nl(true), module(slashes)])),
   maplist(tc_newco_oldco, TCs, TCNewCOs, TCOldCOs),
+  maplist(co_top, TCOldCOs, TCOldTopCOs),
   append(TokenCOs, TCNewCOs, COs),
   cos_tops_deps(COs, TopCOs, Deps0),
   length(TokenCOs, L),
   length(TokenTopCOs, L),
   append(TokenTopCOs, TCTopCOs, TopCOs),
-  maplist(tok4tc(TCTopCOs, TCOldCOs), Deps0, Deps),
+  maplist(tok4tc(TCTopCOs, TCOldTopCOs), Deps0, Deps),
+  %write(Tokens),nl,
+  %write(TCs),nl,
   %write(TokenTopCOs),nl,
   %write(TCTopCOs),nl,
+  %write(TCOldCOs),nl,
+  %write(TCOldTopCOs),nl,
+  %write(Deps0),nl,
   %write(Deps),nl,
   %write(Tokens),nl,
   maplist(write_dep(Tokens, TokenTopCOs, Deps), Tokens, TokenTopCOs).
