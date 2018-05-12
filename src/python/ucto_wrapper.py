@@ -10,9 +10,13 @@ import sys
 
 
 if __name__ == '__main__':
+    try:
+        _, config_path = sys.argv
+    except ValueError:
+        print('USAGE: python3 ucto_wrapper.py CONFIGFILE', file=sys.stderr)
+        sys.exit(1)
     for line in sys.stdin.buffer:
-        cp = subprocess.run(('ucto', '-c', 'ext/ucto/config/tokconfig-generic'), input=line, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, check=True)
-        #cp = subprocess.run(('ucto'), input=line, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, check=True)
+        cp = subprocess.run(('ucto', '-c', config_path), input=line, stdout=subprocess.PIPE, check=True)
         output = cp.stdout
         num_sentences = output.count(b'<utt>')
         assert num_sentences >= 1
