@@ -5,6 +5,7 @@
 """
 
 
+import re
 import sys
 import ucto
 
@@ -26,4 +27,10 @@ if __name__ == '__main__':
             # suppress document with multiple sentences
             print()
             continue
+        tokens = [str(t) for t in tokens]
+        # HACK: "qualcos'" becomes "qua cos'" (why???), breaks alignment - drop those sentences
+        if ''.join(tokens) != re.sub(r'\s', '', line):
+            print()
+            continue
+            #raise RuntimeError('Nomatch: {} {}'.format(repr(tokens), repr(line)))
         print(' '.join(str(t) for t in tokens))
