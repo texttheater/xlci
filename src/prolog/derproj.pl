@@ -54,7 +54,7 @@ main :-
   create_derivations(ForeignSentences, OutputFormat),
   halt.
 main :-
-  format(user_error, 'USAGE (example): swipl -l derproj -g main en.der nl.wordalign nl.tok.off en.tok.off boxer false parse.tags~n', []),
+  format(user_error, 'USAGE (example): swipl -l derproj -g main en.node nl.wordalign nl.tok.off en.tok.off boxer false parse.tags~n', []),
   halt(1).
 
 %%% CORE PROJECTION PREDICATES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
