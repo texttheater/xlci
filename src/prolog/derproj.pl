@@ -133,6 +133,17 @@ flip_slashes_functors :-
 	    ),
 	    ( assertz(target_catobj(SID, From, To, FlipCO, Sem, Atts))
 	    ) )
+      ) ),
+  forall(
+      ( retract(target_typechanger(SID, From, To, tc(NewCO-OldCO, Sem)))
+      ),
+      ( findall(FlipCO, flip_slashes_functors(NewCO, SID, From, To, FlipCO), FlipCOs0),
+	dedup(FlipCOs0, FlipCOs),
+	forall(
+	    ( member(FlipCO, FlipCOs)
+	    ),
+	    ( assertz(target_typechanger(SID, From, To, tc(FlipCO-OldCO, Sem)))
+	    ) )
       ) ).
 
 flip_slashes_functors(X/Y, SID, From, To, FlipCO) :-
@@ -184,13 +195,24 @@ flip_slashes_args :-
 	    ),
 	    ( assertz(target_catobj(SID, From, To, FlipCO, Sem, Atts))
 	    ) )
+      ) ),
+  forall(
+      ( retract(target_typechanger(SID, From, To, tc(NewCO-OldCO, Sem)))
+      ),
+      ( findall(FlipCO, flip_slashes_args(SID, NewCO, FlipCO), FlipCOs0),
+	dedup(FlipCOs0, FlipCOs),
+	forall(
+	    ( member(FlipCO, FlipCOs)
+	    ),
+	    ( assertz(target_typechanger(SID, From, To, tc(FlipCO-OldCO, Sem)))
+	    ) )
       ) ).
 
 flip_slashes_args(SID, co(ID, _, _), co(ID, Cat, UCat)) :-
-  target_catobj(SID, _, _, CO, _, _),
-  ( functor_in(_/co(ID, Cat, UCat), CO)
-  ; functor_in(_\co(ID, Cat, UCat), CO)
-  ),
+  functor_from_to(_/co(ID, Cat, UCat), SID, _, _),
+  !.
+flip_slashes_args(SID, co(ID, _, _), co(ID, Cat, UCat)) :-
+  functor_from_to(_\co(ID, Cat, UCat), SID, _, _),
   !.
 flip_slashes_args(_, co(ID, Cat, UCat), co(ID, Cat, UCat)).
 flip_slashes_args(SID, X/Y, FlipX/Y) :-
