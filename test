@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -e
+
+swipl -l src/prolog/derproj -g main t/$1/src.node t/$1/wordalign t/$1/trg.ftok.off t/$1/src.ftok.off offsets false node
