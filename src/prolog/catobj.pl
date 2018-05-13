@@ -123,7 +123,7 @@ resolve_target(TopCO, TopCOs, TargetTopCOs, TargetTopCO) :-
 resolve_target(TopCO, _, _, TopCO).
 
 co_top_target_deps(CO, TopCO, TargetTopCO0, TargetTopCO, [TargetTopCO0-target(ArgTopCO)|Deps]) :-
-  ( is_modifier_co(CO) ; co2cat(CO, np/n) ),
+  is_modifier_co(CO), % TODO also treat determiners, prepositions, ... as dependents?
   co_res_arg(CO, ResCO, ArgCO),
   !,
   co_top(ArgCO, ArgTopCO), % TODO should we do target calculations here??
