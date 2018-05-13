@@ -124,13 +124,15 @@ flip_slashes :-
 % of modifiers to match the slash directions of the result categories.
 flip_slashes_functors :-
   forall(
-      ( clause(target_catobj(SID, From, To, CO, Sem, Atts), true, Ref)
+      ( retract(target_catobj(SID, From, To, CO, Sem, Atts))
       ),
-      ( (  flip_slashes_functors(CO, SID, From, To, FlipCO)
-        -> erase(Ref),
-           assertz(target_catobj(SID, From, To, FlipCO, Sem, Atts))
-        ;  true % TODO Do something more intelligent? Warn?
-        )
+      ( findall(FlipCO, flip_slashes_functors(CO, SID, From, To, FlipCO), FlipCOs0),
+        dedup(FlipCOs0, FlipCOs),
+	forall(
+	    ( member(FlipCO, FlipCOs)
+	    ),
+	    ( assertz(target_catobj(SID, From, To, FlipCO, Sem, Atts))
+	    ) )
       ) ).
 
 flip_slashes_functors(X/Y, SID, From, To, FlipCO) :-
@@ -175,8 +177,13 @@ flip_slashes_args :-
   forall(
       ( retract(target_catobj(SID, From, To, CO, Sem, Atts))
       ),
-      ( flip_slashes_args(SID, CO, FlipCO),
-	assertz(target_catobj(SID, From, To, FlipCO, Sem, Atts))
+      ( findall(FlipCO, flip_slashes_args(SID, CO, FlipCO), FlipCOs0),
+	dedup(FlipCOs0, FlipCOs),
+	forall(
+	    ( member(FlipCO, FlipCOs)
+	    ),
+	    ( assertz(target_catobj(SID, From, To, FlipCO, Sem, Atts))
+	    ) )
       ) ).
 
 flip_slashes_args(SID, co(ID, _, _), co(ID, Cat, UCat)) :-
