@@ -35,7 +35,7 @@
 :- dynamic target_typechanger/4.
 
 main :-
-  argv([EnglishDerFile, WordAlignFile, ForeignTokOffFile, EnglishTokOffFile, SemanticsFormat, StripFeatures, OutputFormat]),
+  argv([_, EnglishDerFile, WordAlignFile, ForeignTokOffFile, EnglishTokOffFile, SemanticsFormat, StripFeatures, OutputFormat]), % HACK: first argument is a workaround for https://github.com/SWI-Prolog/swipl-devel/issues/298
   assertion(member(SemanticsFormat, ['boxer', 'offsets'])),
   assertion(member(StripFeatures, ['true', 'false'])),
   assertion(member(OutputFormat, ['parse.tags', 'node'])),
