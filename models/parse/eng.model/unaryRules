@@ -1,0 +1,30 @@
+# Unary type-changing rules, which allow the left hand category to convert to the right hand category.
+# There's plenty of scope for improving these.
+
+# Rule used to allow nouns to become noun-phrases without needed a determiner.
+N       NP
+
+# Relativization, as in "the boy playing tennis"    
+S[pss]\NP      N\N
+S[ng]\NP       N\N
+S[adj]\NP      N\N
+S[dcl]/NP       N\N
+
+# Matt has these, but they don't help F-scores very much. I think the parser can just convert to N\N and compose, anyway.
+#S[pss]\NP      (N/PP)\(N/PP)
+#S[ng]\NP       (N/PP)\(N/PP)
+#S[adj]\NP      (N/PP)\(N/PP)
+#S[to]\NP       (N/PP)\(N/PP)
+
+
+# Rules that let verb-phrases modify sentences, as in "Born in Hawaii, Obama is the 44th president."
+#S[ng]\NP       S\S
+
+S[to]\NP       S/S
+S[pss]\NP       S/S
+S[ng]\NP       S/S
+
+# Type raising
+NP      S[X]/(S[X]\NP)
+NP      (S[X]\NP)\((S[X]\NP)/NP)
+PP      (S[X]\NP)\((S[X]\NP)/PP)

@@ -1,5 +1,4 @@
 *.pyc
-/models
 /out
 /ext
 __pycache__
