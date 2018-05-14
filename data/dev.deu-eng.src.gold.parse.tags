@@ -4,22 +4,6 @@
 :- discontiguous ccg/2, id/2.
 
 ccg(1,
- ba(s:dcl,
-  ba(s:dcl,
-   fa(np,
-    t(np/(n/pp), 'My', [lemma:'my', from:0, to:2]),
-    t(n/pp, 'suitcase', [lemma:'suitcase', from:3, to:11])),
-   fa(s:dcl\np,
-    t((s:dcl\np)/(s:adj\np), 'is', [lemma:'is', from:12, to:14]),
-    t(s:adj\np, 'broken', [lemma:'broken', from:15, to:21]))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:21, to:22]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
  ba(s:q,
   fa(s:q,
    fa(s:q/(s:b\np),
@@ -44,17 +28,373 @@ ccg(1,
 ccg(1,
  ba(s:dcl,
   ba(s:dcl,
-   fa(np,
-    t(np/n, 'A', [lemma:'a', from:0, to:1]),
-    t(n, 'stranger', [lemma:'stranger', from:2, to:10])),
-   fa(s:dcl\np,
-    t((s:dcl\np)/pp, 'came', [lemma:'came', from:11, to:15]),
-    fa(pp,
-     t(pp/np, 'into', [lemma:'into', from:16, to:20]),
+   ba(s:dcl,
+    fa(s:dcl,
+     t(s:dcl/s:dcl, '\"', [lemma:'\"', from:0, to:1]),
+     ba(s:dcl,
+      ba(s:dcl,
+       ba(s:dcl,
+        t(np, 'I', [lemma:'i', from:1, to:2]),
+        t(s:dcl\np, 'see', [lemma:'see', from:3, to:6])),
+       t(s:dcl\s:dcl, ',', [lemma:',', from:6, to:7])),
+      t(s:dcl\s:dcl, '\"', [lemma:'\"', from:7, to:8]))),
+    fa(s:dcl\s:dcl,
+     t((s:dcl\s:dcl)/np, 'said', [lemma:'said', from:9, to:13]),
      fa(np,
-      t(np/n, 'the', [lemma:'the', from:21, to:24]),
-      t(n, 'building', [lemma:'building', from:25, to:33]))))),
+      t(np/n, 'the', [lemma:'the', from:14, to:17]),
+      fa(n,
+       t(n/n, 'blind', [lemma:'blind', from:18, to:23]),
+       t(n, 'man', [lemma:'man', from:24, to:27]))))),
+   fa(s\s,
+    t((s\s)/(s\s), ',', [lemma:',', from:27, to:28]),
+    fa(s\s,
+     t((s\s)/s:dcl, 'as', [lemma:'as', from:29, to:31]),
+     ba(s:dcl,
+      t(np, 'he', [lemma:'he', from:32, to:34]),
+      fa(s:dcl\np,
+       fa((s:dcl\np)/np,
+        t(((s:dcl\np)/np)/pr, 'picked', [lemma:'picked', from:35, to:41]),
+        t(pr, 'up', [lemma:'up', from:42, to:44])),
+       fa(np,
+        t(np/(n/pp), 'his', [lemma:'his', from:45, to:48]),
+        ba(n/pp,
+         t(n/pp, 'hammer', [lemma:'hammer', from:49, to:55]),
+         fa((n/pp)\(n/pp),
+          t(((n/pp)\(n/pp))/(n/pp), 'and', [lemma:'and', from:56, to:59]),
+          t(n/pp, 'saw', [lemma:'saw', from:60, to:63]))))))))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:63, to:64]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:wq,
+  fa(s:wq,
+   t(s:wq/s:q, 'Where', [lemma:'where', from:0, to:5]),
+   fa(s:q,
+    fa(s:q/(s:b\np),
+     t((s:q/(s:b\np))/np, 'did', [lemma:'did', from:6, to:9]),
+     t(np, 'you', [lemma:'you', from:10, to:13])),
+    fa(s:b\np,
+     t((s:b\np)/np, 'buy', [lemma:'buy', from:14, to:17]),
+     lx(np, n,
+      t(n, 'flowers', [lemma:'flowers', from:18, to:25]))))),
+  t(s:wq\s:wq, '?', [lemma:'?', from:25, to:26]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(np,
+  fa(np,
+   t(np/n, 'No', [lemma:'no', from:0, to:2]),
+   t(n, 'problem', [lemma:'problem', from:3, to:10])),
+  t(np\np, '.', [lemma:'.', from:10, to:11]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:dcl,
+  ba(s:dcl,
+   t(np, 'We', [lemma:'we', from:0, to:2]),
+   fa(s:dcl\np,
+    t((s:dcl\np)/(s:b\np), 'must', [lemma:'must', from:3, to:7]),
+    fa(s:b\np,
+     t((s:b\np)/pp, 'go', [lemma:'go', from:8, to:10]),
+     fa(pp,
+      t(pp/np, 'to', [lemma:'to', from:11, to:13]),
+      lx(np, n,
+       t(n, 'school', [lemma:'school', from:14, to:20])))))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:20, to:21]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:wq,
+  fa(s:wq,
+   t(s:wq/(s:q/pp), 'Where', [lemma:'where', from:0, to:5]),
+   fa(s:q/pp,
+    t((s:q/pp)/np, '\'s', [lemma:'\'s', from:5, to:7]),
+    fa(np,
+     t(np/n, 'the', [lemma:'the', from:8, to:11]),
+     t(n, 'bank', [lemma:'bank', from:12, to:16])))),
+  t(s:wq\s:wq, '?', [lemma:'?', from:16, to:17]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:dcl,
+  ba(s:dcl,
+   t(np, 'Everything', [lemma:'everything', from:0, to:10]),
+   ba(s:dcl\np,
+    fa(s:dcl\np,
+     t((s:dcl\np)/(s:adj\np), 'was', [lemma:'was', from:11, to:14]),
+     t(s:adj\np, 'better', [lemma:'better', from:15, to:21])),
+    fa((s\np)\(s\np),
+     t(((s\np)\(s\np))/np, 'in', [lemma:'in', from:22, to:24]),
+     fa(np,
+      t(np/n, 'the', [lemma:'the', from:25, to:28]),
+      t(n, 'past', [lemma:'past', from:29, to:33]))))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:33, to:34]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:dcl,
+  ba(s:dcl,
+   t(np, 'It', [lemma:'it', from:0, to:2]),
+   ba(s:dcl\np,
+    ba(s:dcl\np,
+     fa(s:dcl\np,
+      t((s:dcl\np)/(s:adj\np), 'was', [lemma:'was', from:3, to:6]),
+      t(s:adj\np, 'colder', [lemma:'colder', from:7, to:13])),
+     t((s\np)\(s\np), 'yesterday', [lemma:'yesterday', from:14, to:23])),
+    fa((s\np)\(s\np),
+     t(((s\np)\(s\np))/(s:adj\np), 'than', [lemma:'than', from:24, to:28]),
+     t(s:adj\np, 'today', [lemma:'today', from:29, to:34])))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:34, to:35]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:q,
+  fa(s:q,
+   fa(s:q/(s:b\np),
+    t((s:q/(s:b\np))/np, 'Could', [lemma:'could', from:0, to:5]),
+    t(np, 'somebody', [lemma:'somebody', from:6, to:14])),
+   fa(s:b\np,
+    t((s\np)/(s\np), 'please', [lemma:'please', from:15, to:21]),
+    fa(s:b\np,
+     t((s:b\np)/np, 'open', [lemma:'open', from:22, to:26]),
+     fa(np,
+      t(np/n, 'the', [lemma:'the', from:27, to:30]),
+      t(n, 'door', [lemma:'door', from:31, to:35]))))),
+  t(s:q\s:q, '?', [lemma:'?', from:35, to:36]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:dcl,
+  ba(s:dcl,
+   t(np, 'It', [lemma:'it', from:0, to:2]),
+   fa(s:dcl\np,
+    t((s:dcl\np)/(s:pt\np), '\'s', [lemma:'\'s', from:2, to:4]),
+    fa(s:pt\np,
+     t((s:pt\np)/np, 'been', [lemma:'been', from:5, to:9]),
+     fa(np,
+      t(np/n, 'a', [lemma:'a', from:10, to:11]),
+      fa(n,
+       t(n/n, 'long', [lemma:'long', from:12, to:16]),
+       t(n, 'night', [lemma:'night', from:17, to:22])))))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:22, to:23]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:wq,
+  fa(s:wq,
+   fa(s:wq/(s:q/np),
+    fa((s:wq/(s:q/np))/n,
+     t(((s:wq/(s:q/np))/n)/(s:adj\np), 'How', [lemma:'how', from:0, to:3]),
+     t(s:adj\np, 'many', [lemma:'many', from:4, to:8])),
+    t(n, 'boys', [lemma:'boys', from:9, to:13])),
+   bxc(s:q/np,
+    fa(s:q/np,
+     t((s:q/np)/np:thr, 'are', [lemma:'are', from:14, to:17]),
+     t(np:thr, 'there', [lemma:'there', from:18, to:23])),
+    fa(s\s,
+     t((s\s)/np, 'in', [lemma:'in', from:24, to:26]),
+     fa(np,
+      t(np/n, 'this', [lemma:'this', from:27, to:31]),
+      t(n, 'class', [lemma:'class', from:32, to:37]))))),
+  t(s:wq\s:wq, '?', [lemma:'?', from:37, to:38]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:dcl,
+  ba(s:dcl,
+   t(np, 'They', [lemma:'they', from:0, to:4]),
+   fa(s:dcl\np,
+    t((s:dcl\np)/(s:adj\np), 'are', [lemma:'are', from:5, to:8]),
+    fa(s:adj\np,
+     t((s:adj\np)/(s:adj\np), 'very', [lemma:'very', from:9, to:13]),
+     fa(s:adj\np,
+      t((s:adj\np)/pp, 'interested', [lemma:'interested', from:14, to:24]),
+      fa(pp,
+       t(pp/np, 'in', [lemma:'in', from:25, to:27]),
+       lx(np, n,
+        t(n, 'astronomy', [lemma:'astronomy', from:28, to:37]))))))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:37, to:38]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:dcl,
+  ba(s:dcl,
+   t(np, 'I', [lemma:'i', from:0, to:1]),
+   fa(s:dcl\np,
+    t((s:dcl\np)/(s:b\np), 'will', [lemma:'will', from:2, to:6]),
+    fa(s:b\np,
+     fa((s:b\np)/pp,
+      t(((s:b\np)/pp)/np, 'take', [lemma:'take', from:7, to:11]),
+      lx(np, n,
+       t(n, 'care', [lemma:'care', from:12, to:16]))),
+     fa(pp,
+      t(pp/np, 'of', [lemma:'of', from:17, to:19]),
+      fa(np,
+       t(np/n, 'the', [lemma:'the', from:20, to:23]),
+       t(n, 'flowers', [lemma:'flowers', from:24, to:31])))))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:31, to:32]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:dcl,
+  ba(s:dcl,
+   fa(np,
+    t(np/(n/pp), 'My', [lemma:'my', from:0, to:2]),
+    fc(n/pp,
+     t(n/n, 'native', [lemma:'native', from:3, to:9]),
+     t(n/pp, 'language', [lemma:'language', from:10, to:18]))),
+   fa(s:dcl\np,
+    t((s:dcl\np)/np, 'is', [lemma:'is', from:19, to:21]),
+    lx(np, n,
+     t(n, 'Portuguese', [lemma:'portuguese', from:22, to:32])))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:32, to:33]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:b\np,
+  ba(s:b\np,
+   ba(s:b\np,
+    fa(s:b\np,
+     t((s:b\np)/np, 'Enjoy', [lemma:'enjoy', from:0, to:5]),
+     t(np, 'yourself', [lemma:'yourself', from:6, to:14])),
+    fa((s\np)\(s\np),
+     t(((s\np)\(s\np))/np, 'at', [lemma:'at', from:15, to:17]),
+     fa(np,
+      t(np/n, 'the', [lemma:'the', from:18, to:21]),
+      t(n, 'party', [lemma:'party', from:22, to:27])))),
+   fa((s:b\np)\(s:b\np),
+    t(((s:b\np)\(s:b\np))/np, ',', [lemma:',', from:27, to:28]),
+    lx(np, n,
+     t(n, 'John', [lemma:'john', from:29, to:33])))),
+  t((s:b\np)\(s:b\np), '.', [lemma:'.', from:33, to:34]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:dcl,
+  ba(s:dcl,
+   t(np, 'I', [lemma:'i', from:0, to:1]),
+   fa(s:dcl\np,
+    t((s:dcl\np)/np, 'am', [lemma:'am', from:2, to:4]),
+    lx(np, n,
+     t(n, 'Tom', [lemma:'tom', from:5, to:8])))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:8, to:9]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:dcl,
+  ba(s:dcl,
+   t(np, 'I', [lemma:'i', from:0, to:1]),
+   fa(s:dcl\np,
+    bxc((s:dcl\np)/(s:b\np),
+     t((s:dcl\np)/(s:b\np), 'do', [lemma:'do', from:2, to:4]),
+     t((s\np)\(s\np), 'n\'t', [lemma:'n\'t', from:4, to:7])),
+    fa(s:b\np,
+     t((s:b\np)/pp, 'feel', [lemma:'feel', from:8, to:12]),
+     fa(pp,
+      t(pp/(s:ng\np), 'like', [lemma:'like', from:13, to:17]),
+      fa(s:ng\np,
+       t((s:ng\np)/pr, 'going', [lemma:'going', from:18, to:23]),
+       t(pr, 'out', [lemma:'out', from:24, to:27])))))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:27, to:28]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:dcl,
+  ba(s:dcl,
+   lx(np, n,
+    t(n, 'Vampires', [lemma:'vampires', from:0, to:8])),
+   ba(s:dcl\np,
+    t(s:dcl\np, 'live', [lemma:'live', from:9, to:13]),
+    t((s\np)\(s\np), 'forever', [lemma:'forever', from:14, to:21]))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:21, to:22]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:dcl,
+  ba(s:dcl,
+   t(np, 'I', [lemma:'i', from:0, to:1]),
+   fa(s:dcl\np,
+    t((s:dcl\np)/(s:to\np), 'need', [lemma:'need', from:2, to:6]),
+    fa(s:to\np,
+     t((s:to\np)/(s:b\np), 'to', [lemma:'to', from:7, to:9]),
+     fa(s:b\np,
+      fa((s:b\np)/np,
+       t(((s:b\np)/np)/np, 'ask', [lemma:'ask', from:10, to:13]),
+       t(np, 'you', [lemma:'you', from:14, to:17])),
+      fa(np,
+       t(np/n, 'a', [lemma:'a', from:18, to:19]),
+       fa(n,
+        t(n/n, 'silly', [lemma:'silly', from:20, to:25]),
+        t(n, 'question', [lemma:'question', from:26, to:34]))))))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:34, to:35]))).
 
 :- op(601, xfx, (/)).
 :- op(601, xfx, (\)).
@@ -70,13 +410,86 @@ ccg(1,
      t((s:q/(s:b\np))/np, 'do', [lemma:'do', from:4, to:6]),
      t(np, 'you', [lemma:'you', from:7, to:10])),
     fa(s:b\np,
-     t((s:b\np)/np, 'spell', [lemma:'spell', from:11, to:16]),
+     t((s:b\np)/np, 'pronounce', [lemma:'pronounce', from:11, to:20]),
      fa(np,
-      t(np/np, '\"', [lemma:'\"', from:17, to:18]),
+      t(np/np, '\"', [lemma:'\"', from:21, to:22]),
       ba(np,
-       t(s:adj\np, 'pretty', [lemma:'pretty', from:18, to:24]),
-       t(np\(s:adj\np), '\"', [lemma:'\"', from:24, to:25])))))),
-  t(s:wq\s:wq, '?', [lemma:'?', from:25, to:26]))).
+       t((s:b\np)/np, 'pronounce', [lemma:'pronounce', from:22, to:31]),
+       t(np\((s:b\np)/np), '\"', [lemma:'\"', from:31, to:32])))))),
+  t(s:wq\s:wq, '?', [lemma:'?', from:32, to:33]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:dcl,
+  ba(s:dcl,
+   t(np, 'I', [lemma:'i', from:0, to:1]),
+   fa(s:dcl\np,
+    fa((s:dcl\np)/(s:to\np),
+     t(((s:dcl\np)/(s:to\np))/np, 'want', [lemma:'want', from:2, to:6]),
+     lx(np, n,
+      t(n, 'Tom', [lemma:'tom', from:7, to:10]))),
+    fa(s:to\np,
+     t((s:to\np)/(s:b\np), 'to', [lemma:'to', from:11, to:13]),
+     fa(s:b\np,
+      t((s:b\np)/(s:pss\np), 'be', [lemma:'be', from:14, to:16]),
+      t(s:pss\np, 'arrested', [lemma:'arrested', from:17, to:25]))))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:25, to:26]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:b\np,
+  fa(s:b\np,
+   t((s:b\np)/pr, 'Wake', [lemma:'wake', from:0, to:4]),
+   t(pr, 'up', [lemma:'up', from:5, to:7])),
+  t((s:b\np)\(s:b\np), '!', [lemma:'!', from:7, to:8]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:dcl,
+  ba(s:dcl,
+   t(np, 'I', [lemma:'i', from:0, to:1]),
+   fa(s:dcl\np,
+    t((s:dcl\np)/(s:adj\np), '\'m', [lemma:'\'m', from:1, to:3]),
+    t(s:adj\np, 'afraid', [lemma:'afraid', from:4, to:10]))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:10, to:11]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:dcl,
+  ba(s:dcl,
+   t(np, 'You', [lemma:'you', from:0, to:3]),
+   fa(s:dcl\np,
+    t((s:dcl\np)/(s:adj\np), 'are', [lemma:'are', from:4, to:7]),
+    fa(s:adj\np,
+     t((s:adj\np)/pp, 'welcome', [lemma:'welcome', from:8, to:15]),
+     fa(pp,
+      t(pp/np, 'to', [lemma:'to', from:16, to:18]),
+      fa(np,
+       t(np/n, 'the', [lemma:'the', from:19, to:22]),
+       fa(n,
+        t(n/pp, 'use', [lemma:'use', from:23, to:26]),
+        fa(pp,
+         t(pp/np, 'of', [lemma:'of', from:27, to:29]),
+         fa(np,
+          t(np/(n/pp), 'my', [lemma:'my', from:30, to:32]),
+          t(n/pp, 'yacht', [lemma:'yacht', from:33, to:38]))))))))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:38, to:39]))).
 
 :- op(601, xfx, (/)).
 :- op(601, xfx, (\)).
@@ -110,16 +523,173 @@ ccg(1,
 :- discontiguous ccg/2, id/2.
 
 ccg(1,
+ ba(s:b\np,
+  fa(s:b\np,
+   fa((s:b\np)/pp,
+    t(((s:b\np)/pp)/np, 'Take', [lemma:'take', from:0, to:4]),
+    fa(np,
+     t(np/n, 'a', [lemma:'a', from:5, to:6]),
+     t(n, 'taxi', [lemma:'taxi', from:7, to:11]))),
+   fa(pp,
+    t(pp/np, 'to', [lemma:'to', from:12, to:14]),
+    fa(np,
+     t(np/n, 'the', [lemma:'the', from:15, to:18]),
+     t(n, 'hotel', [lemma:'hotel', from:19, to:24])))),
+  t((s:b\np)\(s:b\np), '.', [lemma:'.', from:24, to:25]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
  ba(s:dcl,
   ba(s:dcl,
-   lx(np, n,
-    t(n, 'Dreams', [lemma:'dreams', from:0, to:6])),
+   t(np, 'We', [lemma:'we', from:0, to:2]),
    fa(s:dcl\np,
-    t((s\np)/(s\np), 'sometimes', [lemma:'sometimes', from:7, to:16]),
-    fa(s:dcl\np,
-     t((s:dcl\np)/(s:adj\np), 'come', [lemma:'come', from:17, to:21]),
-     t(s:adj\np, 'true', [lemma:'true', from:22, to:26])))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:26, to:27]))).
+    t((s:dcl\np)/(s:b\np), 'should', [lemma:'should', from:3, to:9]),
+    fa(s:b\np,
+     t((s:b\np)/np, 'make', [lemma:'make', from:10, to:14]),
+     fa(np,
+      t(np/pp, 'something', [lemma:'something', from:15, to:24]),
+      fa(pp,
+       t(pp/np, 'like', [lemma:'like', from:25, to:29]),
+       t(np, 'that', [lemma:'that', from:30, to:34])))))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:34, to:35]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:dcl,
+  ba(s:dcl,
+   fa(np,
+    t(np/(n/pp), 'Her', [lemma:'her', from:0, to:3]),
+    t(n/pp, 'mother', [lemma:'mother', from:4, to:10])),
+   fa(s:dcl\np,
+    bxc((s:dcl\np)/(s:adj\np),
+     t((s:dcl\np)/(s:adj\np), 'is', [lemma:'is', from:11, to:13]),
+     t((s\np)\(s\np), 'not', [lemma:'not', from:14, to:17])),
+    fa(s:adj\np,
+     t((s:adj\np)/(s:adj\np), 'as', [lemma:'as', from:18, to:20]),
+     fa(s:adj\np,
+      t((s:adj\np)/pp, 'old', [lemma:'old', from:21, to:24]),
+      fa(pp,
+       t(pp/(s:dcl/(s:adj\np)), 'as', [lemma:'as', from:25, to:27]),
+       fc(s:dcl/(s:adj\np),
+        lx(s:X/(s:X\np), np,
+         t(np, 'she', [lemma:'she', from:28, to:31])),
+        t((s:dcl\np)/(s:adj\np), 'looks', [lemma:'looks', from:32, to:37]))))))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:37, to:38]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:dcl,
+  ba(s:dcl,
+   fa(np,
+    t(np/n, 'The', [lemma:'the', from:0, to:3]),
+    t(n, 'policeman', [lemma:'policeman', from:4, to:13])),
+   fa(s:dcl\np,
+    t((s:dcl\np)/(s:ng\np), 'is', [lemma:'is', from:14, to:16]),
+    fa(s:ng\np,
+     t((s:ng\np)/np, 'wearing', [lemma:'wearing', from:17, to:24]),
+     fa(np,
+      t(np/n, 'a', [lemma:'a', from:25, to:26]),
+      fa(n,
+       t(n/n, 'gas', [lemma:'gas', from:27, to:30]),
+       t(n, 'mask', [lemma:'mask', from:31, to:35])))))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:35, to:36]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(np,
+  ba(np,
+   fa(np,
+    t(np/n, 'A', [lemma:'a', from:0, to:1]),
+    fa(n,
+     t(n/pp, 'glass', [lemma:'glass', from:2, to:7]),
+     fa(pp,
+      t(pp/np, 'of', [lemma:'of', from:8, to:10]),
+      lx(np, n,
+       t(n, 'water', [lemma:'water', from:11, to:16]))))),
+   fa(np\np,
+    t((np\np)/(np\np), ',', [lemma:',', from:16, to:17]),
+    t(np\np, 'please', [lemma:'please', from:18, to:24]))),
+  t(np\np, '.', [lemma:'.', from:24, to:25]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:dcl,
+  ba(s:dcl,
+   t(np, 'I', [lemma:'i', from:0, to:1]),
+   fa(s:dcl\np,
+    bxc((s:dcl\np)/(s:b\np),
+     t((s:dcl\np)/(s:b\np), 'should', [lemma:'should', from:2, to:8]),
+     t((s\np)\(s\np), 'n\'t', [lemma:'n\'t', from:8, to:11])),
+    fa(s:b\np,
+     t((s:b\np)/(s:pt\np), 'have', [lemma:'have', from:12, to:16]),
+     fa(s:pt\np,
+      t((s:pt\np)/pr, 'logged', [lemma:'logged', from:17, to:23]),
+      t(pr, 'off', [lemma:'off', from:24, to:27]))))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:27, to:28]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:q,
+  fa(s:q,
+   fa(s:q/(s:b\np),
+    t((s:q/(s:b\np))/np, 'Do', [lemma:'do', from:0, to:2]),
+    t(np, 'you', [lemma:'you', from:3, to:6])),
+   fa(s:b\np,
+    t((s:b\np)/np, 'want', [lemma:'want', from:7, to:11]),
+    lx(np, n,
+     ba(n,
+      t(n, 'anything', [lemma:'anything', from:12, to:20]),
+      lx(n\n, (s:to\np)/np,
+       fc((s:to\np)/np,
+        t((s:to\np)/(s:b\np), 'to', [lemma:'to', from:21, to:23]),
+        t((s:b\np)/np, 'eat', [lemma:'eat', from:24, to:27]))))))),
+  t(s:q\s:q, '?', [lemma:'?', from:27, to:28]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:wq,
+  fa(s:wq,
+   t(s:wq/s:q, 'How', [lemma:'how', from:0, to:3]),
+   fa(s:q,
+    fa(s:q/(s:b\np),
+     t((s:q/(s:b\np))/np, 'do', [lemma:'do', from:4, to:6]),
+     t(np, 'you', [lemma:'you', from:7, to:10])),
+    fa(s:b\np,
+     t((s:b\np)/np, 'spell', [lemma:'spell', from:11, to:16]),
+     fa(np,
+      t(np/np, '\"', [lemma:'\"', from:17, to:18]),
+      ba(np,
+       t(s:adj\np, 'pretty', [lemma:'pretty', from:18, to:24]),
+       t(np\(s:adj\np), '\"', [lemma:'\"', from:24, to:25])))))),
+  t(s:wq\s:wq, '?', [lemma:'?', from:25, to:26]))).
 
 :- op(601, xfx, (/)).
 :- op(601, xfx, (\)).
@@ -129,9 +699,15 @@ ccg(1,
 ccg(1,
  ba(s:b\np,
   fa(s:b\np,
-   t((s:b\np)/np, 'Excuse', [lemma:'excuse', from:0, to:6]),
-   t(np, 'me', [lemma:'me', from:7, to:9])),
-  t((s:b\np)\(s:b\np), '?', [lemma:'?', from:9, to:10]))).
+   t((s\np)/(s\np), 'Please', [lemma:'please', from:0, to:6]),
+   fa(s:b\np,
+    fa((s:b\np)/np,
+     t(((s:b\np)/np)/np, 'give', [lemma:'give', from:7, to:11]),
+     t(np, 'me', [lemma:'me', from:12, to:14])),
+    fa(np,
+     t(np/n, 'another', [lemma:'another', from:15, to:22]),
+     t(n, 'chance', [lemma:'chance', from:23, to:29])))),
+  t((s:b\np)\(s:b\np), '.', [lemma:'.', from:29, to:30]))).
 
 :- op(601, xfx, (/)).
 :- op(601, xfx, (\)).
@@ -170,504 +746,15 @@ ccg(1,
 ccg(1,
  ba(s:dcl,
   ba(s:dcl,
-   t(np, 'Someone', [lemma:'someone', from:0, to:7]),
-   fa(s:dcl\np,
-    t((s:dcl\np)/(s:ng\np), 'is', [lemma:'is', from:8, to:10]),
-    fa(s:ng\np,
-     t((s:ng\np)/pp, 'standing', [lemma:'standing', from:11, to:19]),
-     fa(pp,
-      t(pp/np, 'behind', [lemma:'behind', from:20, to:26]),
-      fa(np,
-       t(np/n, 'the', [lemma:'the', from:27, to:30]),
-       t(n, 'wall', [lemma:'wall', from:31, to:35])))))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:35, to:36]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:dcl,
-  ba(s:dcl,
-   t(np, 'I', [lemma:'i', from:0, to:1]),
-   fa(s:dcl\np,
-    fa((s:dcl\np)/(s:to\np),
-     t(((s:dcl\np)/(s:to\np))/np, 'asked', [lemma:'asked', from:2, to:7]),
-     t(np, 'him', [lemma:'him', from:8, to:11])),
-    fa(s:to\np,
-     t((s:to\np)/(s:b\np), 'to', [lemma:'to', from:12, to:14]),
-     fa(s:b\np,
-      t((s:b\np)/np, 'do', [lemma:'do', from:15, to:17]),
-      t(np, 'that', [lemma:'that', from:18, to:22]))))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:22, to:23]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:wq,
-  fa(s:wq,
-   t(s:wq/(s:q/np), 'What', [lemma:'what', from:0, to:4]),
-   fc(s:q/np,
-    fa(s:q/(s:b\np),
-     t((s:q/(s:b\np))/np, 'do', [lemma:'do', from:5, to:7]),
-     t(np, 'you', [lemma:'you', from:8, to:11])),
-    fc((s:b\np)/np,
-     fa((s:b\np)/(s:to\np),
-      t(((s:b\np)/(s:to\np))/np, 'want', [lemma:'want', from:12, to:16]),
-      t(np, 'me', [lemma:'me', from:17, to:19])),
-     fc((s:to\np)/np,
-      t((s:to\np)/(s:b\np), 'to', [lemma:'to', from:20, to:22]),
-      t((s:b\np)/np, 'do', [lemma:'do', from:23, to:25]))))),
-  t(s:wq\s:wq, '?', [lemma:'?', from:25, to:26]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:q,
-  fa(s:q,
-   fa(s:q/(s:b\np),
-    t((s:q/(s:b\np))/np, 'May', [lemma:'may', from:0, to:3]),
-    t(np, 'I', [lemma:'i', from:4, to:5])),
-   fa(s:b\np,
-    t((s:b\np)/np, 'borrow', [lemma:'borrow', from:6, to:12]),
-    fa(np,
-     t(np/n, 'this', [lemma:'this', from:13, to:17]),
-     t(n, 'CD', [lemma:'cd', from:18, to:20])))),
-  t(s:q\s:q, '?', [lemma:'?', from:20, to:21]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:wq,
-  fa(s:wq,
-   t(s:wq/(s:dcl\np), 'What', [lemma:'what', from:0, to:4]),
-   ba(s:dcl\np,
-    fa(s:dcl\np,
-     fa((s:dcl\np)/pr,
-      t(((s:dcl\np)/pr)/np, 'keeps', [lemma:'keeps', from:5, to:10]),
-      t(np, 'you', [lemma:'you', from:11, to:14])),
-     t(pr, 'up', [lemma:'up', from:15, to:17])),
-    fa((s\np)\(s\np),
-     t(((s\np)\(s\np))/((s\np)\(s\np)), 'so', [lemma:'so', from:18, to:20]),
-     t((s\np)\(s\np), 'late', [lemma:'late', from:21, to:25])))),
-  t(s:wq\s:wq, '?', [lemma:'?', from:25, to:26]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:dcl,
-  ba(s:dcl,
-   t(np, 'I', [lemma:'i', from:0, to:1]),
-   fa(s:dcl\np,
-    bxc((s:dcl\np)/(s:b\np),
-     t((s:dcl\np)/(s:b\np), 'do', [lemma:'do', from:2, to:4]),
-     t((s\np)\(s\np), 'n\'t', [lemma:'n\'t', from:4, to:7])),
-    fa(s:b\np,
-     t((s:b\np)/pp, 'feel', [lemma:'feel', from:8, to:12]),
-     fa(pp,
-      t(pp/(s:ng\np), 'like', [lemma:'like', from:13, to:17]),
-      fa(s:ng\np,
-       t((s:ng\np)/pr, 'going', [lemma:'going', from:18, to:23]),
-       t(pr, 'out', [lemma:'out', from:24, to:27])))))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:27, to:28]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:dcl,
-  ba(s:dcl,
    fa(np,
-    t(np/(n/pp), 'Our', [lemma:'our', from:0, to:3]),
-    fc(n/pp,
-     t(n/n, 'new', [lemma:'new', from:4, to:7]),
-     fc(n/pp,
-      t(n/n, 'head', [lemma:'head', from:8, to:12]),
-      t(n/pp, 'office', [lemma:'office', from:13, to:19])))),
+    t(np/(n/pp), 'My', [lemma:'my', from:0, to:2]),
+    t(n/pp, 'mother', [lemma:'mother', from:3, to:9])),
    fa(s:dcl\np,
-    t((s:dcl\np)/pp, 'is', [lemma:'is', from:20, to:22]),
-    fa(pp,
-     t(pp/np, 'in', [lemma:'in', from:23, to:25]),
-     lx(np, n,
-      t(n, 'Tokyo', [lemma:'tokyo', from:26, to:31]))))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:31, to:32]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:dcl,
-  ba(s:dcl,
-   t(np, 'I', [lemma:'i', from:0, to:1]),
-   fa(s:dcl\np,
-    t((s:dcl\np)/(s:b\np), 'do', [lemma:'do', from:2, to:4]),
-    fa(s:b\np,
-     t((s:b\np)/(s:adj\np), 'think', [lemma:'think', from:5, to:10]),
-     t(s:adj\np, 'so', [lemma:'so', from:11, to:13])))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:13, to:14]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:wq,
-  fa(s:wq,
-   t(s:wq/s:q, 'Where', [lemma:'where', from:0, to:5]),
-   fa(s:q,
-    fa(s:q/(s:b\np),
-     t((s:q/(s:b\np))/np, 'did', [lemma:'did', from:6, to:9]),
-     t(np, 'you', [lemma:'you', from:10, to:13])),
-    fa(s:b\np,
-     t((s:b\np)/np, 'buy', [lemma:'buy', from:14, to:17]),
-     lx(np, n,
-      t(n, 'flowers', [lemma:'flowers', from:18, to:25]))))),
-  t(s:wq\s:wq, '?', [lemma:'?', from:25, to:26]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:dcl,
-  ba(s:dcl,
-   t(np, 'They', [lemma:'they', from:0, to:4]),
-   fa(s:dcl\np,
-    bxc((s:dcl\np)/(s:ng\np),
-     t((s:dcl\np)/(s:ng\np), 'are', [lemma:'are', from:5, to:8]),
-     t((s\np)\(s\np), 'not', [lemma:'not', from:9, to:12])),
-    ba(s:ng\np,
-     t(s:ng\np, 'coming', [lemma:'coming', from:13, to:19]),
-     t((s\np)\(s\np), 'today', [lemma:'today', from:20, to:25])))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:25, to:26]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:dcl,
-  ba(s:dcl,
-   t(np, 'It', [lemma:'it', from:0, to:2]),
-   fa(s:dcl\np,
-    t((s:dcl\np)/(s:pt\np), '\'s', [lemma:'\'s', from:2, to:4]),
-    fa(s:pt\np,
-     t((s:pt\np)/np, 'been', [lemma:'been', from:5, to:9]),
-     fa(np,
-      t(np/n, 'a', [lemma:'a', from:10, to:11]),
-      fa(n,
-       t(n/n, 'long', [lemma:'long', from:12, to:16]),
-       t(n, 'night', [lemma:'night', from:17, to:22])))))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:22, to:23]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:dcl,
-  ba(s:dcl,
-   t(np, 'He', [lemma:'he', from:0, to:2]),
-   fa(s:dcl\np,
-    t((s:dcl\np)/np, 'noticed', [lemma:'noticed', from:3, to:10]),
-    fa(np,
-     t(np/n, 'a', [lemma:'a', from:11, to:12]),
-     ba(n,
-      t(n, 'letter', [lemma:'letter', from:13, to:19]),
-      fa(n\n,
-       t((n\n)/np, 'on', [lemma:'on', from:20, to:22]),
-       fa(np,
-        t(np/n, 'the', [lemma:'the', from:23, to:26]),
-        t(n, 'desk', [lemma:'desk', from:27, to:31]))))))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:31, to:32]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:dcl,
-  ba(s:dcl,
-   fa(s:ng\np,
-    t((s:ng\np)/np, 'Speaking', [lemma:'speaking', from:0, to:8]),
-    lx(np, n,
-     t(n, 'English', [lemma:'english', from:9, to:16]))),
-   fa(s:dcl\(s:ng\np),
-    t((s:dcl\(s:ng\np))/(s:adj\np), 'is', [lemma:'is', from:17, to:19]),
-    t(s:adj\np, 'difficult', [lemma:'difficult', from:20, to:29]))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:29, to:30]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:dcl,
-  ba(s:dcl,
-   t(np, 'He', [lemma:'he', from:0, to:2]),
-   fa(s:dcl\np,
-    t((s:dcl\np)/np, 'had', [lemma:'had', from:3, to:6]),
-    lx(np, n,
-     fa(n,
-      t(n/n, 'three', [lemma:'three', from:7, to:12]),
-      t(n, 'sons', [lemma:'sons', from:13, to:17]))))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:17, to:18]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:b\np,
-  fa(s:b\np,
-   t((s\np)/(s\np), 'Please', [lemma:'please', from:0, to:6]),
-   fa(s:b\np,
-    fa((s:b\np)/np,
-     t(((s:b\np)/np)/np, 'give', [lemma:'give', from:7, to:11]),
-     t(np, 'me', [lemma:'me', from:12, to:14])),
-    fa(np,
-     t(np/n, 'another', [lemma:'another', from:15, to:22]),
-     t(n, 'chance', [lemma:'chance', from:23, to:29])))),
-  t((s:b\np)\(s:b\np), '.', [lemma:'.', from:29, to:30]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:dcl,
-  ba(s:dcl,
-   lx(np, n,
-    t(n, 'Windows', [lemma:'windows', from:0, to:7])),
-   fa(s:dcl\np,
-    t((s:dcl\np)/np, 'is', [lemma:'is', from:8, to:10]),
-    fa(np,
-     t(np/n, 'the', [lemma:'the', from:11, to:14]),
-     fa(n,
-      fa(n/n,
-       t((n/n)/(n/n), 'most', [lemma:'most', from:15, to:19]),
-       t(n/n, 'used', [lemma:'used', from:20, to:24])),
-      ba(n,
-       fa(n,
-        t(n/n, 'operating', [lemma:'operating', from:25, to:34]),
-        t(n, 'system', [lemma:'system', from:35, to:41])),
-       fa(n\n,
-        t((n\n)/np, 'in', [lemma:'in', from:42, to:44]),
-        fa(np,
-         t(np/n, 'the', [lemma:'the', from:45, to:48]),
-         t(n, 'world', [lemma:'world', from:49, to:54])))))))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:54, to:55]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:dcl,
-  ba(s:dcl,
-   fa(np,
-    t(np/(n/pp), 'Your', [lemma:'your', from:0, to:4]),
-    t(n/pp, 'name', [lemma:'name', from:5, to:9])),
-   fa(s:dcl\np,
-    t((s:dcl\np)/(s:adj\np), 'is', [lemma:'is', from:10, to:12]),
-    fa(s:adj\np,
-     t((s:adj\np)/pp, 'familiar', [lemma:'familiar', from:13, to:21]),
-     fa(pp,
-      t(pp/np, 'to', [lemma:'to', from:22, to:24]),
-      t(np, 'me', [lemma:'me', from:25, to:27]))))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:27, to:28]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:wq,
-  fa(s:wq,
-   fa(s:wq/(s:q/np),
-    fa((s:wq/(s:q/np))/n,
-     t(((s:wq/(s:q/np))/n)/(s:adj\np), 'How', [lemma:'how', from:0, to:3]),
-     t(s:adj\np, 'many', [lemma:'many', from:4, to:8])),
-    t(n, 'boys', [lemma:'boys', from:9, to:13])),
-   bxc(s:q/np,
-    fa(s:q/np,
-     t((s:q/np)/np:thr, 'are', [lemma:'are', from:14, to:17]),
-     t(np:thr, 'there', [lemma:'there', from:18, to:23])),
-    fa(s\s,
-     t((s\s)/np, 'in', [lemma:'in', from:24, to:26]),
-     fa(np,
-      t(np/n, 'this', [lemma:'this', from:27, to:31]),
-      t(n, 'class', [lemma:'class', from:32, to:37]))))),
-  t(s:wq\s:wq, '?', [lemma:'?', from:37, to:38]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:dcl,
-  ba(s:dcl,
-   t(np, 'I', [lemma:'i', from:0, to:1]),
-   fa(s:dcl\np,
-    t((s:dcl\np)/(s:to\np), 'need', [lemma:'need', from:2, to:6]),
-    fa(s:to\np,
-     t((s:to\np)/(s:b\np), 'to', [lemma:'to', from:7, to:9]),
-     fa(s:b\np,
-      fa((s:b\np)/np,
-       t(((s:b\np)/np)/np, 'ask', [lemma:'ask', from:10, to:13]),
-       t(np, 'you', [lemma:'you', from:14, to:17])),
-      fa(np,
-       t(np/n, 'a', [lemma:'a', from:18, to:19]),
-       fa(n,
-        t(n/n, 'silly', [lemma:'silly', from:20, to:25]),
-        t(n, 'question', [lemma:'question', from:26, to:34]))))))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:34, to:35]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:dcl,
-  ba(s:dcl,
-   fa(np,
-    t(np/n, 'The', [lemma:'the', from:0, to:3]),
-    t(n, 'surgeon', [lemma:'surgeon', from:4, to:11])),
-   fa(s:dcl\np,
-    t((s:dcl\np)/np, 'amputated', [lemma:'amputated', from:12, to:21]),
-    fa(np,
-     t(np/n, 'the', [lemma:'the', from:22, to:25]),
-     fa(n,
-      t(n/n, 'wrong', [lemma:'wrong', from:26, to:31]),
-      t(n, 'leg', [lemma:'leg', from:32, to:35]))))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:35, to:36]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:dcl,
-  ba(s:dcl,
-   t(np, 'I', [lemma:'i', from:0, to:1]),
-   fa(s:dcl\np,
-    t((s:dcl\np)/(s:b\np), '\'ll', [lemma:'\'ll', from:1, to:4]),
-    fa(s:b\np,
-     t((s:b\np)/np, 'eat', [lemma:'eat', from:5, to:8]),
-     fa(np,
-      t(np/n, 'the', [lemma:'the', from:9, to:12]),
-      t(n, 'apple', [lemma:'apple', from:13, to:18]))))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:18, to:19]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:dcl,
-  ba(s:dcl,
-   fa(np,
-    t(np/n, 'No', [lemma:'no', from:0, to:2]),
-    t(n, 'one', [lemma:'one', from:3, to:6])),
-   fa(s:dcl\np,
-    t((s:dcl\np)/(s:b\np), 'can', [lemma:'can', from:7, to:10]),
-    ba(s:b\np,
-     fa(s:b\np,
-      t((s:b\np)/np, 'read', [lemma:'read', from:11, to:15]),
-      fa(np,
-       t(np/n, 'the', [lemma:'the', from:16, to:19]),
-       t(n, 'book', [lemma:'book', from:20, to:24]))),
-     fa((s\np)\(s\np),
-      t(((s\np)\(s\np))/(s:ng\np), 'without', [lemma:'without', from:25, to:32]),
-      t(s:ng\np, 'crying', [lemma:'crying', from:33, to:39]))))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:39, to:40]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:q,
-  fa(s:q,
-   fa(s:q/(s:b\np),
-    t((s:q/(s:b\np))/np, 'Could', [lemma:'could', from:0, to:5]),
-    t(np, 'somebody', [lemma:'somebody', from:6, to:14])),
-   fa(s:b\np,
-    t((s\np)/(s\np), 'please', [lemma:'please', from:15, to:21]),
-    fa(s:b\np,
-     t((s:b\np)/np, 'open', [lemma:'open', from:22, to:26]),
-     fa(np,
-      t(np/n, 'the', [lemma:'the', from:27, to:30]),
-      t(n, 'door', [lemma:'door', from:31, to:35]))))),
-  t(s:q\s:q, '?', [lemma:'?', from:35, to:36]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:dcl,
-  ba(s:dcl,
-   t(np, 'I', [lemma:'i', from:0, to:1]),
-   fa(s:dcl\np,
-    t((s:dcl\np)/np, 'saw', [lemma:'saw', from:2, to:5]),
-    fa(np,
-     t(np/n, 'a', [lemma:'a', from:6, to:7]),
-     t(n, 'plane', [lemma:'plane', from:8, to:13])))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:13, to:14]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:dcl,
-  ba(s:dcl,
-   t(np, 'She', [lemma:'she', from:0, to:3]),
-   ba(s:dcl\np,
-    fa(s:dcl\np,
-     t((s:dcl\np)/np, 'made', [lemma:'made', from:4, to:8]),
-     fa(np,
-      t(np/n, 'the', [lemma:'the', from:9, to:12]),
-      fa(n,
-       t(n/n, 'same', [lemma:'same', from:13, to:17]),
-       t(n, 'mistake', [lemma:'mistake', from:18, to:25])))),
-    t((s\np)\(s\np), 'again', [lemma:'again', from:26, to:31]))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:31, to:32]))).
+    bxc((s:dcl\np)/(s:adj\np),
+     t((s:dcl\np)/(s:adj\np), 'is', [lemma:'is', from:10, to:12]),
+     t((s\np)\(s\np), 'always', [lemma:'always', from:13, to:19])),
+    t(s:adj\np, 'busy', [lemma:'busy', from:20, to:24]))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:24, to:25]))).
 
 :- op(601, xfx, (/)).
 :- op(601, xfx, (\)).
@@ -706,16 +793,47 @@ ccg(1,
  ba(s:dcl,
   ba(s:dcl,
    t(np, 'It', [lemma:'it', from:0, to:2]),
-   ba(s:dcl\np,
-    ba(s:dcl\np,
-     fa(s:dcl\np,
-      t((s:dcl\np)/(s:adj\np), 'was', [lemma:'was', from:3, to:6]),
-      t(s:adj\np, 'colder', [lemma:'colder', from:7, to:13])),
-     t((s\np)\(s\np), 'yesterday', [lemma:'yesterday', from:14, to:23])),
-    fa((s\np)\(s\np),
-     t(((s\np)\(s\np))/(s:adj\np), 'than', [lemma:'than', from:24, to:28]),
-     t(s:adj\np, 'today', [lemma:'today', from:29, to:34])))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:34, to:35]))).
+   fa(s:dcl\np,
+    t((s:dcl\np)/(s:adj\np), '\'s', [lemma:'\'s', from:2, to:4]),
+    fa(s:adj\np,
+     t((s:adj\np)/(s:adj\np), 'very', [lemma:'very', from:5, to:9]),
+     t(s:adj\np, 'romantic', [lemma:'romantic', from:10, to:18])))),
+  t(s:dcl\s:dcl, '!', [lemma:'!', from:18, to:19]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:b\np,
+  fa(s:b\np,
+   t((s\np)/(s\np), 'Just', [lemma:'just', from:0, to:4]),
+   fa(s:b\np,
+    t((s:b\np)/s:intj, 'say', [lemma:'say', from:5, to:8]),
+    ba(s:intj,
+     t(s:intj, 'yes', [lemma:'yes', from:9, to:12]),
+     fa(s:intj\s:intj,
+      t((s:intj\s:intj)/s:intj, 'or', [lemma:'or', from:13, to:15]),
+      t(s:intj, 'no', [lemma:'no', from:16, to:18]))))),
+  t((s:b\np)\(s:b\np), '.', [lemma:'.', from:18, to:19]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:q,
+  fa(s:q,
+   fa(s:q/(s:b\np),
+    t((s:q/(s:b\np))/np, 'Does', [lemma:'does', from:0, to:4]),
+    t(np, 'she', [lemma:'she', from:5, to:8])),
+   fa(s:b\np,
+    t((s:b\np)/np, 'speak', [lemma:'speak', from:9, to:14]),
+    lx(np, n,
+     t(n, 'English', [lemma:'english', from:15, to:22])))),
+  t(s:q\s:q, '?', [lemma:'?', from:22, to:23]))).
 
 :- op(601, xfx, (/)).
 :- op(601, xfx, (\)).
@@ -744,40 +862,12 @@ ccg(1,
  ba(s:dcl,
   ba(s:dcl,
    fa(np,
-    t(np/n, 'The', [lemma:'the', from:0, to:3]),
-    t(n, 'policeman', [lemma:'policeman', from:4, to:13])),
+    t(np/(n/pp), 'My', [lemma:'my', from:0, to:2]),
+    t(n/pp, 'suitcase', [lemma:'suitcase', from:3, to:11])),
    fa(s:dcl\np,
-    t((s:dcl\np)/(s:ng\np), 'is', [lemma:'is', from:14, to:16]),
-    fa(s:ng\np,
-     t((s:ng\np)/np, 'wearing', [lemma:'wearing', from:17, to:24]),
-     fa(np,
-      t(np/n, 'a', [lemma:'a', from:25, to:26]),
-      fa(n,
-       t(n/n, 'gas', [lemma:'gas', from:27, to:30]),
-       t(n, 'mask', [lemma:'mask', from:31, to:35])))))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:35, to:36]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:dcl,
-  t(np, 'You', [lemma:'you', from:0, to:3]),
-  fa(s:dcl\np,
-   bxc((s:dcl\np)/(s:b\np),
-    t((s:dcl\np)/(s:b\np), 'ca', [lemma:'ca', from:4, to:6]),
-    t((s\np)\(s\np), 'n\'t', [lemma:'n\'t', from:6, to:9])),
-   fa(s:b\np,
-    t((s:b\np)/s:intj, 'say', [lemma:'say', from:10, to:13]),
-    fa(s:intj,
-     t(s:intj/s:intj, '\"', [lemma:'\"', from:14, to:15]),
-     ba(s:intj,
-      ba(s:intj,
-       t(s:intj, 'No', [lemma:'no', from:15, to:17]),
-       t(s:intj\s:intj, '.', [lemma:'.', from:17, to:18])),
-      t(s:intj\s:intj, '\"', [lemma:'\"', from:18, to:19]))))))).
+    t((s:dcl\np)/(s:adj\np), 'is', [lemma:'is', from:12, to:14]),
+    t(s:adj\np, 'broken', [lemma:'broken', from:15, to:21]))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:21, to:22]))).
 
 :- op(601, xfx, (/)).
 :- op(601, xfx, (\)).
@@ -804,15 +894,16 @@ ccg(1,
 :- discontiguous ccg/2, id/2.
 
 ccg(1,
- ba(s:wq,
-  fa(s:wq,
-   t(s:wq/(s:q/(s:adj\np)), 'How', [lemma:'how', from:0, to:3]),
-   fa(s:q/(s:adj\np),
-    t((s:q/(s:adj\np))/np, 'is', [lemma:'is', from:4, to:6]),
-    fa(np,
-     t(np/(n/pp), 'your', [lemma:'your', from:7, to:11]),
-     t(n/pp, 'dad', [lemma:'dad', from:12, to:15])))),
-  t(s:wq\s:wq, '?', [lemma:'?', from:15, to:16]))).
+ ba(s:dcl,
+  ba(s:dcl,
+   fa(s:ng\np,
+    t((s:ng\np)/np, 'Speaking', [lemma:'speaking', from:0, to:8]),
+    lx(np, n,
+     t(n, 'English', [lemma:'english', from:9, to:16]))),
+   fa(s:dcl\(s:ng\np),
+    t((s:dcl\(s:ng\np))/(s:adj\np), 'is', [lemma:'is', from:17, to:19]),
+    t(s:adj\np, 'difficult', [lemma:'difficult', from:20, to:29]))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:29, to:30]))).
 
 :- op(601, xfx, (/)).
 :- op(601, xfx, (\)).
@@ -822,42 +913,13 @@ ccg(1,
 ccg(1,
  ba(s:dcl,
   ba(s:dcl,
-   fa(np,
-    t(np/(n/pp), 'My', [lemma:'my', from:0, to:2]),
-    t(n/pp, 'father', [lemma:'father', from:3, to:9])),
-   ba(s:dcl\np,
-    fa(s:dcl\np,
-     t((s:dcl\np)/pp, 'goes', [lemma:'goes', from:10, to:14]),
-     fa(pp,
-      t(pp/np, 'to', [lemma:'to', from:15, to:17]),
-      lx(np, n,
-       t(n, 'work', [lemma:'work', from:18, to:22])))),
-    fa((s\np)\(s\np),
-     t(((s\np)\(s\np))/np, 'by', [lemma:'by', from:23, to:25]),
-     lx(np, n,
-      t(n, 'bike', [lemma:'bike', from:26, to:30]))))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:30, to:31]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:dcl,
-  ba(s:dcl,
-   t(np, 'I', [lemma:'i', from:0, to:1]),
+   lx(np, n,
+    t(n, 'Dreams', [lemma:'dreams', from:0, to:6])),
    fa(s:dcl\np,
-    t((s:dcl\np)/(s:adj\np), '\'m', [lemma:'\'m', from:1, to:3]),
-    fa(s:adj\np,
-     t((s:adj\np)/(s:to\np), 'happy', [lemma:'happy', from:4, to:9]),
-     fa(s:to\np,
-      t((s:to\np)/(s:b\np), 'to', [lemma:'to', from:10, to:12]),
-      ba(s:b\np,
-       fa(s:b\np,
-        t((s:b\np)/np, 'see', [lemma:'see', from:13, to:16]),
-        t(np, 'you', [lemma:'you', from:17, to:20])),
-       t((s\np)\(s\np), 'again', [lemma:'again', from:21, to:26])))))),
+    t((s\np)/(s\np), 'sometimes', [lemma:'sometimes', from:7, to:16]),
+    fa(s:dcl\np,
+     t((s:dcl\np)/(s:adj\np), 'come', [lemma:'come', from:17, to:21]),
+     t(s:adj\np, 'true', [lemma:'true', from:22, to:26])))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:26, to:27]))).
 
 :- op(601, xfx, (/)).
@@ -868,18 +930,33 @@ ccg(1,
 ccg(1,
  ba(s:dcl,
   ba(s:dcl,
-   t(np, 'I', [lemma:'i', from:0, to:1]),
+   t(np, 'Someone', [lemma:'someone', from:0, to:7]),
    fa(s:dcl\np,
-    fa((s:dcl\np)/(s:to\np),
-     t(((s:dcl\np)/(s:to\np))/np, 'want', [lemma:'want', from:2, to:6]),
-     lx(np, n,
-      t(n, 'Tom', [lemma:'tom', from:7, to:10]))),
-    fa(s:to\np,
-     t((s:to\np)/(s:b\np), 'to', [lemma:'to', from:11, to:13]),
-     fa(s:b\np,
-      t((s:b\np)/(s:pss\np), 'be', [lemma:'be', from:14, to:16]),
-      t(s:pss\np, 'arrested', [lemma:'arrested', from:17, to:25]))))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:25, to:26]))).
+    t((s:dcl\np)/(s:ng\np), 'is', [lemma:'is', from:8, to:10]),
+    fa(s:ng\np,
+     t((s:ng\np)/pp, 'standing', [lemma:'standing', from:11, to:19]),
+     fa(pp,
+      t(pp/np, 'behind', [lemma:'behind', from:20, to:26]),
+      fa(np,
+       t(np/n, 'the', [lemma:'the', from:27, to:30]),
+       t(n, 'wall', [lemma:'wall', from:31, to:35])))))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:35, to:36]))).
+
+:- op(601, xfx, (/)).
+:- op(601, xfx, (\)).
+:- multifile ccg/2, id/2.
+:- discontiguous ccg/2, id/2.
+
+ccg(1,
+ ba(s:wq,
+  fa(s:wq,
+   t(s:wq/(s:dcl\np), 'What', [lemma:'what', from:0, to:4]),
+   fa(s:dcl\np,
+    t((s:dcl\np)/np, '\'s', [lemma:'\'s', from:4, to:6]),
+    fa(np,
+     t(np/n, 'that', [lemma:'that', from:7, to:11]),
+     t(n, 'building', [lemma:'building', from:12, to:20])))),
+  t(s:wq\s:wq, '?', [lemma:'?', from:20, to:21]))).
 
 :- op(601, xfx, (/)).
 :- op(601, xfx, (\)).
@@ -889,15 +966,24 @@ ccg(1,
 ccg(1,
  ba(s:dcl,
   ba(s:dcl,
-   t(np, 'He', [lemma:'he', from:0, to:2]),
-   fa(s:dcl\np,
-    t((s:dcl\np)/np, 'had', [lemma:'had', from:3, to:6]),
+   ba(np,
     fa(np,
-     t(np/n, 'a', [lemma:'a', from:7, to:8]),
-     fa(n,
-      t(n/n, 'new', [lemma:'new', from:9, to:12]),
-      t(n, 'idea', [lemma:'idea', from:13, to:17]))))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:17, to:18]))).
+     t(np/n, 'The', [lemma:'the', from:0, to:3]),
+     t(n, 'Earth', [lemma:'earth', from:4, to:9])),
+    fa(np\np,
+     t((np\np)/np, ',', [lemma:',', from:9, to:10]),
+     ba(np,
+      lx(np, n,
+       t(n, 'Mars', [lemma:'mars', from:11, to:15])),
+      fa(np\np,
+       t((np\np)/np, 'and', [lemma:'and', from:16, to:19]),
+       lx(np, n,
+        t(n, 'Jupiter', [lemma:'jupiter', from:20, to:27])))))),
+   fa(s:dcl\np,
+    t((s:dcl\np)/np, 'are', [lemma:'are', from:28, to:31]),
+    lx(np, n,
+     t(n, 'planets', [lemma:'planets', from:32, to:39])))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:39, to:40]))).
 
 :- op(601, xfx, (/)).
 :- op(601, xfx, (\)).
@@ -909,16 +995,13 @@ ccg(1,
   ba(s:dcl,
    t(np, 'They', [lemma:'they', from:0, to:4]),
    fa(s:dcl\np,
-    t((s:dcl\np)/(s:adj\np), 'are', [lemma:'are', from:5, to:8]),
-    fa(s:adj\np,
-     t((s:adj\np)/(s:adj\np), 'very', [lemma:'very', from:9, to:13]),
-     fa(s:adj\np,
-      t((s:adj\np)/pp, 'interested', [lemma:'interested', from:14, to:24]),
-      fa(pp,
-       t(pp/np, 'in', [lemma:'in', from:25, to:27]),
-       lx(np, n,
-        t(n, 'astronomy', [lemma:'astronomy', from:28, to:37]))))))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:37, to:38]))).
+    bxc((s:dcl\np)/(s:ng\np),
+     t((s:dcl\np)/(s:ng\np), 'are', [lemma:'are', from:5, to:8]),
+     t((s\np)\(s\np), 'not', [lemma:'not', from:9, to:12])),
+    ba(s:ng\np,
+     t(s:ng\np, 'coming', [lemma:'coming', from:13, to:19]),
+     t((s\np)\(s\np), 'today', [lemma:'today', from:20, to:25])))),
+  t(s:dcl\s:dcl, '.', [lemma:'.', from:25, to:26]))).
 
 :- op(601, xfx, (/)).
 :- op(601, xfx, (\)).
@@ -926,93 +1009,17 @@ ccg(1,
 :- discontiguous ccg/2, id/2.
 
 ccg(1,
- ba(np,
-  fa(np,
-   t(np/n, 'No', [lemma:'no', from:0, to:2]),
-   t(n, 'problem', [lemma:'problem', from:3, to:10])),
-  t(np\np, '.', [lemma:'.', from:10, to:11]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:dcl,
-  ba(s:dcl,
-   t(np, 'You', [lemma:'you', from:0, to:3]),
-   fa(s:dcl\np,
-    t((s:dcl\np)/(s:adj\np), 'are', [lemma:'are', from:4, to:7]),
-    fa(s:adj\np,
-     t((s:adj\np)/pp, 'welcome', [lemma:'welcome', from:8, to:15]),
-     fa(pp,
-      t(pp/np, 'to', [lemma:'to', from:16, to:18]),
-      fa(np,
-       t(np/n, 'the', [lemma:'the', from:19, to:22]),
-       fa(n,
-        t(n/pp, 'use', [lemma:'use', from:23, to:26]),
-        fa(pp,
-         t(pp/np, 'of', [lemma:'of', from:27, to:29]),
-         fa(np,
-          t(np/(n/pp), 'my', [lemma:'my', from:30, to:32]),
-          t(n/pp, 'yacht', [lemma:'yacht', from:33, to:38]))))))))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:38, to:39]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:q,
-  fa(s:q,
-   fa(s:q/(s:b\np),
-    t((s:q/(s:b\np))/np, 'May', [lemma:'may', from:0, to:3]),
-    t(np, 'I', [lemma:'i', from:4, to:5])),
-   fa(s:b\np,
-    t((s:b\np)/np, 'borrow', [lemma:'borrow', from:6, to:12]),
-    fa(np,
-     t(np/(n/pp), 'your', [lemma:'your', from:13, to:17]),
-     t(n/pp, 'bike', [lemma:'bike', from:18, to:22])))),
-  t(s:q\s:q, '?', [lemma:'?', from:22, to:23]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:dcl,
-  ba(s:dcl,
-   t(np, 'He', [lemma:'he', from:0, to:2]),
-   ba(s:dcl\np,
-    t(s:dcl\np, 'lives', [lemma:'lives', from:3, to:8]),
-    fa((s\np)\(s\np),
-     t(((s\np)\(s\np))/s:poss, 'as', [lemma:'as', from:9, to:11]),
-     fa(s:poss,
-      t(s:poss/s:dcl, 'if', [lemma:'if', from:12, to:14]),
-      ba(s:dcl,
-       t(np, 'he', [lemma:'he', from:15, to:17]),
-       fa(s:dcl\np,
-        t((s:dcl\np)/np, 'were', [lemma:'were', from:18, to:22]),
-        fa(np,
-         t(np/n, 'a', [lemma:'a', from:23, to:24]),
-         t(n, 'millionaire', [lemma:'millionaire', from:25, to:36])))))))),
-  t(s:dcl\s:dcl, '.', [lemma:'.', from:36, to:37]))).
-
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
- ba(s:dcl,
-  ba(s:dcl,
-   t(np, 'It', [lemma:'it', from:0, to:2]),
-   fa(s:dcl\np,
-    t((s:dcl\np)/(s:adj\np), '\'s', [lemma:'\'s', from:2, to:4]),
-    fa(s:adj\np,
-     t((s:adj\np)/(s:adj\np), 'very', [lemma:'very', from:5, to:9]),
-     t(s:adj\np, 'romantic', [lemma:'romantic', from:10, to:18])))),
-  t(s:dcl\s:dcl, '!', [lemma:'!', from:18, to:19]))).
+ ba(s:b\np,
+  ba(s:b\np,
+   t(s:b\np, 'Stop', [lemma:'stop', from:0, to:4]),
+   fa((s:b\np)\(s:b\np),
+    fa(((s:b\np)\(s:b\np))/s:dcl,
+     t((((s:b\np)\(s:b\np))/s:dcl)/(((s:b\np)\(s:b\np))/s:dcl), ',', [lemma:',', from:4, to:5]),
+     t(((s:b\np)\(s:b\np))/s:dcl, 'or', [lemma:'or', from:6, to:8])),
+    ba(s:dcl,
+     t(np, 'I', [lemma:'i', from:9, to:10]),
+     fa(s:dcl\np,
+      t((s:dcl\np)/(s:b\np), '\'ll', [lemma:'\'ll', from:10, to:13]),
+      t(s:b\np, 'shoot', [lemma:'shoot', from:14, to:19]))))),
+  t((s:b\np)\(s:b\np), '.', [lemma:'.', from:19, to:20]))).
 
