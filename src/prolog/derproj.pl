@@ -23,7 +23,7 @@
     must/1,
     split/4,
     substitute_sub_term/4,
-    term_in_file/3,
+    term_in_stream/3,
     write_clause/2,
     write_clause/3]).
 
@@ -35,23 +35,29 @@
 :- dynamic target_typechanger/4.
 
 main :-
-  argv([_, EnglishDerFile, WordAlignFile, ForeignTokOffFile, EnglishTokOffFile, SemanticsFormat, StripFeatures, OutputFormat]), % HACK: first argument is a workaround for https://github.com/SWI-Prolog/swipl-devel/issues/298
+  argv([EnglishNodeFile, WordAlignFile, ForeignTokOffFile, EnglishTokOffFile, SemanticsFormat, StripFeatures, OutputFormat]),
   assertion(member(SemanticsFormat, ['boxer', 'offsets'])),
   assertion(member(StripFeatures, ['true', 'false'])),
   assertion(member(OutputFormat, ['parse.tags', 'node'])),
   % Load information from various sources:
-  load_source_derivations(EnglishDerFile, StripFeatures),
-  %dump_source,
   load_wordalign_file(WordAlignFile),
   %dump_wordalign,
   tokoff_read_file(ForeignTokOffFile, ForeignSentences),
   tokoff_read_file(EnglishTokOffFile, EnglishSentences),
-  % Project:
-  transfer_categories(ForeignSentences, EnglishSentences, SemanticsFormat),
-  transfer_typechangers,
-  flip_slashes,
-  %dump_target,
-  create_derivations(ForeignSentences, OutputFormat),
+  open(EnglishNodeFile, read, EnglishNodeStream),
+  forall(
+      ( load_source_derivation(EnglishNodeStream, StripFeatures, SID)
+      ),
+      ( dump_source,
+	nth1(SID, ForeignSentences, ForeignSentence),
+	nth1(SID, EnglishSentences, EnglishSentence),
+	transfer_categories(SID, ForeignSentence, EnglishSentence, SemanticsFormat),
+	transfer_typechangers,
+	flip_slashes,
+	dump_target,
+	create_derivation(SID, ForeignSentence, OutputFormat),
+	clear
+      ) ),
   halt.
 main :-
   format(user_error, 'USAGE (example): swipl -l derproj -g main en.node nl.wordalign nl.tok.off en.tok.off boxer false parse.tags~n', []),
@@ -60,10 +66,9 @@ main :-
 %%% CORE PROJECTION PREDICATES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Asserts target_catobj/5 facts mapping target tokens to category objects.
-transfer_categories(ForeignSentences, EnglishSentences, SemanticsFormat) :-
+transfer_categories(SID, ForeignSentence, EnglishSentence, SemanticsFormat) :-
   forall(
-      ( nth1(SID, ForeignSentences, ForeignSentence),
-        member(tokoff(ForFrom, ForTo, _TokID, Token), ForeignSentence)
+      ( member(tokoff(ForFrom, ForTo, _TokID, Token), ForeignSentence)
       ),
       ( forall(
 	    ( wordalign(SID, ForFrom, ForTo, EnglishOffsets)
@@ -78,8 +83,7 @@ transfer_categories(ForeignSentences, EnglishSentences, SemanticsFormat) :-
               -> findall(EngTokoff,
                      ( member(EngFrom-EngTo, Pairs),
                        once(
-                           ( nth1(SID, EnglishSentences, EnglishSentence),
-                             member(EngTokoff, EnglishSentence),
+                           ( member(EngTokoff, EnglishSentence),
                              EngTokoff = tokoff(EngFrom, EngTo, _, _)
                            ) )
                      ), EngPhrase),
@@ -220,85 +224,85 @@ flip_slashes_args(SID, X/Y, FlipX/Y) :-
 flip_slashes_args(SID, X\Y, FlipX\Y) :-
   flip_slashes_args(SID, X, FlipX).
 
-create_derivations(ForeignSentences, Format) :-
-  forall(
-      ( nth1(SID, ForeignSentences, ForeignSentence)
-      ),
-      ( % Determine target category object:
-        (  source_sentence_catobj(SID, TargetCO)
-        -> true
-        ;  format(user_error, 'WARNING: no target category object for sentence ~w found (did not find or failed to analyze 1:1 aligned source sentence)~n', [SID]),
-           TargetCO = dummy
-        ),
-        % Parse the foreign sentence using projected categories:
-        make_item(target_catobj, target_typechanger, SID, ForeignSentence, Item),
-        catch(
-            ( parse([Item], Agenda0)
-            ), agenda_limit_exceeded,
-            ( format(user_error, 'WARNING: parser agenda limit exceeded for sentence ~w~n', [SID]),
-              Agenda0 = []
-            ) ),
-        include(hits_target(TargetCO), Agenda0, Agenda),
-        length(Agenda, Length),
-        (  Length = 0
-        -> format(user_error, 'WARNING: no parse projected for sentence ~w~n', [SID])
-        ;  (  Length > 1
-           -> format(user_error, 'WARNING: ~w different parses projected for sentence ~w~n', [Length, SID])
-           ;  true
-           ),
-	   format(user_error, 'INFO: parse projected for sentence ~w~n', [SID]),
-           Agenda = [item([Node], [], _, true)|_],
-	   %with_output_to(user_error, pp_node(Node)),
-	   (  Format == node
-	   -> pp_node(node(SID, Node))
-	   ;  node2ccg(Node, CCG),
-              write_clause(current_output, ccg(SID, CCG), [module(slashes)])
-	   )
-        )
-      ) ).
+create_derivation(SID, ForeignSentence, Format) :-
+  % Determine target category object:
+  (  source_sentence_catobj(SID, TargetCO)
+  -> true
+  ;  format(user_error, 'WARNING: no target category object for sentence ~w found (did not find or failed to analyze 1:1 aligned source sentence)~n', [SID]),
+     TargetCO = dummy
+  ),
+  % Parse the foreign sentence using projected categories:
+  make_item(target_catobj, target_typechanger, SID, ForeignSentence, Item),
+  catch(
+      ( parse([Item], Agenda0)
+      ), agenda_limit_exceeded,
+      ( format(user_error, 'WARNING: parser agenda limit exceeded for sentence ~w~n', [SID]),
+        Agenda0 = []
+      ) ),
+  include(hits_target(TargetCO), Agenda0, Agenda),
+  length(Agenda, Length),
+  (  Length = 0
+  -> format(user_error, 'WARNING: no parse projected for sentence ~w~n', [SID])
+  ;  (  Length > 1
+     -> format(user_error, 'WARNING: ~w different parses projected for sentence ~w~n', [Length, SID])
+     ;  true
+     ),
+     format(user_error, 'INFO: parse projected for sentence ~w~n', [SID]),
+     Agenda = [item([Node], [], _, true)|_],
+     %with_output_to(user_error, pp_node(Node)),
+     (  Format == node
+     -> pp_node(node(SID, Node))
+     ;  node2ccg(Node, CCG),
+        write_clause(current_output, ccg(SID, CCG), [module(slashes)])
+     )
+  ).
 
 %%% LOADERS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Asserts source_catobj/6 and source_typechanger/4 facts mapping source offset
 % pairs to lexical category objects and to typechangers.
-load_source_derivations(EnglishNodeFile, StripFeatures) :-
+load_source_derivation(EnglishNodeStream, StripFeatures, SID) :-
+  term_in_stream(node(SID, Node), EnglishNodeStream, [module(slashes)]),
+  % Get lexical category objects:
   forall(
-      ( term_in_file(node(SID, Node), EnglishNodeFile, [module(slashes)])
+      ( sub_node(node(CO0, Sem, t(_Form, Atts0), []), Node)
       ),
-      ( % Get lexical category objects:
-        forall(
-            ( sub_node(node(CO0, Sem, t(_Form, Atts0), []), Node)
-            ),
-            ( select(from:From, Atts0, Atts1),
-              select(to:To, Atts1, Atts),
-	      (  StripFeatures
-	      -> strip_features(CO0, CO)
-	      ;  CO0 = CO
-	      ),
-              assertz(source_catobj(SID, From, To, CO, Sem, Atts))
-            ) ),
-        % Get type changers:
-        forall(
-            ( sub_node(node(X0, _, tc(TCSem), [Child]), Node)
-            ),
-            ( Child = node(Y0, _, _, _),
-              node_from_to(Child, From, To),
-	      ( StripFeatures
-	      -> strip_features(X0, X),
-		 strip_features(Y0, Y)
-	      ;  X0 = X,
-		 Y0 = Y
-	      ),
-              assertz(source_typechanger(SID, From, To, tc(X-Y, TCSem)))
-            ) ),
-        % Get sentence category object:
-        Node = node(CO0, _, _, _),
-	(  StripFeatures
-	-> strip_features(CO0, CO)
-	;  CO0 = CO
-	),
-        assertz(source_sentence_catobj(SID, CO))
-      ) ).
+      ( select(from:From, Atts0, Atts1),
+        select(to:To, Atts1, Atts),
+        (  StripFeatures
+        -> strip_features(CO0, CO)
+        ;  CO0 = CO
+        ),
+        assertz(source_catobj(SID, From, To, CO, Sem, Atts))
+      ) ),
+  % Get type changers:
+  forall(
+      ( sub_node(node(X0, _, tc(TCSem), [Child]), Node)
+      ),
+      ( Child = node(Y0, _, _, _),
+        node_from_to(Child, From, To),
+        ( StripFeatures
+        -> strip_features(X0, X),
+  	 strip_features(Y0, Y)
+        ;  X0 = X,
+  	 Y0 = Y
+        ),
+        assertz(source_typechanger(SID, From, To, tc(X-Y, TCSem)))
+      ) ),
+  % Get sentence category object:
+  Node = node(CO0, _, _, _),
+  (  StripFeatures
+  -> strip_features(CO0, CO)
+  ;  CO0 = CO
+  ),
+  assertz(source_sentence_catobj(SID, CO)).
+
+clear :-
+  retractall(source_catobj(_, _, _, _, _, _)),
+  retractall(source_typechanger(_, _, _, _)),
+  retractall(source_sentence_catobj(_, _)),
+  retractall(target_catobj(_, _, _, _, _, _)),
+  retractall(target_typechanger(_, _, _, _)).
 
 % Reads the word alignment file and asserts its contents as wordalign/4 facts.
 load_wordalign_file(WordAlignFile) :-
