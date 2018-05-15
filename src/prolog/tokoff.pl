@@ -4,7 +4,7 @@
 :- use_module(library(dialect/sicstus/lists), [
     substitute/4]).
 :- use_module(util, [
-    line_in_file/2,
+    block_in_file/2,
     split/4]).
 
 %%	tokoff_read_file(+FileName, -Sentences)
@@ -12,9 +12,10 @@
 %	Reads a PMB-style .tok.off file into a list of lists of =|tokoff/4|=
 %	terms. Each list corresponds to a sentence.
 tokoff_read_file(FileName, Sentences) :-
-  findall(Line, line_in_file(Line, FileName), Lines),
-  split(Lines, [], infinity, Blocks),
-  maplist(block2sentences, Blocks, Sentencess),
+  findall(Sentences,
+      ( block_in_file(Block, FileName),
+	block2sentences(Block, Sentences)
+      ), Sentencess),
   append(Sentencess, Sentences).
 
 block2sentences(Block, Sentences) :-

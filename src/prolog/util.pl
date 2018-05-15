@@ -1,6 +1,8 @@
 :- module(util, [
     argv/1,
     atom_upper/2,
+    block_in_file/2,
+    block_in_stream/2,
     codes//2,
     dedup/2,
     enumerate/2,
@@ -93,6 +95,21 @@ line_in_file(Codes, File) :-
       ( close(Stream)
       ) ).
 
+%%	block_in_file(-Codes, +FileName) is nondet.
+%
+%	Opens the specified file and succeeds once for every block (contiguous
+%	sequence of lines terminated by an empty line) in it. Blocks are
+%	returned as lists of lines in the block (as code-lists), not including
+%	the final empty lines.
+block_in_file(Block, File) :-
+  setup_call_cleanup(
+      ( open(File, read, Stream)
+      ),
+      ( block_in_stream(Block, Stream)
+      ),
+      ( close(Stream)
+      ) ).
+
 %%	line_in_stream(-Codes, +Stream) is nondet.
 %
 %	Reads from Stream and succeeds once for every line read from it.
@@ -103,6 +120,28 @@ line_in_stream(Codes, Stream) :-
   -> !,
      fail
   ;  true
+  ).
+
+%%	block_in_stream(-Lines, +Stream) is nondet.
+%
+%	Reads from Stream and succeeds once for every block (contiguous
+%	sequence of lines terminated by an empty line) in it. Lines is a
+%	list of the lines in the block (as code-lists), not including the
+%	final empty line.
+block_in_stream(Lines, Stream) :-
+  repeat,
+  (  next_block_in_stream(Lines, Stream)
+  -> true
+  ;  !,
+     fail
+  ).
+
+next_block_in_stream(Lines, Stream) :-
+  line_in_stream(Line, Stream),
+  (  Line = []
+  -> Lines = []
+  ;  Lines = [Line|Rest],
+     next_block_in_stream(Rest, Stream)
   ).
 
 %%	lines_in_file(-Lines, +FileName)

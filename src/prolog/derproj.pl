@@ -18,8 +18,9 @@
     tokoff_read_file/2]).
 :- use_module(util, [
     argv/1,
+    block_in_file/2,
     dedup/2,
-    line_in_file/2,
+    enumerate/2,
     must/1,
     split/4,
     substitute_sub_term/4,
@@ -306,10 +307,8 @@ clear :-
 
 % Reads the word alignment file and asserts its contents as wordalign/4 facts.
 load_wordalign_file(WordAlignFile) :-
-  findall(Line, line_in_file(Line, WordAlignFile), Lines),
-  split(Lines, [], infinity, Blocks),
   forall(
-      ( nth1(SID, Blocks, Block)
+      ( enumerate(SID, block_in_file(Block, WordAlignFile))
       ),
       ( findall(wordalign(SID, ForeignFrom, ForeignTo, EnglishOffsetsList),
 	    ( member(Line, Block),
