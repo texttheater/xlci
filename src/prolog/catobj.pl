@@ -99,11 +99,11 @@ cos_tops_deps(COs, TopCOs, Deps) :-
   %nl,
   resolve_targets(Deps0, TopCOs, TargetTopCOs, Deps).
 
-resolve_targets([target(TopCO)-Head|Deps0], TopCOs, TargetTopCOs, [TargetTopCO-Head|Deps]) :-
+resolve_targets([dep(target(TopCO), Head, Label)|Deps0], TopCOs, TargetTopCOs, [dep(TargetTopCO, Head, Label)|Deps]) :-
   resolve_target(TopCO, TopCOs, TargetTopCOs, TargetTopCO),
   !,
   resolve_targets(Deps0, TopCOs, TargetTopCOs, Deps).
-resolve_targets([Dependent-target(TopCO)|Deps0], TopCOs, TargetTopCOs, [Dependent-TargetTopCO|Deps]) :-
+resolve_targets([dep(Dependent, target(TopCO), Label)|Deps0], TopCOs, TargetTopCOs, [dep(Dependent, TargetTopCO, Label)|Deps]) :-
   resolve_target(TopCO, TopCOs, TargetTopCOs, TargetTopCO),
   !,
   resolve_targets(Deps0, TopCOs, TargetTopCOs, Deps).
@@ -122,17 +122,19 @@ resolve_target(TopCO, TopCOs, TargetTopCOs, TargetTopCO) :-
   ).
 resolve_target(TopCO, _, _, TopCO).
 
-co_top_target_deps(CO, TopCO, TargetTopCO0, TargetTopCO, [TargetTopCO0-target(ArgTopCO)|Deps]) :-
+co_top_target_deps(CO, TopCO, TargetTopCO0, TargetTopCO, [dep(TargetTopCO0, target(ArgTopCO), Label)|Deps]) :-
   is_modifier_co(CO), % TODO also treat determiners, prepositions, ... as dependents?
   co_res_arg(CO, ResCO, ArgCO),
   !,
   co_top(ArgCO, ArgTopCO), % TODO should we do target calculations here??
-  co_top_target_deps(ResCO, TopCO, ArgTopCO, TargetTopCO, Deps).
-co_top_target_deps(CO, TopCO, TargetTopCO0, TargetTopCO, [target(ArgTopCO)-TargetTopCO0|Deps]) :-
+  co_top_target_deps(ResCO, TopCO, ArgTopCO, TargetTopCO, Deps),
+  co2cat(CO, Label).
+co_top_target_deps(CO, TopCO, TargetTopCO0, TargetTopCO, [dep(target(ArgTopCO), TargetTopCO0, Label)|Deps]) :-
   co_res_arg(CO, ResCO, ArgCO),
   !,
   co_top(ArgCO, ArgTopCO), % TODO should we do target calculations here??
-  co_top_target_deps(ResCO, TopCO, TargetTopCO0, TargetTopCO, Deps).
+  co_top_target_deps(ResCO, TopCO, TargetTopCO0, TargetTopCO, Deps),
+  co2cat(CO, Label).
 co_top_target_deps(CO, CO, TargetTopCO, TargetTopCO, []).
 
 co_top(CO, TopCO) :-

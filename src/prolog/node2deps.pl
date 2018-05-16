@@ -69,7 +69,7 @@ node2deps(Node) :-
 
 tc_newco_oldco(NewCO-OldCO, NewCO, OldCO).
 
-tok4tc(TCTopCOs, TCOldCOs, Dep0-Head0, Dep-Head) :-
+tok4tc(TCTopCOs, TCOldCOs, dep(Dep0, Head0, Label), dep(Dep, Head, Label)) :-
   tok4tc_(TCTopCOs, TCOldCOs, Dep0, Dep),
   tok4tc_(TCTopCOs, TCOldCOs, Head0, Head).
 
@@ -81,7 +81,7 @@ tok4tc_(TCTopCOs, TCOldCOs, CO0, CO) :-
 tok4tc_(_, _, CO, CO).
 
 write_dep(Tokens, TopCOs, Deps, DToken, TopCO) :-
-  member(TopCO-Head, Deps),
+  member(dep(TopCO, Head, Label), Deps),
   !,
   nth1(N, TopCOs, Head),
   nth1(N, Tokens, HToken),
@@ -95,7 +95,8 @@ write_dep(Tokens, TopCOs, Deps, DToken, TopCO) :-
   node_co(HToken, HCO),
   co2cat(HCO, HCat),
   phrase(cat(HCat), HCatCodes),
-  format('~w\t~w\t~w\t~s\t~w\t~w\t~w\t~s~n', [DFrom, DTo, DForm, DCatCodes, HFrom, HTo, HForm, HCatCodes]).
+  phrase(cat(Label), LabelCodes),
+  format('~w\t~w\t~w\t~s\t~w\t~w\t~w\t~s\t~s~n', [DFrom, DTo, DForm, DCatCodes, HFrom, HTo, HForm, HCatCodes, LabelCodes]).
 write_dep(_, _, _, DToken, _) :-
   node_from_to(DToken, DFrom, DTo),
   node_rule(DToken, t(DForm, _)),
