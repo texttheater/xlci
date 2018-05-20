@@ -6,7 +6,7 @@ import sys
 import util
 
 
-PUNCTUATION = (',', ':', '!', '?', '.', '"', '“', '”', '„')
+PUNCTUATION = (',', ':', '!', '?', '.', '"', '“', '”', '„', ',,', "''")
 
 
 def read_file(path):

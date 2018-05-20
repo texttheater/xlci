@@ -26,7 +26,7 @@ def prologify_rolelist(string):
 def att((key, value)):
     if key == 'verbnet':
         return "verbnet:%s" % prologify_rolelist(value)
-    elif key in ['from', 'to']:
+    elif key in ['from', 'to', 'toknum']:
         return "%s:%d" % (key, int(value))
     elif key == 'antecedent':
         try:

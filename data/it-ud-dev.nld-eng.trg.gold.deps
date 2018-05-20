@@ -1,0 +1,85 @@
+1	Corriere	_
+2	Sport	_	1	Corriere	_	_
+3	da	_	4	pagina	_	_
+4	pagina	_	1	Corriere	_	_
+5	23	_	4	pagina	_	_
+6	a	_	7	pagina	_	_
+7	pagina	_	1	Corriere	_	_
+8	26	_	7	pagina	_	_
+
+1	I	_	2	tre	_	_
+2	tre	_	6	lasciato	_	_
+3	avevano	_	6	lasciato	_	_
+4	da	_	5	poco	_	_
+5	poco	_	6	lasciato	_	_
+6	lasciato	_
+7	la	_	8	cima	_	_
+8	cima	_	6	lasciato	_	_
+9	e	_	11	cominciando	_	_
+10	stavano	_	11	cominciando	_	_
+11	cominciando	_	6	lasciato	_	_
+12	la	_	13	discesa	_	_
+13	discesa	_	11	cominciando	_	_
+14	.	_	6	lasciato	_	_
+
+1	Tutti	_	3	esseri	_	_
+2	gli	_	3	esseri	_	_
+3	esseri	_	5	sanno	_	_
+4	umani	_	3	esseri	_	_
+5	sanno	_
+6	di	_	9	più	_	_
+7	poter	_	9	più	_	_
+8	essere	_	9	più	_	_
+9	più	_	5	sanno	_	_
+10	di	_	11	ciò	_	_
+11	ciò	_	9	più	_	_
+12	che	_	13	sono	_	_
+13	sono	_	11	ciò	_	_
+14	.	_	5	sanno	_	_
+
+1	Per	_	4	motivo	_	_
+2	lo	_	4	motivo	_	_
+3	stesso	_	4	motivo	_	_
+4	motivo	_	9	fanno	_	_
+5	però	_	9	fanno	_	_
+6	,	_	5	però	_	_
+7	spesso	_	9	fanno	_	_
+8	,	_	7	spesso	_	_
+9	fanno	_
+10	fatica	_	9	fanno	_	_
+11	ad	_	12	ammettere	_	_
+12	ammettere	_	10	fatica	_	_
+13	che	_	19	dotato	_	_
+14	qualcun	_	19	dotato	_	_
+15	altro	_	14	qualcun	_	_
+16	sia	_	19	dotato	_	_
+17	veramente	_	19	dotato	_	_
+18	più	_	19	dotato	_	_
+19	dotato	_	12	ammettere	_	_
+20	,	_	21	possegga	_	_
+21	possegga	_	19	dotato	_	_
+22	qualità	_	21	possegga	_	_
+23	e	_	24	capacità	_	_
+24	capacità	_	22	qualità	_	_
+25	superiori	_	24	capacità	_	_
+26	.	_	9	fanno	_	_
+
+1	Vi	_	2	sono	_	_
+2	sono	_
+3	migliaia	_	2	sono	_	_
+4	di	_	5	casi	_	_
+5	casi	_	3	migliaia	_	_
+6	di	_	8	genere	_	_
+7	questo	_	8	genere	_	_
+8	genere	_	5	casi	_	_
+9	.	_	2	sono	_	_
+
+1	È	_	2	vero	_	_
+2	vero	_
+3	,	_	2	vero	_	_
+4	tutti	_	7	sostituiti	_	_
+5	possiamo	_	7	sostituiti	_	_
+6	essere	_	7	sostituiti	_	_
+7	sostituiti	_	2	vero	_	_
+8	.	_	2	vero	_	_
+

@@ -85,22 +85,37 @@ write_dep(Tokens, TopCOs, Deps, DToken, TopCO) :-
   !,
   nth1(N, TopCOs, Head),
   nth1(N, Tokens, HToken),
-  node_from_to(DToken, DFrom, DTo),
-  node_rule(DToken, t(DForm, _)),
+  node_rule(DToken, t(DForm, DAtts)),
+  (  member(toknum:DTokID, DAtts)
+  -> true
+  ;  member(from:DFrom, DAtts),
+     member(to:DTo, DAtts),
+     DTokID = (DFrom, DTo)
+  ),
   node_co(DToken, DCO),
   co2cat(DCO, DCat),
   phrase(cat(DCat), DCatCodes),
-  node_from_to(HToken, HFrom, HTo),
-  node_rule(HToken, t(HForm, _)),
+  node_rule(HToken, t(HForm, HAtts)),
+  (  member(toknum:HTokID, HAtts)
+  -> true
+  ;  member(from:HFrom, HAtts),
+     member(to:HTo, HAtts),
+     HTokID = (HFrom,HTo)
+  ),
   node_co(HToken, HCO),
   co2cat(HCO, HCat),
   phrase(cat(HCat), HCatCodes),
   phrase(cat(Label), LabelCodes),
-  format('~w,~w\t~w\t~s\t~w,~w\t~w\t~s\t~s~n', [DFrom, DTo, DForm, DCatCodes, HFrom, HTo, HForm, HCatCodes, LabelCodes]).
+  format('~w\t~w\t~s\t~w\t~w\t~s\t~s~n', [DTokID, DForm, DCatCodes, HTokID, HForm, HCatCodes, LabelCodes]).
 write_dep(_, _, _, DToken, _) :-
-  node_from_to(DToken, DFrom, DTo),
-  node_rule(DToken, t(DForm, _)),
+  node_rule(DToken, t(DForm, DAtts)),
+  (  member(toknum:DTokID, DAtts)
+  -> true
+  ;  member(from:DFrom, DAtts),
+     member(to:DTo, DAtts),
+     DTokID = (DFrom,DTo)
+  ),
   node_co(DToken, DCO),
   co2cat(DCO, DCat),
   phrase(cat(DCat), DCatCodes),
-  format('~w,~w\t~w\t~s~n', [DFrom, DTo, DForm, DCatCodes]).
+  format('~w\t~w\t~s~n', [DTokID, DForm, DCatCodes]).
