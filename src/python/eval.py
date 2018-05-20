@@ -9,11 +9,6 @@ import util
 PUNCTUATION = (',', ':', '!', '?', '.', '"', '“', '”', '„')
 
 
-def parse_offset_pair(pair):
-    fr, to = pair.split(',')
-    return (int(fr), int(to))
-
-
 def read_file(path):
     sentence_numbers = set()
     cats = set()
@@ -30,11 +25,9 @@ def read_file(path):
                 dep_fromto, dep_token, dep_cat = fields[:3]
                 if dep_token in PUNCTUATION:
                     continue
-                dep_fromto = parse_offset_pair(dep_fromto)
                 cats.add((i, dep_fromto, dep_cat))
                 if len(fields) == 7:
                     head_fromto, head_token, head_cat, label = fields[3:]
-                    head_fromto = parse_offset_pair(head_fromto)
                     deps.add((i, dep_fromto, head_fromto, label))
     return sentence_numbers, cats, deps
 
