@@ -9,6 +9,11 @@ import util
 PUNCTUATION = (',', ':', '!', '?', '.', '"', '“', '”', '„')
 
 
+def parse_offset_pair(pair):
+    fr, to = pair.split(',')
+    return (int(fr), int(to))
+
+
 def read_file(path):
     sentence_numbers = set()
     cats = set()
@@ -21,16 +26,16 @@ def read_file(path):
                 sentence_numbers.add(i)
             for line in lines[:-1]:
                 fields = line.split()
-                assert len(fields) == 4 or len(fields) == 9
-                dep_from, dep_to, dep_token, dep_cat = fields[:4]
+                assert len(fields) == 3 or len(fields) == 7
+                dep_fromto, dep_token, dep_cat = fields[:3]
                 if dep_token in PUNCTUATION:
                     continue
-                dep_from = int(dep_from)
-                dep_to = int(dep_to)
-                cats.add((i, dep_from, dep_to, dep_cat))
-                if len(fields) == 9:
-                    head_from, head_to, head_token, head_cat, label = fields[4:]
-                    deps.add((i, dep_from, dep_to, head_from, head_to, label))
+                dep_fromto = parse_offset_pair(dep_fromto)
+                cats.add((i, dep_fromto, dep_cat))
+                if len(fields) == 7:
+                    head_fromto, head_token, head_cat, label = fields[3:]
+                    head_fromto = parse_offset_pair(head_fromto)
+                    deps.add((i, dep_fromto, head_fromto, label))
     return sentence_numbers, cats, deps
 
 
@@ -43,14 +48,14 @@ def compute(gold, pred):
 
 
 def unlabel(dep):
-    i, dep_from, dep_to, head_from, head_to, label = dep
-    return (i, dep_from, dep_to, head_from, head_to, 'DUMMY')
+    i, dep_fromto, head_fromto, label = dep
+    return (i, dep_fromto, head_fromto, 'DUMMY')
 
 
 def set2dict(cats):
     result = {}
-    for snum, fr, to, cat in cats:
-        result[(snum, fr, to)] = cat
+    for snum, fromto, cat in cats:
+        result[(snum, fromto)] = cat
     return result
 
 

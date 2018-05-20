@@ -96,11 +96,11 @@ write_dep(Tokens, TopCOs, Deps, DToken, TopCO) :-
   co2cat(HCO, HCat),
   phrase(cat(HCat), HCatCodes),
   phrase(cat(Label), LabelCodes),
-  format('~w\t~w\t~w\t~s\t~w\t~w\t~w\t~s\t~s~n', [DFrom, DTo, DForm, DCatCodes, HFrom, HTo, HForm, HCatCodes, LabelCodes]).
+  format('~w,~w\t~w\t~s\t~w,~w\t~w\t~s\t~s~n', [DFrom, DTo, DForm, DCatCodes, HFrom, HTo, HForm, HCatCodes, LabelCodes]).
 write_dep(_, _, _, DToken, _) :-
   node_from_to(DToken, DFrom, DTo),
   node_rule(DToken, t(DForm, _)),
   node_co(DToken, DCO),
   co2cat(DCO, DCat),
   phrase(cat(DCat), DCatCodes),
-  format('~w\t~w\t~w\t~s~n', [DFrom, DTo, DForm, DCatCodes]).
+  format('~w,~w\t~w\t~s~n', [DFrom, DTo, DForm, DCatCodes]).
