@@ -4,6 +4,7 @@
     node_rule/2,
     node_sem/2,
     pp_node/1,
+    sub_node/2,
     token_in_node/2,
     typechanger_in_node/2]).
 
@@ -29,6 +30,11 @@ node_from_to(node(_, _, _, Children), From, To) :-
   node_from_to(First, From, _),
   last(Children, Last),
   node_from_to(Last, _, To).
+
+sub_node(Node, Node).
+sub_node(Sub, node(_, _, _, Children)) :-
+  member(Child, Children),
+  sub_node(Sub, Child).
 
 token_in_node(node(Cat, Sem, t(Form, Atts), []), node(Cat, Sem, t(Form, Atts), [])) :-
   !.
