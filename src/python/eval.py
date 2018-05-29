@@ -2,6 +2,7 @@
 
 
 import collections
+import math
 import sys
 import util
 
@@ -36,7 +37,10 @@ def compute(gold, pred):
     tp = gold & pred
     prec = len(tp) / len(pred)
     rec = len(tp) / len(gold)
-    f1 = 2 * prec * rec / (prec + rec)
+    try:
+        f1 = 2 * prec * rec / (prec + rec)
+    except ZeroDivisionError:
+        f1 = math.nan
     return prec, rec, f1
 
 

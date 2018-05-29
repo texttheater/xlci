@@ -26,7 +26,9 @@ der2node(Der, Node) :-
   % Extract top category of derivation:
   der_cat(Der, Cat),
   % Assign a corresponding category object to the node:
-  node_co(Node0, co(_, Cat, Cat)),
+  node_co(Node0, CO),
+  once(co_cat_ucat(CO, Cat, Cat)),
+  %node_co(Node0, co(_, Cat, Cat)),
   % Find all top category objects in the node:
   list_occurrences_of_term(co(_, _, _), Node0, COs),
   % Find their (variable) IDs:
@@ -254,11 +256,17 @@ der_ucat(fxc(_, _, ftr(_, _, _, _), _), _) :-
   !.
 der_ucat(fxc(_, _, _, btr(_, _, _, _)), _) :-
   !.
+der_ucat(fxc(_, _, _, fxc(_, _, _, btr(_, _, _, _))), _) :-
+  !.
 der_ucat(fxc(_, _, _, bc(_, _, _, btr(_, _, _, _))), _) :-
   !.
 der_ucat(gfxc(_, _, _, btr(_, _, _, _)), _) :-
   !.
+der_ucat(gfxc(_, _, _, gfxc(_, _, _, btr(_, _, _, _))), _) :-
+  !.
 der_ucat(bxc(_, _, ftr(_, _, _, _), _), _) :-
+  !.
+der_ucat(bxc(_, _, bxc(_, _, ftr(_, _, _, _), _), _), _) :-
   !.
 % TODO Does this work?
 % TODO Why does this work?

@@ -4,7 +4,6 @@
 :- use_module(catobj, [
     co2cat/2,
     co_res_arg/3,
-    is_modifier_co/1,
     co_top/2]).
 :- use_module(ccgbank, [
     cat//1]).
@@ -18,7 +17,7 @@
 :- use_module(util, [
     argv/1,
     term_in_file/3,
-    write_clause/1]).
+    write_clause/3]).
 
 main :-
   argv([NodeFile]),
@@ -26,12 +25,18 @@ main :-
       ( term_in_file(node(_, Node), NodeFile, [module(slashes)])
       ),
       ( node2deps(Node, Deps),
+        check_deps(Node, Deps),
         write_deps(Node, Deps)
       ) ),
   halt.
 main :-
   format(user_error, 'USAGE: swipl -l node2deps -g main NODEFILE~n', []),
   halt(1).
+
+check_deps(Node, Deps) :-
+  aggregate_all(count, token_in_node(_, Node), TokenCount),
+  length(Deps, DepCount),
+  assertion(DepCount is TokenCount - 1).
 
 write_deps(Node, Deps) :-
   forall(
@@ -43,7 +48,7 @@ write_deps(Node, Deps) :-
            write_token(Head),
            write('\t'),
            write_label(Label)
-        ;  true
+        ;  write('\t0\t_\t_\tROOT')
         ),
         nl
       ) ),
@@ -86,24 +91,28 @@ node2deps(Node, Deps) :-
 %       Target0 is the token on which arguments will depend until
 %       modification is encountered; bind this to Tok by default.
 co_node_deps_tok_target(CO, Node, [Dep|Deps], Tok, Target0, Target) :-
-  % Case 1: functional CO where the argument exists
+  % Case 1: functional CO where the argument has an origin
   co_res_arg(CO, Res, Arg),
   co_node_origin(Arg, Node, ArgOrigin),
   co_node_deps_tok_target(ArgOrigin, Node, _, ArgTok, ArgTok, ArgTarget),
   !,
   co2cat(CO, Cat),
-  (  is_modifier_co(CO)
+  (  inverts_dependency(Cat)
   -> Dep = dep(Target0, ArgTarget, Cat),
      co_node_deps_tok_target(Res, Node, Deps, Tok, ArgTarget, Target)
   ;  Dep = dep(ArgTarget, Target0, Cat),
      co_node_deps_tok_target(Res, Node, Deps, Tok, Target0, Target)
   ).
+co_node_deps_tok_target(CO, Node, Deps, Tok, Target0, Target) :-
+  % Case 2: functional CO where the argument has no origin
+  co_res_arg(CO, Res, _),
+  !,
+  co_node_deps_tok_target(Res, Node, Deps, Tok, Target0, Target).
 co_node_deps_tok_target(CO, Node, [], Tok, Target, Target) :-
-  % Case 2: atomic CO or with phantom argument, lexical origin
-  co_top(CO, Top),
+  % Case 2: atomic CO, lexical origin
   token_in_node(Tok, Node),
   node_co(Tok, TokCO),
-  co_top(TokCO, Top),
+  co_top(TokCO, CO),
   !.
 co_node_deps_tok_target(CO, Node, [], Tok, Target0, Target) :-
   % Case 3: atomic CO or with phantom argument, tc origin
@@ -124,3 +133,18 @@ co_node_origin(CO, Node, Origin) :-
   original_co_in_node(Origin, Node),
   co_top(CO, Top),
   co_top(Origin, Top).
+
+% Modifiers
+inverts_dependency(X/X).
+inverts_dependency(X\X).
+% Conjunctions and adpositions
+% Problem: S[dcl] can be an argument to S[dcl]. Special treatment for punctuation?
+%inverts_dependency((X\X)/_).
+%inverts_dependency((X/X)/_).
+%inverts_dependency((X\X)\_).
+%inverts_dependency((X\X)\_).
+% Determiners
+inverts_dependency(np/n).
+inverts_dependency(np/(n/pp)).
+% Complementizers
+%inverts_dependency((s:_\np)/(s:_\np)).
