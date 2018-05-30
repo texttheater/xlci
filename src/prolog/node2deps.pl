@@ -106,7 +106,7 @@ depdirs(mod, Cat, Dirs) :-
 depdirs(det, Cat, Dirs) :-
   depdirs(yes, no, yes, Cat, Dirs).
 depdirs(alpino, Cat, Dirs) :-
-  depdirs(yes, yes, yes, Cat, Dirs).
+  depdirs(yes, alpino, yes, Cat, Dirs).
 
 %%      depdirs(+Mod, +Coord, +Det, +Cat, -Dirs)
 %
@@ -122,46 +122,32 @@ depdirs(alpino, Cat, Dirs) :-
 %
 %       The last two arguments are the input category (Cat) and the list of
 %       dependency directions (=normal= or =inverted=) for each argument.
+% Treat coordination Alpino-style if Coord=alpino
 
+depdirs(yes, alpino, Det, (X\X)/X, [noninv, noninv|Dirs]) :-
+  !,
+  depdirs(yes, alpino, Det, X, Dirs).
+% Otherwise, treat modifier as dependent if Mod=yes
+depdirs(yes, Coord, Det, X/X, [inverted|Dirs]) :-
+  !,
+  depdirs(yes, Coord, Det, X, Dirs).
+depdirs(yes, Coord, Det, X\X, [inverted|Dirs]) :-
+  !,
+  depdirs(yes, Coord, Det, X, Dirs).
+% Otherwise, treat determiners as dependent if Det=yes
 depdirs(_, _, yes, np/n, [inverted]) :-
   !.
 depdirs(_, _, yes, np/(n/pp), [inverted]) :-
   !.
-depdirs(Mod, Coord, _, Cat, Dirs) :-
-  depdirs(Mod, Coord, Cat, Dirs).
-
-%%      depdirs(+Mod, +Coord, +Cat, -Dirs)
-%
-%       Like =|depdir/5|=, but computes Dirs from Cat recursively after the
-%       non-recursive rules (such as for Det) have applied.
-%
-%       Arguments:
-%
-%           * Cat is the category
-%           * Dirs is a list of the directions (=normal= or =inverted=) of all
-%             arguments.
-%
-
-% Treat coordination Alpino-style if Coord=alpino
-depdirs(yes, alpino, (X\X)/X, [noninv, noninv|Dirs]) :-
-  !,
-  depdirs(yes, alpino, X, Dirs).
-% Otherwise, treat modifier as dependent if Mod=yes
-depdirs(yes, Coord, X/X, [inverted|Dirs]) :-
-  !,
-  depdirs(yes, Coord, X, Dirs).
-depdirs(yes, Coord, X\X, [inverted|Dirs]) :-
-  !,
-  depdirs(yes, Coord, X, Dirs).
 % Otherwise, treat argument as dependent
-depdirs(Mod, Coord, Res/_, [normal|Dirs]) :-
+depdirs(Mod, Coord, Det, Res/_, [normal|Dirs]) :-
   !,
-  depdirs(Mod, Coord, Res, Dirs).
-depdirs(Mod, Coord, Res\_, [normal|Dirs]) :-
+  depdirs(Mod, Coord, Det, Res, Dirs).
+depdirs(Mod, Coord, Det, Res\_, [normal|Dirs]) :-
   !,
-  depdirs(Mod, Coord, Res, Dirs).
+  depdirs(Mod, Coord, Det, Res, Dirs).
 % Base case: no argument
-depdirs(_, _, _, []).
+depdirs(_, _, _, _, []).
 
 %%      co_dirs_deps_tok_target(+Style, +Node, +CO, +Dirs, -Deps, -Tok, +Target0, -Target)
 %
