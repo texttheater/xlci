@@ -16,9 +16,7 @@ import util
 
 
 def is_nonpunct(line):
-    print(line, file=sys.stderr)
     fields = line.split()
-    print(fields, file=sys.stderr)
     return fields[1] not in PUNCTUATION
 
 
