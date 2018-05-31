@@ -180,6 +180,11 @@ depdirs(Mod, Coord, Det, yes, X\_, [inverted|Dirs]) :-
   is_modifier_category(Mod, X),
   !,
   depdirs(Mod, Coord, Det, yes, X, Dirs).
+% Treat adpositions as dependent if Prep=yes
+depdirs(Mod, Coord, Det, yes, pp/_, [inverted[) :-
+  !.
+depdirs(Mod, Coord, Det, yes, pp\_, [inverted[) :-
+  !.
 % Treat determiners as dependent if Det=yes
 depdirs(_, _, yes, _, np/n, [inverted]) :-
   !.
