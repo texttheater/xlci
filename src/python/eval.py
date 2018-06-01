@@ -21,7 +21,7 @@ def read_file(path):
             if len(lines[:-1]) > 0:
                 sentence_numbers.add(i)
             for line in lines[:-1]:
-                fields = line.split()
+                fields = line.split('\t')
                 assert len(fields) == 3 or len(fields) == 7
                 dep_fromto, dep_token, dep_cat = fields[:3]
                 if dep_token in PUNCTUATION:
@@ -74,6 +74,11 @@ if __name__ == '__main__':
         _, gold_path, pred_path = sys.argv
     except ValueError:
         print('USAGE: python3 eval.py GOLDFILE PREDICTEDFILE', file=sys.stderr)
+    with open(gold_path) as f:
+        gold_blocks = list(util.blocks(f))
+    with open(pred_path) as f:
+        pred_blocks = list(util.blocks(f))
+    assert len(gold_blocks) == len(pred_blocks)
     gold_sids, gold_cats, gold_deps = read_file(gold_path)
     pred_sids, pred_cats, pred_deps = read_file(pred_path)
     gold_udeps = set(unlabel(d) for d in gold_deps)

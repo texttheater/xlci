@@ -24,17 +24,26 @@
 main :-
   argv([NodeFile, Style]),
   assertion(member(Style, [plain, mod, det, bisk_nl, bisk_esdept, bisk_sv, ud])),
-  forall(
-      ( term_in_file(node(_, Node), NodeFile, [module(slashes)])
-      ),
-      ( node2deps(Node, Style, Deps),
-        check_deps(Node, Deps),
-        write_deps(Node, Deps)
-      ) ),
+  findall(Node, term_in_file(Node, NodeFile, [module(slashes)]), Nodes),
+  process(Style, 1, Nodes),
   halt.
 main :-
   format(user_error, 'USAGE: swipl -l node2deps -g main NODEFILE STYLE~n', []),
   halt(1).
+
+process(Style, I, [node(I, Node)|Nodes]) :-
+  !,
+  node2deps(Node, Style, Deps),
+  check_deps(Node, Deps),
+  write_deps(Node, Deps),
+  J is I + 1,
+  process(Style, J, Nodes).
+process(_, _, []) :-
+  !.
+process(Style, I, Nodes) :-
+  nl,
+  J is I + 1,
+  process(Style, J, Nodes).
 
 check_deps(Node, Deps) :-
   aggregate_all(count, token_in_node(_, Node), TokenCount),
@@ -181,9 +190,9 @@ depdirs(Mod, Coord, Det, yes, X\_, [inverted|Dirs]) :-
   !,
   depdirs(Mod, Coord, Det, yes, X, Dirs).
 % Treat adpositions as dependent if Prep=yes
-depdirs(Mod, Coord, Det, yes, pp/_, [inverted[) :-
+depdirs(_, _, _, yes, pp/_, [inverted]) :-
   !.
-depdirs(Mod, Coord, Det, yes, pp\_, [inverted[) :-
+depdirs(_, _, _, yes, pp\_, [inverted]) :-
   !.
 % Treat determiners as dependent if Det=yes
 depdirs(_, _, yes, _, np/n, [inverted]) :-

@@ -10,7 +10,7 @@ if __name__ == '__main__':
         block = block.splitlines()
         block = block[:-1]
         lines = [line for line in block if not line.startswith('#')]
-        lines = [line.split() for line in lines]
+        lines = [line.split('\t') for line in lines]
         forms = []
         for i, line in enumerate(lines, start = 1):
             assert i == int(line[0])

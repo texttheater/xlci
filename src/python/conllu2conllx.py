@@ -14,13 +14,13 @@ if __name__ == '__main__':
         # Maps to fill:
         wordid_tokenid_map = {} # which word belongs to which multiword token
         oldid_newid_map = {'0': '0'} # how word/token ids change
-        tokenid_headids_map = collections.defaultdict(set) # heads of words per multiword token (should be 1)
+        tokenid_headids_map = collections.defaultdict(list) # heads of words per multiword token (should be 1)
         newid = 0
         # First pass: fill the maps
         for line in lines:
             if line.startswith('#'):
                 continue
-            fields = line.split()
+            fields = line.split('\t')
             lineid = fields[0]
             # If line represents a multiword token, map all words belonging to it to it:
             if '-' in lineid:
@@ -37,13 +37,13 @@ if __name__ == '__main__':
             if lineid in wordid_tokenid_map:
                 tokenid = wordid_tokenid_map[lineid]
                 headid = fields[6]
-                tokenid_headids_map[tokenid].add(headid)
+                tokenid_headids_map[tokenid].append(headid)
         # Second pass: output the changed dependencies
         for line in lines:
             if line.startswith('#'):
                 print(line)
                 continue
-            fields = line.split()
+            fields = line.split('\t')
             lineid = fields[0]
             # Throw words belonging to multiword tokens away:
             if lineid in wordid_tokenid_map:
@@ -52,8 +52,8 @@ if __name__ == '__main__':
             headid = fields[6]
             if headid == '_':
                 headids = tokenid_headids_map[lineid]
-                assert len(headids) == 1
-                headid = next(iter(headids))
+                headid = headids[0] # HACK!!! Is there a better way of choosing the head?
+                #assert len(headids) == 1
             # If the head is in a multiword token, change ID to the ID of the multiword token:
             if headid in wordid_tokenid_map:
                 headid = wordid_tokenid_map[headid]

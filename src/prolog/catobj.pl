@@ -68,13 +68,13 @@ co2cat(X\Y, XCat\YCat) :-
   co2cat(X, XCat),
   co2cat(Y, YCat).
 
-co_cat_ucat(co(_, Cat, UCat), Cat, UCat).
 co_cat_ucat(A/B, C/D, E/F) :-
   co_cat_ucat(A, C, E),
   co_cat_ucat(B, D, F).
 co_cat_ucat(A\B, C\D, E\F) :-
   co_cat_ucat(A, C, E),
   co_cat_ucat(B, D, F).
+co_cat_ucat(co(_, Cat, UCat), Cat, UCat).
 
 is_modifier_co(CO) :-
   co2cat(CO, X/X),
