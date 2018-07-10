@@ -1,8 +1,3 @@
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
 ccg(1,
  ba(s:dcl,
   ba(s:dcl,
@@ -21,12 +16,7 @@ ccg(1,
       t(n, 'Tokyo', [lemma:'tokyo', from:26, to:31]))))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:31, to:32]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(2,
  ba(s:dcl,
   ba(s:dcl,
    t(np, 'It', [lemma:'it', from:0, to:2]),
@@ -39,12 +29,7 @@ ccg(1,
       t(s:b\np, 'rain', [lemma:'rain', from:15, to:19]))))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:19, to:20]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(3,
  ba(s:dcl,
   ba(s:dcl,
    lx(np, n,
@@ -63,12 +48,7 @@ ccg(1,
         t(n, 'rain', [lemma:'rain', from:26, to:30]))))))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:30, to:31]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(4,
  ba(s:dcl,
   ba(s:dcl,
    fa(np,
@@ -83,12 +63,7 @@ ccg(1,
       t(n, 'building', [lemma:'building', from:25, to:33]))))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:33, to:34]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(5,
  ba(s:dcl,
   ba(s:dcl,
    lx(np, n,
@@ -106,12 +81,7 @@ ccg(1,
         t(n, 'people', [lemma:'people', from:29, to:35]))))))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:35, to:36]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(6,
  ba(s:dcl,
   ba(s:dcl,
    t(np, 'I', [lemma:'i', from:0, to:1]),
@@ -126,12 +96,7 @@ ccg(1,
       t((s\np)\(s\np), 'there', [lemma:'there', from:17, to:22]))))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:22, to:23]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(7,
  ba(s:dcl,
   ba(s:dcl,
    t(np, 'I', [lemma:'i', from:0, to:1]),
@@ -140,12 +105,7 @@ ccg(1,
     t(s:ng\np, 'playing', [lemma:'playing', from:6, to:13]))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:13, to:14]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(8,
  ba(s:dcl,
   ba(s:dcl,
    t(np, 'She', [lemma:'she', from:0, to:3]),
@@ -160,12 +120,7 @@ ccg(1,
     t((s\np)\(s\np), 'again', [lemma:'again', from:26, to:31]))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:31, to:32]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(9,
  ba(s:wq,
   fa(s:wq,
    t(s:wq/(s:q/np), 'What', [lemma:'what', from:0, to:4]),
@@ -180,12 +135,7 @@ ccg(1,
      t(pp/np, 'like', [lemma:'like', from:25, to:29])))),
   t(s:wq\s:wq, '?', [lemma:'?', from:29, to:30]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(10,
  ba(s:dcl,
   ba(s:dcl,
    fa(np,
@@ -204,12 +154,7 @@ ccg(1,
       t(s:ng\np, 'crying', [lemma:'crying', from:33, to:39]))))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:39, to:40]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(11,
  ba(s:b\np,
   fa(s:b\np,
    t((s\np)/(s\np), 'Please', [lemma:'please', from:0, to:6]),
@@ -227,12 +172,7 @@ ccg(1,
       t(n, 'French', [lemma:'french', from:41, to:47]))))),
   t((s:b\np)\(s:b\np), '.', [lemma:'.', from:47, to:48]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(12,
  ba(s:dcl,
   ba(s:dcl,
    t(np, 'He', [lemma:'he', from:0, to:2]),
@@ -251,24 +191,14 @@ ccg(1,
          t(n, 'millionaire', [lemma:'millionaire', from:25, to:36])))))))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:36, to:37]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(13,
  ba(s:b\np,
   fa(s:b\np,
    t((s:b\np)/np, 'Call', [lemma:'call', from:0, to:4]),
    t(np, 'me', [lemma:'me', from:5, to:7])),
   t((s:b\np)\(s:b\np), '.', [lemma:'.', from:7, to:8]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(14,
  ba(s:dcl,
   ba(s:dcl,
    t(np, 'I', [lemma:'i', from:0, to:1]),
@@ -285,12 +215,7 @@ ccg(1,
        t((s\np)\(s\np), 'again', [lemma:'again', from:21, to:26])))))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:26, to:27]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(15,
  ba(s:dcl,
   t(np, 'You', [lemma:'you', from:0, to:3]),
   fa(s:dcl\np,
@@ -307,12 +232,7 @@ ccg(1,
        t(s:intj\s:intj, '.', [lemma:'.', from:17, to:18])),
       t(s:intj\s:intj, '\"', [lemma:'\"', from:18, to:19]))))))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(16,
  ba(s:dcl,
   ba(s:dcl,
    fa(np,
@@ -327,12 +247,7 @@ ccg(1,
       t(n, 'branches', [lemma:'branches', from:25, to:33]))))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:33, to:34]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(17,
  ba(s:q,
   fa(s:q,
    fa(s:q/np,
@@ -343,12 +258,7 @@ ccg(1,
     t(n/pp, 'sister', [lemma:'sister', from:12, to:18]))),
   t(s:q\s:q, '?', [lemma:'?', from:18, to:19]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(18,
  ba(s:dcl,
   ba(s:dcl,
    t(np, 'I', [lemma:'i', from:0, to:1]),
@@ -361,12 +271,7 @@ ccg(1,
     t((s\np)\(s\np), 'yesterday', [lemma:'yesterday', from:19, to:28]))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:28, to:29]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(19,
  ba(s:wq,
   fa(s:wq,
    t(s:wq/(s:dcl\np), 'Who', [lemma:'who', from:0, to:3]),
@@ -377,12 +282,7 @@ ccg(1,
      t(n, 'letter', [lemma:'letter', from:15, to:21])))),
   t(s:wq\s:wq, '?', [lemma:'?', from:21, to:22]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(20,
  ba(s:q,
   fa(s:q,
    fa(s:q/(s:b\np),
@@ -395,12 +295,7 @@ ccg(1,
      t(n/pp, 'bike', [lemma:'bike', from:18, to:22])))),
   t(s:q\s:q, '?', [lemma:'?', from:22, to:23]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(21,
  ba(s:dcl,
   ba(s:dcl,
    t(np, 'I', [lemma:'i', from:0, to:1]),
@@ -409,12 +304,7 @@ ccg(1,
     t(s:adj\np, 'left-handed', [lemma:'left-handed', from:4, to:15]))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:15, to:16]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(22,
  ba(s:dcl,
   ba(s:dcl,
    ba(s:dcl,
@@ -443,12 +333,7 @@ ccg(1,
       t(n, 'mouse', [lemma:'mouse', from:44, to:49]))))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:49, to:50]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(23,
  ba(s:dcl,
   ba(s:dcl,
    t(np, 'I', [lemma:'i', from:0, to:1]),
@@ -466,12 +351,7 @@ ccg(1,
          t(n, 'animals', [lemma:'animals', from:26, to:33])))))))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:33, to:34]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(24,
  ba(s:dcl,
   ba(s:dcl,
    lx(np, n,
@@ -495,12 +375,7 @@ ccg(1,
          t(n, 'world', [lemma:'world', from:49, to:54])))))))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:54, to:55]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(25,
  ba(s:b\np,
   fa(s:b\np,
    t((s:b\np)/np, 'Do', [lemma:'do', from:0, to:2]),
@@ -509,12 +384,7 @@ ccg(1,
     t(n/pp, 'best', [lemma:'best', from:8, to:12]))),
   t((s:b\np)\(s:b\np), '.', [lemma:'.', from:12, to:13]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(26,
  ba(s:b\np,
   fa(s:b\np,
    bxc((s:b\np)/(s:b\np),
@@ -527,12 +397,7 @@ ccg(1,
     t((s\np)\(s\np), 'again', [lemma:'again', from:14, to:19]))),
   t((s:b\np)\(s:b\np), '.', [lemma:'.', from:19, to:20]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(27,
  ba(s:dcl,
   ba(s:dcl,
    t(np, 'He', [lemma:'he', from:0, to:2]),
@@ -541,12 +406,7 @@ ccg(1,
     t(s:ng\np, 'smoking', [lemma:'smoking', from:8, to:15]))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:15, to:16]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(28,
  ba(s:dcl,
   ba(s:dcl,
    t(np, 'He', [lemma:'he', from:0, to:2]),
@@ -559,12 +419,7 @@ ccg(1,
       t(n, 'runner', [lemma:'runner', from:13, to:19]))))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:19, to:20]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(29,
  ba(s:dcl,
   ba(s:dcl,
    t(np, 'He', [lemma:'he', from:0, to:2]),
@@ -577,12 +432,7 @@ ccg(1,
       t(n, 'idea', [lemma:'idea', from:13, to:17]))))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:17, to:18]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(30,
  ba(s:wq,
   fa(s:wq,
    t(s:wq/(s:dcl\np), 'What', [lemma:'what', from:0, to:4]),
@@ -597,12 +447,7 @@ ccg(1,
      t((s\np)\(s\np), 'late', [lemma:'late', from:21, to:25])))),
   t(s:wq\s:wq, '?', [lemma:'?', from:25, to:26]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(31,
  ba(s:dcl,
   ba(s:dcl,
    t(np, 'You', [lemma:'you', from:0, to:3]),
@@ -619,12 +464,7 @@ ccg(1,
        t(n, 'impossible', [lemma:'impossible', from:21, to:31])))))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:31, to:32]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(32,
  ba(s:dcl,
   ba(s:dcl,
    t(np, 'He', [lemma:'he', from:0, to:2]),
@@ -641,12 +481,7 @@ ccg(1,
         t(n, 'desk', [lemma:'desk', from:27, to:31]))))))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:31, to:32]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(33,
  ba(s:b\np,
   fa(s:b\np,
    fa((s:b\np)/(s:b\np),
@@ -658,24 +493,14 @@ ccg(1,
      t(n, 'TV', [lemma:'tv', from:12, to:14])))),
   t((s:b\np)\(s:b\np), '.', [lemma:'.', from:14, to:15]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(34,
  ba(s:b\np,
   fa(s:b\np,
    t((s:b\np)/np, 'Excuse', [lemma:'excuse', from:0, to:6]),
    t(np, 'me', [lemma:'me', from:7, to:9])),
   t((s:b\np)\(s:b\np), '?', [lemma:'?', from:9, to:10]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(35,
  ba(s:dcl,
   ba(s:dcl,
    t(np, 'I', [lemma:'i', from:0, to:1]),
@@ -692,12 +517,7 @@ ccg(1,
         t(n, 'boots', [lemma:'boots', from:23, to:28]))))))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:28, to:29]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(36,
  ba(s:dcl,
   ba(s:dcl,
    t(np, 'I', [lemma:'i', from:0, to:1]),
@@ -706,12 +526,7 @@ ccg(1,
     t(s:ng\np, 'traveling', [lemma:'traveling', from:7, to:16]))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:16, to:17]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(37,
  ba(s:wq,
   fa(s:wq,
    t(s:wq/(s:q/np), 'What', [lemma:'what', from:0, to:4]),
@@ -728,12 +543,7 @@ ccg(1,
       t((s:b\np)/np, 'do', [lemma:'do', from:23, to:25]))))),
   t(s:wq\s:wq, '?', [lemma:'?', from:25, to:26]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(38,
  ba(s:q,
   fa(s:q,
    fa(s:q/(s:b\np),
@@ -746,12 +556,7 @@ ccg(1,
      t(n, 'CD', [lemma:'cd', from:18, to:20])))),
   t(s:q\s:q, '?', [lemma:'?', from:20, to:21]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(39,
  ba(s:dcl,
   ba(s:dcl,
    fa(np,
@@ -770,12 +575,7 @@ ccg(1,
       t(n, 'bike', [lemma:'bike', from:26, to:30]))))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:30, to:31]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(40,
  ba(s:dcl,
   ba(s:dcl,
    t(np, 'I', [lemma:'i', from:0, to:1]),
@@ -788,12 +588,7 @@ ccg(1,
       t(n, 'apple', [lemma:'apple', from:13, to:18]))))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:18, to:19]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(41,
  ba(s:dcl,
   ba(s:dcl,
    t(np, 'I', [lemma:'i', from:0, to:1]),
@@ -806,12 +601,7 @@ ccg(1,
      t(np, 'it', [lemma:'it', from:19, to:21])))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:21, to:22]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(42,
  ba(s:dcl,
   ba(s:dcl,
    t(np, 'I', [lemma:'i', from:0, to:1]),
@@ -822,12 +612,7 @@ ccg(1,
      t(s:adj\np, 'so', [lemma:'so', from:11, to:13])))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:13, to:14]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(43,
  ba(s:wq,
   fa(s:wq,
    t(s:wq/(s:q/(s:adj\np)), 'How', [lemma:'how', from:0, to:3]),
@@ -838,12 +623,7 @@ ccg(1,
      t(n/pp, 'dad', [lemma:'dad', from:12, to:15])))),
   t(s:wq\s:wq, '?', [lemma:'?', from:15, to:16]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(44,
  ba(s:wq,
   fa(s:wq,
    t(s:wq/(s:dcl\np), 'What', [lemma:'what', from:0, to:4]),
@@ -857,12 +637,7 @@ ccg(1,
      t(n/pp, 'address', [lemma:'address', from:13, to:20])))),
   t(s:wq\s:wq, '?', [lemma:'?', from:20, to:21]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(45,
  ba(s:dcl,
   ba(s:dcl,
    t(np, 'I', [lemma:'i', from:0, to:1]),
@@ -877,12 +652,7 @@ ccg(1,
       t(np, 'that', [lemma:'that', from:18, to:22]))))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:22, to:23]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(46,
  ba(s:dcl,
   ba(s:dcl,
    t(np, 'I', [lemma:'i', from:0, to:1]),
@@ -893,12 +663,7 @@ ccg(1,
      t(n, 'plane', [lemma:'plane', from:8, to:13])))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:13, to:14]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(47,
  ba(s:q,
   fa(s:q,
    fa(s:q/(s:b\np),
@@ -909,12 +674,7 @@ ccg(1,
     t(np, 'us', [lemma:'us', from:13, to:15]))),
   t(s:q\s:q, '?', [lemma:'?', from:15, to:16]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(48,
  ba(s:dcl,
   ba(s:dcl,
    fa(np,
@@ -929,12 +689,7 @@ ccg(1,
       t(np, 'me', [lemma:'me', from:25, to:27]))))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:27, to:28]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(49,
  ba(s:dcl,
   ba(s:dcl,
    fa(np,
@@ -949,12 +704,7 @@ ccg(1,
       t(n, 'leg', [lemma:'leg', from:32, to:35]))))),
   t(s:dcl\s:dcl, '.', [lemma:'.', from:35, to:36]))).
 
-:- op(601, xfx, (/)).
-:- op(601, xfx, (\)).
-:- multifile ccg/2, id/2.
-:- discontiguous ccg/2, id/2.
-
-ccg(1,
+ccg(50,
  ba(s:dcl,
   ba(s:dcl,
    t(np, 'He', [lemma:'he', from:0, to:2]),
