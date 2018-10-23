@@ -2,7 +2,8 @@
     main/0]).
 
 :- use_module(der, [
-    der2node/2]).
+    der2node/2,
+    pp_der/1]).
 :- use_module(node, [
     pp_node/1]).
 :- use_module(slashes).
@@ -15,7 +16,14 @@ main :-
   forall(
       ( term_in_file(der(SID, Der), DerFile, [module(slashes)])
       ),
-      ( der2node(Der, Node),
+      ( catch(
+            ( der2node(Der, Node)
+            ),
+            failed(der:der2node_(SubDer, _)),
+            ( format(user_error, 'ERROR: failed to convert the following sub-derivation~n', []),
+              with_output_to(user_error, pp_der(SubDer)),
+              halt(1)
+            ) ),
         pp_node(node(SID, Node))
       ) ),
   halt.
