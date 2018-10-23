@@ -8,8 +8,6 @@ import util
 
 
 PUNCTUATION = (',', ':', '!', '?', '.', '"', '“', '”', '„', ',,', "''")
-
-
 def read_file(path):
     sentence_numbers = set()
     cats = set()
@@ -80,6 +78,7 @@ if __name__ == '__main__':
         _, gold_path, pred_path = sys.argv
     except ValueError:
         print('USAGE: python3 eval.py GOLDFILE PREDICTEDFILE', file=sys.stderr)
+        sys.exit(1)
     with open(gold_path) as f:
         gold_blocks = list(util.blocks(f))
     with open(pred_path) as f:
