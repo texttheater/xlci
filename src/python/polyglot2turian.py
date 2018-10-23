@@ -28,11 +28,11 @@ if __name__ == '__main__':
         sys.exit(1)
     with open(path, 'rb') as f:
         words, embeddings = pickle.load(f)
-    assert words[0] == '<UNK>'
-    assert words[1] == '<S>'
-    assert words[2] == '</S>'
-    assert words[3] == '<PAD>'
-    print('*UNKNOWN*', array2string(embeddings[0]))
+    assert set(words[:4]) == set(('<S>', '</S>', '<PAD>', '<UNK>'))
+    for word, embedding in zip(words, embeddings):
+        if word == '<UNK>':
+            print('*UNKNOWN*', array2string(embedding))
+            break
     out = codecs.getwriter('utf8')(sys.stdout)
     for word, embedding in zip(words[4:], embeddings[4:]):
         print(word, array2string(embedding), file=out)

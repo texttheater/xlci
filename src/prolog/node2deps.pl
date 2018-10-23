@@ -23,7 +23,7 @@
 
 main :-
   argv([NodeFile, Style]),
-  assertion(member(Style, [plain, mod, det, bisk_nl, bisk_esdept, bisk_sv, ud])),
+  assertion(member(Style, [plain, mod, det, cc_x1___cc_x2, x1_cc___cc_x2, x1_cc___x1_x2, x1_x2___x2_cc, ud])),
   findall(Node, term_in_file(Node, NodeFile, [module(slashes)]), Nodes),
   process(Style, 1, Nodes),
   halt.
@@ -100,11 +100,11 @@ node2deps(Node, Style, Deps) :-
 % The coordination dependency scheme used for Spanish, German and Portuguese
 % cannot be expressed as a special case of our conversion algorithm, so we
 % convert it to UD-style first and then fix it here.
-fix_coord(bisk_esdept, Deps0, Deps) :-
+fix_coord(x1_x2___x2_cc, Deps0, Deps) :-
   member(dep(X1, X2, X\X), Deps0),
   select(dep(X2, CC, (X\X)/X), Deps0, Deps1),
   !,
-  fix_coord(bisk_esdept, [dep(X1, CC, (X\X)/X)|Deps1], Deps).
+  fix_coord(x1_x2___x2_cc, [dep(X1, CC, (X\X)/X)|Deps1], Deps).
 fix_coord(_, Deps, Deps).
 
 %%      depdirs(+Style, +Cat, -Dirs)
@@ -116,30 +116,37 @@ fix_coord(_, Deps, Deps).
 %           * =plain= - functors are the heads of their arguments (like Koller
 %             and Kuhlmann, 2009)
 %           * =mod= - head-dependent relationship is inverted between modifiers
-%             and their arguments
+%             and their arguments (standard)
 %           * =det= - like =mod=, but head-dependent relationship is also
 %             inverted for the arguments of =|np/n|= and =|np/(n/pp)|=
-%           * =bisk_nl=, =bisk_esdept=, =bisk_sv= - mimicking the dependencies
-%             created by Bisk and Hockenmaier (2013) for various treebanks,
-%             differing from =det= in how coordination is treated and by
-%             treating S and VP "modifiers" with different S features as
-%             modifiers.
-%           * =ud= - targetting Universal Dependencies; similar to =bisk_sv=.
+%           * =cc_x1___cc_x2=, =x1_cc___cc_x2=, =x1_cc___x1_x2=,
+%             =x1_x2___x2_cc= - similar to =det= but features are ignored for
+%             determining modifierhood, and coordination is treated as
+%             indicated by the label (Bisk and Hockenmaier, 2013)
+%           * =ud= - targetting Universal Dependencies;
+%             similar to =x1_x2___x2_cc= but also makes PPs headed by the
+%             arguments
 %
 %      Dirs is bound to a list of terms =normal= or =inverted=, corresponding
 %      to the arguments.
 
+% TODO TUNE FOR EACH TREEBANK! They have different conventions and we can observe
+% them. BH13 do this for coordination, but not for determiners, PPs, particles,
+% subordinating conjunctions - they can't (easily) do it because they don't
+% have rich categories. We do! Let's take advantage of it!
 depdirs(plain, Cat, Dirs) :-
   depdirs(no, x1_cc___cc_x2, no, no, Cat, Dirs).
 depdirs(mod, Cat, Dirs) :-
   depdirs(feat_sensitive, x1_cc___cc_x2, no, no, Cat, Dirs).
 depdirs(det, Cat, Dirs) :-
   depdirs(feat_sensitive, x1_cc___cc_x2, yes, no, Cat, Dirs).
-depdirs(bisk_nl, Cat, Dirs) :-
+depdirs(cc_x1___cc_x2, Cat, Dirs) :-
   depdirs(feat_insensitive, cc_x1___cc_x2, yes, no, Cat, Dirs).
-depdirs(bisk_esdept, Cat, Dirs) :-
+depdirs(x1_cc___cc_x2, Cat, Dirs) :-
+  depdirs(feat_insensitive, x1_cc___cc_x2, yes, no, Cat, Dirs).
+depdirs(x1_cc___x1_x2, Cat, Dirs) :-
   depdirs(feat_insensitive, x1_x2___x2_cc, yes, no, Cat, Dirs). % will be converted later by fix_coord/3
-depdirs(bisk_sv, Cat, Dirs) :-
+depdirs(x1_x2___x2_cc, Cat, Dirs) :-
   depdirs(feat_insensitive, x1_x2___x2_cc, yes, no, Cat, Dirs).
 depdirs(ud, Cat, Dirs) :-
   depdirs(feat_insensitive, x1_x2___x2_cc, yes, yes, Cat, Dirs).
@@ -158,7 +165,7 @@ depdirs(ud, Cat, Dirs) :-
 %           * Det is one of =no=, =yes= - whether or not to treat determiners
 %             as dependents of their arguments.
 %           * Prep is one of =no=, =yes= - whether or not to treat prepostions
-%             as dependents of their arguments. TODO implement
+%             as dependents of their arguments.
 %
 %       The last two arguments are the input category (Cat) and the list of
 %       dependency directions (=normal= or =inverted=) for each argument.
