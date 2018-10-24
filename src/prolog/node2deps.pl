@@ -141,13 +141,13 @@ depdirs(mod, Cat, Dirs) :-
 depdirs(det, Cat, Dirs) :-
   depdirs(feat_sensitive, x1_cc___cc_x2, yes, no, Cat, Dirs).
 depdirs(cc_x1___cc_x2, Cat, Dirs) :-
-  depdirs(feat_insensitive, cc_x1___cc_x2, yes, no, Cat, Dirs).
+  depdirs(feat_sensitive, cc_x1___cc_x2, yes, no, Cat, Dirs).
 depdirs(x1_cc___cc_x2, Cat, Dirs) :-
-  depdirs(feat_insensitive, x1_cc___cc_x2, yes, no, Cat, Dirs).
+  depdirs(feat_sensitive, x1_cc___cc_x2, yes, no, Cat, Dirs).
 depdirs(x1_cc___x1_x2, Cat, Dirs) :-
-  depdirs(feat_insensitive, x1_x2___x2_cc, yes, no, Cat, Dirs). % will be converted later by fix_coord/3
+  depdirs(feat_sensitive, x1_x2___x2_cc, yes, no, Cat, Dirs). % will be converted later by fix_coord/3
 depdirs(x1_x2___x2_cc, Cat, Dirs) :-
-  depdirs(feat_insensitive, x1_x2___x2_cc, yes, no, Cat, Dirs).
+  depdirs(feat_sensitive, x1_x2___x2_cc, yes, no, Cat, Dirs).
 depdirs(ud, Cat, Dirs) :-
   depdirs(feat_insensitive, x1_x2___x2_cc, yes, yes, Cat, Dirs).
 
