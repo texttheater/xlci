@@ -5,25 +5,25 @@
 
 Input example:
 
-# Sentence pair (33977) source length 7 target length 8 alignment score : 4.28365e-07
-can you give me your phone number ?
-NULL ({ }) kan ({ 1 }) je ({ 2 }) mij ({ 4 }) je ({ 5 }) telefoonnummer ({ 6 7 }) geven ({ 3 }) ? ({ 8 }) 
+# Sentence pair (1) source length 8 target length 5 alignment score : 0.000275724
+tom is obviously scared . 
+NULL ({ 2 }) jak ({ }) je ({ }) vidět ({ 3 }) , ({ }) tom ({ 1 }) má ({ }) strach ({ 4 }) . ({ 5 }) 
 
 Assuming the following raw texts:
 
-Can you give me your phone number?
-
-Kan je mij je telefoonnummer geven?
+Jak je vidět, Tom má strach.    Tom is obviously scared.
 
 Output example:
 
-0	3	0,3
-4	6	4,7
-7	10	13,15
-11	13	16,20
-14	28	21,16 27,33
-29	34	8,12
-34	35	33,34
+0	0       4,6
+0	3	
+4	6	
+7	12	7,16
+12	13	
+14	17	0,3
+18	20	
+21	27	17,23
+27	28	23,24
 """
 
 
@@ -80,7 +80,7 @@ def read_dict_file(path, nbest_out):
                 old_sentence_number = sentence_number
                 eng_token_count = len(eng_line.split())
                 eng_id_lists = [[int(i) for i in l.split()] for l
-                                in ALIGN_PATTERN.findall(alignment_line)][1:]
+                                in ALIGN_PATTERN.findall(alignment_line)]
                 sentence_alignments.append((eng_token_count, eng_id_lists))
     result.append(sentence_alignments)
     return result
@@ -102,10 +102,13 @@ if __name__ == '__main__':
     for alignments, eng_sentence, for_sentence in zip(dict_data, eng_sentences, for_sentences):
         for eng_token_count, eng_id_lists in alignments:
             if eng_token_count != len(eng_sentence) or \
-                    len(eng_id_lists) != len(for_sentence):
+                    len(eng_id_lists) != len(for_sentence) + 1:
                 print('WARNING: token counts don\'t match, skipping', file=sys.stderr)
             else:
-                for (for_from, for_to), eng_id_list in zip(for_sentence, eng_id_lists):
+                # Unaligned English words are aligned to a dummy token which we represent by the offsets 0,0:
+                print(0, 0, trgid_list2english_offsets(eng_id_lists[0], eng_sentence), sep='\t')
+                # Aligned English tokens are output with each foreign token:
+                for (for_from, for_to), eng_id_list in zip(for_sentence, eng_id_lists[1:]):
                     print(for_from, for_to, 
                           trgid_list2english_offsets(eng_id_list, eng_sentence),
                           sep ='\t')
