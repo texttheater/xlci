@@ -23,7 +23,7 @@
 
 main :-
   argv([NodeFile, Style]),
-  assertion(member(Style, [plain, mod, det, cc_x1___cc_x2, x1_cc___cc_x2, x1_cc___x1_x2, x1_x2___x2_cc, ud])),
+  assertion(member(Style, [plain, mod, det, pascal_arabic, pascal_basque, pascal_czech, pascal_danish, pascal_dutch, pascal_portuguese, pascal_slovene, pascal_swedish])), % TODO ud
   findall(Node, term_in_file(Node, NodeFile, [module(slashes)]), Nodes),
   process(Style, 1, Nodes),
   halt.
@@ -88,7 +88,7 @@ node2deps(Node, Style, Deps) :-
   findall(Dep,
       ( original_co_in_node(CO, Node), 
         co2cat(CO, Cat),
-        depdirs(Style, Cat, Dirs),
+        depdirs(Style, Cat, Dirs),%phrase(cat(Cat), CatCodes),format(user_error, '~s ~w~n', [CatCodes, Dirs]),
         co_dirs_deps_tok_target(Style, Node, CO, Dirs, Deps, Tok, Tok, _),
         member(Dep, Deps)
       ), Deps0),
@@ -119,39 +119,41 @@ fix_coord(_, Deps, Deps).
 %             and their arguments (standard)
 %           * =det= - like =mod=, but head-dependent relationship is also
 %             inverted for the arguments of =|np/n|= and =|np/(n/pp)|=
-%           * =cc_x1___cc_x2=, =x1_cc___cc_x2=, =x1_cc___x1_x2=,
-%             =x1_x2___x2_cc= - similar to =det= but features are ignored for
-%             determining modifierhood, and coordination is treated as
-%             indicated by the label (Bisk and Hockenmaier, 2013)
-%           * =ud= - targetting Universal Dependencies;
-%             similar to =x1_x2___x2_cc= but also makes PPs headed by the
-%             arguments
+%           * =pascal_arabic=, =pascal_basque=, =pascal_czech=,
+%             =pascal_danish=, =pascal_dutch=, =pascal_portuguese=,
+%             =pascal_slovene=, =pascal_swedish= - attempts to match the
+%             dependency schemes of the various PASCAL treebanks
+%           * =ud= - targetting Universal Dependencies 
 %
 %      Dirs is bound to a list of terms =normal= or =inverted=, corresponding
 %      to the arguments.
 
-% TODO TUNE FOR EACH TREEBANK! They have different conventions and we can observe
-% them. BH13 do this for coordination, but not for determiners, PPs, particles,
-% subordinating conjunctions - they can't (easily) do it because they don't
-% have rich categories. We do! Let's take advantage of it!
 depdirs(plain, Cat, Dirs) :-
-  depdirs(no, x1_cc___cc_x2, no, no, Cat, Dirs).
+  depdirs(no, x1_cc___cc_x2, no, no, no, Cat, Dirs).
 depdirs(mod, Cat, Dirs) :-
-  depdirs(feat_sensitive, x1_cc___cc_x2, no, no, Cat, Dirs).
+  depdirs(feat_sensitive, x1_cc___cc_x2, no, no, no, Cat, Dirs).
 depdirs(det, Cat, Dirs) :-
-  depdirs(feat_sensitive, x1_cc___cc_x2, yes, no, Cat, Dirs).
-depdirs(cc_x1___cc_x2, Cat, Dirs) :-
-  depdirs(feat_sensitive, cc_x1___cc_x2, yes, no, Cat, Dirs).
-depdirs(x1_cc___cc_x2, Cat, Dirs) :-
-  depdirs(feat_sensitive, x1_cc___cc_x2, yes, no, Cat, Dirs).
-depdirs(x1_cc___x1_x2, Cat, Dirs) :-
-  depdirs(feat_sensitive, x1_x2___x2_cc, yes, no, Cat, Dirs). % will be converted later by fix_coord/3
-depdirs(x1_x2___x2_cc, Cat, Dirs) :-
-  depdirs(feat_sensitive, x1_x2___x2_cc, yes, no, Cat, Dirs).
-depdirs(ud, Cat, Dirs) :-
-  depdirs(feat_insensitive, x1_x2___x2_cc, yes, yes, Cat, Dirs).
+  depdirs(feat_sensitive, x1_cc___cc_x2, yes, no, no, Cat, Dirs).
+depdirs(pascal_arabic, Cat, Dirs) :-
+  depdirs(feat_sensitive, cc_x1___cc_x2, yes, no, no, no, Cat, Dirs).
+depdirs(pascal_basque, Cat, Dirs) :-
+  depdirs(feat_sensitive, cc_x1___cc_x2, yes, no, no, no, Cat, Dirs).
+depdirs(pascal_czech, Cat, Dirs) :-
+  depdirs(feat_sensitive, cc_x1___cc_x2, yes, no, no, yes, Cat, Dirs).
+depdirs(pascal_danish, Cat, Dirs) :-
+  depdirs(feat_sensitive, x1_cc___cc_x2, no, no, no, no, Cat, Dirs).
+depdirs(pascal_dutch, Cat, Dirs) :-
+  depdirs(feat_sensitive, cc_x1___cc_x2, yes, no, no, no, Cat, Dirs).
+depdirs(pascal_portuguese, Cat, Dirs) :-
+  depdirs(feat_sensitive, x1_cc___x1_x2, yes, yes, no, no, Cat, Dirs).
+depdirs(pascal_slovene, Cat, Dirs) :-
+  depdirs(feat_sensitive, x1_x2___x2_cc, yes, yes, yes, yes, Cat, Dirs).
+depdirs(pascal_swedish, Cat, Dirs) :-
+  depdirs(feat_sensitive, x1_x2___x2_cc, yes, yes, no, no, Cat, Dirs).
+% TODO get rid of feat_insensitive?
+% TODO ud
 
-%%      depdirs(+Mod, +Coord, +Det, +VPMod, +Prep, +Cat, -Dirs)
+%%      depdirs(+Mod, +Coord, +Det, +VPMod, +Subo, +Prep, +Cat, -Dirs)
 %
 %       Computes the directions of functor-argument dependencies, depending on
 %       various features:
@@ -164,57 +166,78 @@ depdirs(ud, Cat, Dirs) :-
 %           * Coord specifies the dependencies created by conjunction.
 %           * Det is one of =no=, =yes= - whether or not to treat determiners
 %             as dependents of their arguments.
+%           * Subo is one of =no=, =yes= - whether or not to treat
+%             subordinating words (subordinating conjunctions, complementizers,
+%             and relative pronouns) as dependent of their argument clauses.
 %           * Prep is one of =no=, =yes= - whether or not to treat prepostions
 %             as dependents of their arguments.
+%           * Aux is one of =no=, =yes= - whether or not to treat auxiliary
+%             verbs as dependents of their arguments.
+%
+%       TODO: Subo and Prep currently have limited effect, see commented-out
+%       clauses below.
 %
 %       The last two arguments are the input category (Cat) and the list of
 %       dependency directions (=normal= or =inverted=) for each argument.
 
 % Treat coordination like cc_x1___cc_x2
-depdirs(Mod, cc_x1___cc_x2, Det, Prep, (X\X)/X, [normal, normal|Dirs]) :-
+depdirs(Mod, cc_x1___cc_x2, Det, Subo, Prep, Aux, (X\X)/X, [normal, normal|Dirs]) :-
   !,
-  depdirs(Mod, cc_x1___cc_x2, Det, Prep, X, Dirs).
+  depdirs(Mod, cc_x1___cc_x2, Det, Subo, Prep, Aux, X, Dirs).
 % Treat coordination like x1_x2___x2_cc
-depdirs(Mod, x1_x2___x2_cc, Det, Prep, (X\X)/X, [inverted, inverted|Dirs]) :-
+depdirs(Mod, x1_x2___x2_cc, Det, Subo, Prep, Aux, (X\X)/X, [inverted, inverted|Dirs]) :-
   !,
-  depdirs(Mod, cc_x1___x2_cc, Det, Prep, X, Dirs).
+  depdirs(Mod, cc_x1___x2_cc, Det, Subo, Prep, Aux, X, Dirs).
 % Treat modifier as dependent
-depdirs(Mod, Coord, Det, Prep, X/Y, [inverted|Dirs]) :-
+depdirs(Mod, Coord, Det, Subo, Prep, Aux, X/Y, [inverted|Dirs]) :-
   is_modifier_category(Mod, X/Y),
   !,
-  depdirs(feat_sensitive, Coord, Det, Prep, X, Dirs).
-depdirs(Mod, Coord, Det, Prep, X\Y, [inverted|Dirs]) :-
+  depdirs(feat_sensitive, Coord, Det, Subo, Prep, Aux, X, Dirs).
+depdirs(Mod, Coord, Det, Subo, Prep, Aux, X\Y, [inverted|Dirs]) :-
   is_modifier_category(Mod, X\Y),
   !,
-  depdirs(feat_sensitive, Coord, Det, Prep, X, Dirs).
-% Treat prepositions as dependent if Prep=yes and Mod\=no
-depdirs(Mod, Coord, Det, yes, X/_, [inverted|Dirs]) :-
-  is_modifier_category(Mod, X),
-  !,
-  depdirs(Mod, Coord, Det, yes, X, Dirs).
-depdirs(Mod, Coord, Det, yes, X\_, [inverted|Dirs]) :-
-  is_modifier_category(Mod, X),
-  !,
-  depdirs(Mod, Coord, Det, yes, X, Dirs).
-% Treat adpositions as dependent if Prep=yes
-depdirs(_, _, _, yes, pp/_, [inverted]) :-
-  !.
-depdirs(_, _, _, yes, pp\_, [inverted]) :-
-  !.
+  depdirs(feat_sensitive, Coord, Det, Subo, Prep, Aux, X, Dirs).
 % Treat determiners as dependent if Det=yes
-depdirs(_, _, yes, _, np/n, [inverted]) :-
+depdirs(_, _, yes, _, _, _, np/n, [inverted]) :-
   !.
-depdirs(_, _, yes, _, np/(n/pp), [inverted]) :-
+depdirs(_, _, yes, _, _, _, np/(n/pp), [inverted]) :-
   !.
+% Treat subordinating conjunctions, complementizers, and relative pronouns as dependent if Subo=yes
+depdirs(Mod, Coord, Det, yes, Prep, Aux, X/Y, [inverted|Dirs]) :-
+  is_subordinating_category(X/Y),
+  !,
+  depdirs(Mod, Coord, Det, yes, Prep, Aux, X, Dirs).
+depdirs(Mod, Coord, Det, yes, Prep, Aux, X\Y, [inverted|Dirs]) :-
+  is_subordinating_category(X\Y),
+  !,
+  depdirs(Mod, Coord, Det, yes, Prep, Aux, X, Dirs).
+% Treat prepositions as dependent if Prep=yes
+depdirs(Mod, Coord, Det, Subo, yes, Aux, X/Y, [inverted|Dirs]) :-
+  is_adposition(X/Y),
+  !,
+  depdirs(Mod, Coord, Det, Subo, yes, Aux, X, Dirs).
+depdirs(Mod, Coord, Det, Subo, yes, Aux, X\Y, [inverted|Dirs]) :-
+  is_adposition(X\Y),
+  !,
+  depdirs(Mod, Coord, Det, Subo, yes, Aux, X, Dirs).
+% Treat auxiliaries as dependent if Aux=yes
+depdirs(Mod, Coord, Det, Subo, Prep, yes, X/Y, [inverted|Dirs]) :-
+  is_aux(X/Y),
+  !,
+  depdirs(Mod, Coord, Det, Subo, Prep, yes, X, Dirs).
+depdirs(Mod, Coord, Det, Subo, Prep, yes, X\Y, [inverted|Dirs]) :-
+  is_aux(X\Y),
+  !,
+  depdirs(Mod, Coord, Det, Subo, Prep, yes, X, Dirs).
 % Otherwise, treat argument as dependent
-depdirs(Mod, Coord, Det, Prep, Res/_, [normal|Dirs]) :-
+depdirs(Mod, Coord, Det, Subo, Prep, Aux, Res/_, [normal|Dirs]) :-
   !,
-  depdirs(Mod, Coord, Det, Prep, Res, Dirs).
-depdirs(Mod, Coord, Det, Prep, Res\_, [normal|Dirs]) :-
+  depdirs(Mod, Coord, Det, Subo, Prep, Aux, Res, Dirs).
+depdirs(Mod, Coord, Det, Subo, Prep, Aux, Res\_, [normal|Dirs]) :-
   !,
-  depdirs(Mod, Coord, Det, Prep, Res, Dirs).
+  depdirs(Mod, Coord, Det, Subo, Prep, Aux, Res, Dirs).
 % Base case: no argument
-depdirs(_, _, _, _, _, []).
+depdirs(_, _, _, _, _, _, _, []).
 
 is_modifier_category(feat_sensitive, X/X).
 is_modifier_category(feat_sensitive, X\X).
@@ -224,6 +247,40 @@ is_modifier_category(feat_insensitive, A/B) :-
 is_modifier_category(feat_insensitive, A\B) :-
   strip_features(A, X),
   strip_features(B, X).
+
+is_subordinating_category(Cat) :-
+  is_subordinating_conjunction(Cat).
+is_subordinating_category(Cat) :-
+  is_complementizer(Cat).
+is_subordinating_category(Cat) :-
+  is_relative_pronoun(Cat).
+
+is_subordinating_conjunction(Cat) :-
+  member(Cat, [X/Y, X\Y]),
+  member(X, [s\s, s/s, (s\np)\(s\np), (s\np)/(s\np), (s/np)\(s/np), (s/np)/(s/np)]),
+  member(Y, [s:dcl, s:to, s:ng\np, s:ng/np]).
+
+is_complementizer(Cat) :-
+  member(Cat, [s:em/s:dcl, s:em\s:dcl, (s:to\np)/(s:b\np), (s:to\np)\(s:b\np), (s:to/np)/(s:b/np), (s:to/np)\(s:b/np)]).
+
+is_relative_pronoun(Cat) :-
+  member(Cat, [X/Y, X\Y]),
+  member(X, [n\n, n/n, np\np, np/np]),
+  member(Y, [s:dcl/np, s:dcl\np]).
+
+% TODO this could also be implemented with BH13's less rich categories, so we
+% do not include them in the comparison for now.
+%is_adposition(_) :-
+%  fail.
+is_adposition(Cat) :-
+  member(Cat, [PP/np, PP\np]),
+  member(PP, [pp, n\n, n/n, np\np, np/np, s\s, s/s, (s\np)\(s\np), (s\np)/(s\np), (s/np)\(s/np), (s/np)/(s/np)]).
+
+is_aux(Cat) :-
+  member(Cat, [X/Y, X\Y]),
+  member(X, [s:F\np, s:F/np]),
+  member(Y, [s:G\np, s:G/np]),
+  member(F-G, [dcl-b, b-ng, dcl-ng, ng-ng, pt-ng, b-pt, dcl-pt, ng-pt, pt-pt]). % HACK dcl-X could also be modal...
 
 %%      co_dirs_deps_tok_target(+Style, +Node, +CO, +Dirs, -Deps, -Tok, +Target0, -Target)
 %
@@ -285,18 +342,3 @@ co_node_origin(CO, Node, Origin) :-
   original_co_in_node(Origin, Node),
   co_top(CO, Top),
   co_top(Origin, Top).
-
-% Modifiers
-inverts_dependency(X/X).
-inverts_dependency(X\X).
-% Conjunctions and adpositions
-% Problem: S[dcl] can be an argument to S[dcl]. Special treatment for punctuation?
-%inverts_dependency((X\X)/_).
-%inverts_dependency((X/X)/_).
-%inverts_dependency((X\X)\_).
-%inverts_dependency((X\X)\_).
-% Determiners
-inverts_dependency(np/n).
-inverts_dependency(np/(n/pp)).
-% Complementizers
-%inverts_dependency((s:_\np)/(s:_\np)).
