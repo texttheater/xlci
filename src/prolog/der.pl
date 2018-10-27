@@ -256,11 +256,25 @@ der_ucat(fxc(_, _, ftr(_, _, _, _), _), _) :-
   !.
 der_ucat(fxc(_, _, _, btr(_, _, _, _)), _) :-
   !.
+der_ucat(fxc(_, _, _, fxc(_, _, _, btr(_, _, _, _))), _) :-
+  !.
+der_ucat(fxc(_, _, _, fxc(_, _, _, fxc(_, _, _, btr(_, _, _, _)))), _) :-
+  !.
+der_ucat(fxc(_, _, _, fxc(_, _, _, fxc(_, _, _, fxc(_, _, _, btr(_, _, _, _))))), _) :-
+  !.
+der_ucat(fxc(_, _, _, fxc(_, _, _, fxc(_, _, _, fxc(_, _, _, fxc(_, _, _, btr(_, _, _, _)))))), _) :-
+  !.
+der_ucat(fxc(_, _, _, fxc(_, _, _, fxc(_, _, _, fxc(_, _, _, fxc(_, _, _, fxc(_, _, _, btr(_, _, _, _))))))), _) :-
+  !.
 der_ucat(gfxc(_, _, _, fxc(_, _, _, btr(_, _, _, _))), _) :-
+  !.
+der_ucat(fxc(_, _, _, gfxc(_, _, _, gfxc(_, _, _, btr(_, _, _, _)))), _) :-
   !.
 der_ucat(fxc(_, _, _, gfxc(_, _, _, btr(_, _, _, _))), _) :-
   !.
 der_ucat(fxc(_, _, _, fxc(_, _, _, btr(_, _, _, _))), _) :-
+  !.
+der_ucat(fxc(_, _, _, bc(_, _, btr(_, _, _, _), _)), _) :-
   !.
 der_ucat(fxc(_, _, _, bc(_, _, _, btr(_, _, _, _))), _) :-
   !.
