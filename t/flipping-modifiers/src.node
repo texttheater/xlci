@@ -39,8 +39,8 @@ node(
             nil,
             comp(0,f,h),
             [
-             node((co(5,n,n)/co(6,n,n))/co(7,n/n,n/n),nil,t(very,[lemma:very,to:17,from:13]),[]),
-             node(co(7,n/n,n/n),nil,t(beautiful,[lemma:beautiful,to:27,from:18]),[])
+             node((co(5,n,n)/co(6,n,n))/(co(7,n,n)/co(8,n,n)),nil,t(very,[lemma:very,to:17,from:13]),[]),
+             node(co(7,n,n)/co(8,n,n),nil,t(beautiful,[lemma:beautiful,to:27,from:18]),[])
             ]),
            node(co(6,n,n),nil,t(girl,[lemma:girl,to:32,from:28]),[])
           ])

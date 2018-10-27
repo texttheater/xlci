@@ -127,8 +127,8 @@ flip_slashes :-
 
 % Flip slashes, phase 1:
 % Make the slashes of all functors lean towards their arguments.
-% Also change co(ID, Cat, UCat) terms that appear as argument categories
-% of modifiers to match the slash directions of the result categories.
+% Also change argument categories of modifier categories to match the slash
+% direction of the result categories.
 flip_slashes_functors :-
   forall(
       ( retract(target_catobj(SID, From, To, CO, Sem, Atts))
@@ -155,8 +155,12 @@ flip_slashes_functors :-
 
 flip_slashes_functors(X/Y, SID, From, To, FlipCO) :-
   flip_slashes_functors(X, Y, SID, From, To, FlipCO).
+flip_slashes_functors(X/Y, SID, _, _, X/Y) :-
+  \+ functor_from_to(Y, SID, _, _). % X/Y is itself an argument
 flip_slashes_functors(X\Y, SID, From, To, FlipCO) :-
   flip_slashes_functors(X, Y, SID, From, To, FlipCO).
+flip_slashes_functors(X\Y, SID, _, _, X/Y) :-
+  \+ functor_from_to(Y, SID, _, _). % X\Y is itself an argument
 flip_slashes_functors(co(ID, Cat, UCat), _, _, _, co(ID, Cat, UCat)).
 
 flip_slashes_functors(X, Y, SID, XFrom, XTo, FlipX/FlipY) :-
@@ -171,26 +175,30 @@ flip_slashes_functors(X, Y, SID, XFrom, XTo, FlipX\FlipY) :-
   flip_slashes_functor_arg(X, Y, FlipX, FlipY).
 
 % Adapt the slash directions of arguments of modifiers
-flip_slashes_functor_arg(X, co(ID, YCat, YUCat), FlipX, co(ID, YFlipCat, YUFlipCat)) :-
-  co2cat(X, YCat), % test if it's a modifier
+flip_slashes_functor_arg(X, Y, FlipX, FlipY) :-
+  % Test if it's a modifier:
+  co2cat(X, Cat),
+  co2cat(Y, Cat),
   !,
-  flip_slashes_functor_arg_cat(FlipX, YCat, YUCat, YFlipCat, YUFlipCat).
+  flip_like(FlipX, Y, FlipY).
 flip_slashes_functor_arg(_, Y, _, Y).
 
-flip_slashes_functor_arg_cat(co(_, _, _), Cat, UCat, Cat, UCat).
-flip_slashes_functor_arg_cat(A/B, C/D, E/F, FlipC/FlipD, FlipE/FlipF) :-
-  flip_slashes_functor_arg_cat(A, C, E, FlipC, FlipE),
-  flip_slashes_functor_arg_cat(B, D, F, FlipD, FlipF).
-flip_slashes_functor_arg_cat(A/B, C\D, E\F, FlipC/FlipD, FlipE/FlipF) :-
-  flip_slashes_functor_arg_cat(A, C, E, FlipC, FlipE),
-  flip_slashes_functor_arg_cat(B, D, F, FlipD, FlipF).
-flip_slashes_functor_arg_cat(A\B, C/D, E/F, FlipC\FlipD, FlipE\FlipF) :-
-  flip_slashes_functor_arg_cat(A, C, E, FlipC, FlipE),
-  flip_slashes_functor_arg_cat(B, D, F, FlipD, FlipF).
-flip_slashes_functor_arg_cat(A\B, C\D, E\F, FlipC\FlipD, FlipE\FlipF) :-
-  flip_slashes_functor_arg_cat(A, C, E, FlipC, FlipE),
-  flip_slashes_functor_arg_cat(B, D, F, FlipD, FlipF).
+flip_like(co(_, _, _), Y, Y).
+flip_like(A/B, C/D, FlipC/FlipD) :-
+  flip_like(A, C, FlipC),
+  flip_like(B, D, FlipD).
+flip_like(A/B, C\D, FlipC/FlipD) :-
+  flip_like(A, C, FlipC),
+  flip_like(B, D, FlipD).
+flip_like(A\B, C/D, FlipC\FlipD) :-
+  flip_like(A, C, FlipC),
+  flip_like(B, D, FlipD).
+flip_like(A\B, C\D, FlipC\FlipD) :-
+  flip_like(A, C, FlipC),
+  flip_like(B, D, FlipD).
 
+% Flip slashes, phase 2:
+% ???
 flip_slashes_args :-
   forall(
       ( retract(target_catobj(SID, From, To, CO, Sem, Atts))
@@ -215,17 +223,32 @@ flip_slashes_args :-
             ) )
       ) ).
 
-flip_slashes_args(SID, co(ID, _, _), co(ID, Cat, UCat)) :-
-  functor_from_to(_/co(ID, Cat, UCat), SID, _, _),
-  !.
-flip_slashes_args(SID, co(ID, _, _), co(ID, Cat, UCat)) :-
-  functor_from_to(_\co(ID, Cat, UCat), SID, _, _),
-  !.
-flip_slashes_args(_, co(ID, Cat, UCat), co(ID, Cat, UCat)).
+flip_slashes_args(SID, CO, FlipCO) :-
+  ( functor_from_to(_/FlipCO, SID, _, _)
+  ; functor_from_to(_\FlipCO, SID, _, _)
+  ; functor_from_to(_-FlipCO, SID, _, _)
+  ),
+  flip_variant(CO, FlipCO).
 flip_slashes_args(SID, X/Y, FlipX/Y) :-
   flip_slashes_args(SID, X, FlipX).
 flip_slashes_args(SID, X\Y, FlipX\Y) :-
   flip_slashes_args(SID, X, FlipX).
+flip_slashes_args(SID, CO, CO) :-
+  source_sentence_catobj(SID, CO).
+
+flip_variant(co(ID, _, _), co(ID, _, _)).
+flip_variant(A/B, C/D) :-
+  flip_variant(A, C),
+  flip_variant(B, D).
+flip_variant(A/B, C\D) :-
+  flip_variant(A, C),
+  flip_variant(B, D).
+flip_variant(A\B, C/D) :-
+  flip_variant(A, C),
+  flip_variant(B, D).
+flip_variant(A\B, C\D) :-
+  flip_variant(A, C),
+  flip_variant(B, D).
 
 create_derivation(SID, ForeignSentence, Format) :-
   % Determine target category object:
