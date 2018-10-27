@@ -42,7 +42,7 @@ main :-
   assertion(member(OutputFormat, ['parse.tags', 'node'])),
   % Load information from various sources:
   load_wordalign_file(WordAlignFile),
-  %dump_wordalign,
+  dump_wordalign,
   tokoff_read_file(ForeignTokOffFile, ForeignSentences),
   tokoff_read_file(EnglishTokOffFile, EnglishSentences),
   open(EnglishNodeFile, read, EnglishNodeStream),
@@ -373,7 +373,8 @@ dump_wordalign :-
       ( wordalign(SID, ForeignFrom, ForeignTo, EnglishOffsetsList)
       ),
       ( write_clause(user_error, wordalign(SID, ForeignFrom, ForeignTo, EnglishOffsetsList))
-      ) ).
+      ) ),
+  nl(user_error).
 
 dump_source :-
   forall(
@@ -385,7 +386,8 @@ dump_source :-
       ( source_typechanger(A, B, C, D)
       ),
       ( write_clause(user_error, source_typechanger(A, B, C, D), [module(slashes)])
-      ) ).
+      ) ),
+  nl(user_error).
 
 dump_target :-
   forall(
@@ -397,4 +399,5 @@ dump_target :-
       ( target_typechanger(A, B, C, D)
       ),
       ( write_clause(user_error, target_typechanger(A, B, C, D), [module(slashes)])
-      ) ).
+      ) ),
+  nl(user_error).
