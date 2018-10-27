@@ -50,14 +50,15 @@ main :-
       ( load_source_derivation(EnglishNodeStream, StripFeatures, SID)
       ),
       ( dump_source,
-	nth1(SID, ForeignSentences, ForeignSentence),
-	nth1(SID, EnglishSentences, EnglishSentence),
-	transfer_categories(SID, ForeignSentence, EnglishSentence, SemanticsFormat),
-	transfer_typechangers,
-	flip_slashes,
-	dump_target,
-	create_derivation(SID, ForeignSentence, OutputFormat),
-	clear
+        nth1(SID, ForeignSentences, ForeignSentence),
+        nth1(SID, EnglishSentences, EnglishSentence),
+        transfer_categories(SID, ForeignSentence, EnglishSentence, SemanticsFormat),
+        transfer_typechangers,
+        dump_target,
+        flip_slashes,
+        dump_target,
+        create_derivation(SID, ForeignSentence, OutputFormat),
+        clear
       ) ),
   halt.
 main :-
@@ -72,9 +73,9 @@ transfer_categories(SID, ForeignSentence, EnglishSentence, SemanticsFormat) :-
       ( member(tokoff(ForFrom, ForTo, _TokID, Token), ForeignSentence)
       ),
       ( forall(
-	    ( wordalign(SID, ForFrom, ForTo, EnglishOffsets)
-	    ),
-	    ( findall(EngFrom-EngTo,
+            ( wordalign(SID, ForFrom, ForTo, EnglishOffsets)
+            ),
+            ( findall(EngFrom-EngTo,
                 ( wordalign(SID, ForFrom, ForTo, EnglishOffsets),
                   member(EngFrom-EngTo, EnglishOffsets)
                 ), Pairs),
@@ -104,7 +105,7 @@ transfer_categories(SID, ForeignSentence, EnglishSentence, SemanticsFormat) :-
                  assertz(target_catobj(SID, ForFrom, ForTo, CO, Sem, [from:ForFrom, to:ForTo|Atts]))
               ;  format(user_error, 'token "~w" (~w, ~w, ~w) one-to-one aligned but no category object found, skipping~n', [Token, SID, ForFrom, ForTo])
               )
-	    ) ) ) ).
+            ) ) ) ).
 
 % Asserts target_typechanger/4 facts mapping target tokens to typechangers.
 transfer_typechangers :-
@@ -133,22 +134,22 @@ flip_slashes_functors :-
       ),
       ( findall(FlipCO, flip_slashes_functors(CO, SID, From, To, FlipCO), FlipCOs0),
         dedup(FlipCOs0, FlipCOs),
-	forall(
-	    ( member(FlipCO, FlipCOs)
-	    ),
-	    ( assertz(target_catobj(SID, From, To, FlipCO, Sem, Atts))
-	    ) )
+        forall(
+            ( member(FlipCO, FlipCOs)
+            ),
+            ( assertz(target_catobj(SID, From, To, FlipCO, Sem, Atts))
+            ) )
       ) ),
   forall(
       ( retract(target_typechanger(SID, From, To, tc(NewCO-OldCO, Sem)))
       ),
       ( findall(FlipCO, flip_slashes_functors(NewCO, SID, From, To, FlipCO), FlipCOs0),
-	dedup(FlipCOs0, FlipCOs),
-	forall(
-	    ( member(FlipCO, FlipCOs)
-	    ),
-	    ( assertz(target_typechanger(SID, From, To, tc(FlipCO-OldCO, Sem)))
-	    ) )
+        dedup(FlipCOs0, FlipCOs),
+        forall(
+            ( member(FlipCO, FlipCOs)
+            ),
+            ( assertz(target_typechanger(SID, From, To, tc(FlipCO-OldCO, Sem)))
+            ) )
       ) ).
 
 flip_slashes_functors(X/Y, SID, From, To, FlipCO) :-
@@ -194,23 +195,23 @@ flip_slashes_args :-
       ( retract(target_catobj(SID, From, To, CO, Sem, Atts))
       ),
       ( findall(FlipCO, flip_slashes_args(SID, CO, FlipCO), FlipCOs0),
-	dedup(FlipCOs0, FlipCOs),
-	forall(
-	    ( member(FlipCO, FlipCOs)
-	    ),
-	    ( assertz(target_catobj(SID, From, To, FlipCO, Sem, Atts))
-	    ) )
+        dedup(FlipCOs0, FlipCOs),
+        forall(
+            ( member(FlipCO, FlipCOs)
+            ),
+            ( assertz(target_catobj(SID, From, To, FlipCO, Sem, Atts))
+            ) )
       ) ),
   forall(
       ( retract(target_typechanger(SID, From, To, tc(NewCO-OldCO, Sem)))
       ),
       ( findall(FlipCO, flip_slashes_args(SID, NewCO, FlipCO), FlipCOs0),
-	dedup(FlipCOs0, FlipCOs),
-	forall(
-	    ( member(FlipCO, FlipCOs)
-	    ),
-	    ( assertz(target_typechanger(SID, From, To, tc(FlipCO-OldCO, Sem)))
-	    ) )
+        dedup(FlipCOs0, FlipCOs),
+        forall(
+            ( member(FlipCO, FlipCOs)
+            ),
+            ( assertz(target_typechanger(SID, From, To, tc(FlipCO-OldCO, Sem)))
+            ) )
       ) ).
 
 flip_slashes_args(SID, co(ID, _, _), co(ID, Cat, UCat)) :-
@@ -284,9 +285,9 @@ load_source_derivation(EnglishNodeStream, StripFeatures, SID) :-
         node_from_to(Child, From, To),
         ( StripFeatures
         -> strip_features(X0, X),
-  	 strip_features(Y0, Y)
+           strip_features(Y0, Y)
         ;  X0 = X,
-  	 Y0 = Y
+           Y0 = Y
         ),
         assertz(source_typechanger(SID, From, To, tc(X-Y, TCSem)))
       ) ),
@@ -311,11 +312,11 @@ load_wordalign_file(WordAlignFile) :-
       ( enumerate(SID, block_in_file(Block, WordAlignFile))
       ),
       ( findall(wordalign(SID, ForeignFrom, ForeignTo, EnglishOffsetsList),
-	    ( member(Line, Block),
-	      line_wordalign(Line, ForeignFrom, ForeignTo, EnglishOffsetsList)
-	    ), Clauses0),
-	dedup(Clauses0, Clauses),
-	maplist(assertz, Clauses)
+            ( member(Line, Block),
+              line_wordalign(Line, ForeignFrom, ForeignTo, EnglishOffsetsList)
+            ), Clauses0),
+        dedup(Clauses0, Clauses),
+        maplist(assertz, Clauses)
       ) ).
 
 line_wordalign(Line, ForeignFrom, ForeignTo, EnglishOffsetsList) :-
