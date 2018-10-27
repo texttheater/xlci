@@ -109,13 +109,14 @@ transfer_categories(SID, ForeignSentence, EnglishSentence, SemanticsFormat) :-
 
 % Asserts target_typechanger/4 facts mapping target tokens to typechangers.
 transfer_typechangers :-
-  findall(target_typechanger(SID, ForFrom, ForTo, TC),
-      ( source_typechanger(SID, TCFrom, TCTo, TC),
-	wordalign(SID, ForFrom, ForTo, EngOffsets),
-	target_catobj(SID, ForFrom, ForTo, _, _, _),
-	member(EngFrom-EngTo, EngOffsets),
-	EngFrom >= TCFrom,
-	EngTo =< TCTo
+  findall(target_typechanger(SID, ForFrom, ForTo, tc(X-Y, TCSem)),
+      ( source_typechanger(SID, _, _, tc(X-Y, TCSem)),
+        %wordalign(SID, ForFrom, ForTo, EngOffsets),
+        target_catobj(SID, ForFrom, ForTo, CO, _, _),
+        functor_in(Y, CO)
+        %member(EngFrom-EngTo, EngOffsets),
+        %EngFrom >= TCFrom,
+        %EngTo =< TCTo
       ), TCs),
   sort(TCs, TCSet),
   maplist(assertz, TCSet).
