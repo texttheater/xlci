@@ -161,12 +161,12 @@ flip_slashes_functors(co(ID, Cat, UCat), _, _, _, co(ID, Cat, UCat)).
 
 flip_slashes_functors(X, Y, SID, XFrom, XTo, FlipX/FlipY) :-
   functor_from_to(Y, SID, YFrom, _),
-  YFrom > XTo, % X before Y -> forward slash
+  YFrom >= XTo, % X before Y -> forward slash
   flip_slashes_functors(X, SID, XFrom, XTo, FlipX),
   flip_slashes_functor_arg(X, Y, FlipX, FlipY).
 flip_slashes_functors(X, Y, SID, XFrom, XTo, FlipX\FlipY) :-
   functor_from_to(Y, SID, _, YTo),
-  YTo < XFrom, % X after Y -> backward slash
+  YTo =< XFrom, % X after Y -> backward slash
   flip_slashes_functors(X, SID, XFrom, XTo, FlipX),
   flip_slashes_functor_arg(X, Y, FlipX, FlipY).
 
