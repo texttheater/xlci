@@ -112,8 +112,7 @@ transfer_categories(SID, ForeignSentence, EnglishSentence, SemanticsFormat) :-
 transfer_typechangers :-
   findall(target_typechanger(SID, ForFrom, ForTo, tc(X-Y, TCSem)),
       ( source_typechanger(SID, _, _, tc(X-Y, TCSem)),
-        target_catobj(SID, ForFrom, ForTo, CO, _, _),
-        functor_in(Y, CO)
+        functor_from_to(Y, SID, ForFrom, ForTo)
       ), TCs),
   sort(TCs, TCSet),
   maplist(assertz, TCSet).
