@@ -68,9 +68,10 @@ co2cat(X\Y, XCat\YCat) :-
   co2cat(X, XCat),
   co2cat(Y, YCat).
 
-% TODO We made the first clause the last one for something to do with UD
-% evaluation, but then conversion of our normal corpus to node format fails.
-co_cat_ucat(co(_, Cat, UCat), Cat, UCat).
+% TODO right?
+co_cat_ucat(co(_, Cat, UCat), Cat, UCat) :-
+  \+ functor(Cat, /, 2),
+  \+ functor(Cat, \, 2).
 co_cat_ucat(A/B, C/D, E/F) :-
   co_cat_ucat(A, C, E),
   co_cat_ucat(B, D, F).
