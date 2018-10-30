@@ -109,13 +109,15 @@ transfer_categories(SID, ForeignSentence, EnglishSentence, SemanticsFormat) :-
             ) ) ) ).
 
 % Asserts target_typechanger/4 facts mapping target tokens to typechangers.
+% Fixpoint pattern: keep asserting things until no new thing can be found.
 transfer_typechangers :-
-  findall(target_typechanger(SID, ForFrom, ForTo, tc(X-Y, TCSem)),
-      ( source_typechanger(SID, _, _, tc(X-Y, TCSem)),
-        functor_from_to(Y, SID, ForFrom, ForTo)
-      ), TCs),
-  sort(TCs, TCSet),
-  maplist(assertz, TCSet).
+  (  source_typechanger(SID, _, _, tc(X-Y, Sem)),
+     functor_from_to(Y, SID, ForFrom, ForTo),
+     \+ target_typechanger(SID, ForFrom, ForTo, tc(X-Y, _))
+  -> assertz(target_typechanger(SID, ForFrom, ForTo, tc(X-Y, Sem))),
+     transfer_typechangers
+  ;  true
+  ).
 
 transfer_unaligned_source_categories(SID) :-
   forall(
