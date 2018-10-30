@@ -199,7 +199,8 @@ flip_like(A\B, C\D, FlipC\FlipD) :-
   flip_like(B, D, FlipD).
 
 % Flip slashes, phase 2:
-% ???
+% Adapt result occurrences of categories to match the slash directions of the
+% argument occurrences, which may have changed in phase 1.
 flip_slashes_args :-
   forall(
       ( retract(target_catobj(SID, From, To, CO, Sem, Atts))
