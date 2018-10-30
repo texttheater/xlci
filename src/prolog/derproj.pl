@@ -54,6 +54,7 @@ main :-
         nth1(SID, EnglishSentences, EnglishSentence),
         transfer_categories(SID, ForeignSentence, EnglishSentence, SemanticsFormat),
         transfer_typechangers,
+%        transfer_unaligned_source_categories(SID),
         dump_target,
         flip_slashes,
         dump_target,
@@ -120,6 +121,23 @@ transfer_typechangers :-
       ), TCs),
   sort(TCs, TCSet),
   maplist(assertz, TCSet).
+
+transfer_unaligned_source_categories(SID) :-
+  forall(
+      ( wordalign(SID, 0, 0, EngOffsets),
+        member(EngFrom-EngTo, EngOffsets),
+        ( source_catobj(SID, EngFrom, EngTo, X/Y, EngSem, _)
+        ; source_catobj(SID, EngFrom, EngTo, X\Y, EngSem, _)
+        ),
+        ( target_catobj(SID, ForFrom, ForTo, CO, _, _)
+        ; target_typechanger(SID, ForFrom, ForTo, tc(CO, _))
+        ),
+        functor_in(Y, CO)
+      ),
+      ( assertz(target_typechanger(SID, ForFrom, ForTo, tc(X-Y, EngSem)))
+      ) ).
+
+% TODO transfer_typechangers/0 and transfer_unaligned_source_categories/1 oughta feed each other
 
 flip_slashes :-
   flip_slashes_functors,
