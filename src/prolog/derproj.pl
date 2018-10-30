@@ -160,7 +160,7 @@ flip_slashes_functors(X/Y, SID, _, _, X/Y) :-
   \+ functor_from_to(Y, SID, _, _). % X/Y is itself an argument
 flip_slashes_functors(X\Y, SID, From, To, FlipCO) :-
   flip_slashes_functors(X, Y, SID, From, To, FlipCO).
-flip_slashes_functors(X\Y, SID, _, _, X/Y) :-
+flip_slashes_functors(X\Y, SID, _, _, X\Y) :-
   \+ functor_from_to(Y, SID, _, _). % X\Y is itself an argument
 flip_slashes_functors(co(ID, Cat, UCat), _, _, _, co(ID, Cat, UCat)).
 
