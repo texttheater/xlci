@@ -81,7 +81,7 @@ transfer_categories(SID, ForeignSentence, EnglishSentence, SemanticsFormat) :-
                   member(EngFrom-EngTo, EnglishOffsets)
                 ), Pairs),
               (  Pairs = [] % nothing aligned
-              -> true % TODO warn when nothing is aligned to a token in *any* alignment?
+              -> true
               ;  Pairs = [_, _|_] % more than one token aligned, need to combine them
               -> findall(EngTokoff,
                      ( member(EngFrom-EngTo, Pairs),
