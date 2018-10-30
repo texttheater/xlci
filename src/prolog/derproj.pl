@@ -123,6 +123,7 @@ transfer_typechangers :-
 
 flip_slashes :-
   flip_slashes_functors,
+  dump_target,
   flip_slashes_args.
 
 % Flip slashes, phase 1:
