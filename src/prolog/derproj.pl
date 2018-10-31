@@ -54,7 +54,6 @@ main :-
         nth1(SID, EnglishSentences, EnglishSentence),
         transfer_categories(SID, ForeignSentence, EnglishSentence, SemanticsFormat),
         transfer_typechangers,
-%        transfer_unaligned_source_categories(SID),
         dump_target,
         flip_slashes,
         dump_target,
@@ -111,30 +110,19 @@ transfer_categories(SID, ForeignSentence, EnglishSentence, SemanticsFormat) :-
 % Asserts target_typechanger/4 facts mapping target tokens to typechangers.
 % Fixpoint pattern: keep asserting things until no new thing can be found.
 transfer_typechangers :-
-  (  source_typechanger(SID, _, _, tc(X-Y, Sem)),
-     functor_from_to(Y, SID, ForFrom, ForTo),
+  (  ( source_typechanger(SID, _, _, tc(X-Y, Sem)),
+       functor_from_to(Y, SID, ForFrom, ForTo)
+     ; wordalign(SID, 0, 0, EngOffsets),
+       member(EngFrom-EngTo, EngOffsets),
+       source_catobj(SID, EngFrom, EngTo, CO, Sem, _),
+       member(CO, [X/Y, X\Y]),
+       functor_from_to(Y, SID, ForFrom, ForTo)
+     ),
      \+ target_typechanger(SID, ForFrom, ForTo, tc(X-Y, _))
   -> assertz(target_typechanger(SID, ForFrom, ForTo, tc(X-Y, Sem))),
      transfer_typechangers
   ;  true
   ).
-
-transfer_unaligned_source_categories(SID) :-
-  forall(
-      ( wordalign(SID, 0, 0, EngOffsets),
-        member(EngFrom-EngTo, EngOffsets),
-        ( source_catobj(SID, EngFrom, EngTo, X/Y, EngSem, _)
-        ; source_catobj(SID, EngFrom, EngTo, X\Y, EngSem, _)
-        ),
-        ( target_catobj(SID, ForFrom, ForTo, CO, _, _)
-        ; target_typechanger(SID, ForFrom, ForTo, tc(CO, _))
-        ),
-        functor_in(Y, CO)
-      ),
-      ( assertz(target_typechanger(SID, ForFrom, ForTo, tc(X-Y, EngSem)))
-      ) ).
-
-% TODO transfer_typechangers/0 and transfer_unaligned_source_categories/1 oughta feed each other
 
 flip_slashes :-
   flip_slashes_functors,
