@@ -116,6 +116,7 @@ transfer_typechangers :-
        member(EngFrom-EngTo, EngOffsets),
        source_catobj(SID, EngFrom, EngTo, CO, Sem, _),
        member(CO, [X/Y, X\Y]),
+       CO = co(_, np, _)/co(_, n, _), % for now, only deal with determiners
        functor_from_to(Y, SID, ForFrom, ForTo)
      ),
      \+ target_typechanger(SID, ForFrom, ForTo, tc(X-Y, _))
