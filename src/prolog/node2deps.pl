@@ -174,9 +174,6 @@ depdirs(pascal_swedish, Cat, Dirs) :-
 %           * Aux is one of =no=, =yes= - whether or not to treat auxiliary
 %             verbs as dependents of their arguments.
 %
-%       TODO: Subo and Prep currently have limited effect, see commented-out
-%       clauses below.
-%
 %       The last two arguments are the input category (Cat) and the list of
 %       dependency directions (=normal= or =inverted=) for each argument.
 
@@ -268,10 +265,6 @@ is_relative_pronoun(Cat) :-
   member(X, [n\n, n/n, np\np, np/np]),
   member(Y, [s:dcl/np, s:dcl\np]).
 
-% TODO this could also be implemented with BH13's less rich categories, so we
-% do not include them in the comparison for now.
-%is_adposition(_) :-
-%  fail.
 is_adposition(Cat) :-
   member(Cat, [PP/np, PP\np]),
   member(PP, [pp, n\n, n/n, np\np, np/np, s\s, s/s, (s\np)\(s\np), (s\np)/(s\np), (s/np)\(s/np), (s/np)/(s/np)]).
