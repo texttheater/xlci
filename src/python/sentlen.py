@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 
-"""Keeps only sentences with the exact number of tokens specified.
+"""Keeps only sentences with at most the number of tokens specified.
 
 Assumes a CoNLL-X-like format: sentences are terminated by blank lines, one
 per line.
@@ -29,8 +29,8 @@ if __name__ == '__main__':
         sys.exit(1)
     for block in util.blocks(sys.stdin):
         lines = block.splitlines()
-        assert lines[-1] == ''
-        lines = lines[:-1]
+        if lines[-1] == '':
+            lines = lines[:-1]
         nonpunct_lines = [line for line in lines if is_nonpunct(line)]
         if len(nonpunct_lines) <= length:
             print(block, end='')
