@@ -73,7 +73,10 @@ write_token(Token) :-
   co2cat(CO, Cat),
   phrase(cat(Cat), CatCodes),
   node_rule(Token, t(Form, Atts)),
-  atts_tokid(Atts, TokID),
+  (  atts_tokid(Atts, TokID)
+  -> true
+  ;  Form = [TokID|_] % HACK: token ID list, can be multiword, we take the first
+  ),
   format('~w\t~w\t~s', [TokID, Form, CatCodes]).
 
 write_label(Cat) :-
