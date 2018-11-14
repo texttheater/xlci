@@ -36,10 +36,9 @@ process(Style, I, [node(I, Node)|Nodes]) :-
   node2deps(Node, Style, Deps),
   check_deps(Node, Deps),
   write_deps(Node, Deps),
-  J is I + 1,
-  process(Style, J, Nodes).
+  process(Style, I, Nodes).
 process(_, _, []) :-
-  !.
+  nl.
 process(Style, I, Nodes) :-
   nl,
   J is I + 1,
@@ -63,8 +62,7 @@ write_deps(Node, Deps) :-
         ;  write('\t0\t_\t_\tROOT')
         ),
         nl
-      ) ),
-  nl.
+      ) ).
 
 write_token(Token) :-
   node_co(Token, CO),
