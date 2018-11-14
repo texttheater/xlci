@@ -47,7 +47,11 @@ process(Style, I, Nodes) :-
 check_deps(Node, Deps) :-
   aggregate_all(count, token_in_node(_, Node), TokenCount),
   length(Deps, DepCount),
-  assertion(DepCount is TokenCount - 1).
+  Expected is TokenCount - 1,
+  (  DepCount = Expected
+  -> true
+  ;  format(user_error, 'WARNING: ~w tokens, expected ~w dependencies but got ~w~n', [TokenCount, Expected, DepCount])
+  ).
 
 write_deps(Node, Deps) :-
   forall(
