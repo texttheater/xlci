@@ -1,5 +1,6 @@
 :- module(der, [
     der2node/2,
+    sder2node/2,
     pp_der/1]).
 
 :- use_module(cat, [
@@ -17,12 +18,37 @@
     list_occurrences_of_term/3]).
 
 %%	der2node(+Der, -Node)
+%
 %	Converts Boxer's derivation terms to our =|node/4|= format. The latter
 %	uses category objects instead of plain categories (see the =catobj=
 %	module documentation).
 der2node(Der, Node) :-
   % Convert from der to node:
   der2node_(Der, Node0),
+  % Extract top category of derivation:
+  der_cat(Der, Cat),
+  % Assign a corresponding category object to the node:
+  node_co(Node0, CO),
+  once(co_cat_ucat(CO, Cat, Cat)),
+  %node_co(Node0, co(_, Cat, Cat)),
+  % Find all top category objects in the node:
+  list_occurrences_of_term(co(_, _, _), Node0, COs),
+  % Find their (variable) IDs:
+  maplist(arg(1), COs, IDs),
+  % Bind each such variable to a unique integer ID (by slightly abusing
+  % numbervars/1 and then replacing the '$VAR'/1 terms by just the integers):
+  numbervars(IDs),
+  substitute_sub_term('$VAR'(N), N, Node0, Node1),
+  % HACK: bind UCats that are still variable:
+  substitute_sub_term(bind_ucat, Node1, Node).
+
+%%	sder2node(+Der, -Node)
+%
+%       Like der2node/2, but assumes only forward slashes in input, as in
+%       xlsp output.
+sder2node(Der, Node) :-
+  % Convert from der to node:
+  sder2node_(Der, Node0),
   % Extract top category of derivation:
   der_cat(Der, Cat),
   % Assign a corresponding category object to the node:
@@ -227,6 +253,186 @@ der2node_(btr(_Cat, _OldCat, Sem, Der), node(X\(X/Y), Sem, btr, [Node])) :-
   node_co(Node, Y),
   must(der2node_(Der, Node)).
 der2node_(t(Sem, _Cat, Form, Atts), node(_, Sem, t(Form, Atts), [])).
+
+%%      sder2node_(+Der, -Node)
+%
+%       Like der2node_/2, but uses only forward slashes, as in
+%       xlsp output.
+sder2node_(fa(_Cat, Sem, t(TCSem, _/UCat2, 'ø', _), ODer), node(_X, Sem, tc(TCSem), [ONode])) :-
+  !,
+  node_co(ONode, Y),
+  must(sder2node_(ODer, ONode)),
+  der_cat(ODer, Cat2),
+  co_cat_ucat(Y, Cat2, UCat2).
+sder2node_(tc(_NewCat, _OldCat, Sem, ODer), node(_X, Sem, tc(nil), [ONode])) :- % nil = HACK
+  !,
+  node_co(ONode, Y),
+  must(sder2node_(ODer, ONode)),
+  der_cat(ODer, Cat2),
+  co_cat_ucat(Y, Cat2, Cat2).
+sder2node_(fa(_Cat, Sem, Der1, Der2), node(Y, Sem, comp(0, f, h), [Node1, Node2])) :-
+  Der1 = t(lam(A, B), C/D, _, _),
+  A == B,
+  C == D,
+  !,
+  node_co(Node1, Y/Y),
+  node_co(Node2, Y),
+  must(sder2node_(Der1, Node1)),
+  must(sder2node_(Der2, Node2)),
+  der_cat(Der2, Cat2),
+  der_ucat(Der1, _/UCat2),
+  co_cat_ucat(Y, Cat2, UCat2).
+sder2node_(fa(_Cat, Sem, Der1, Der2), node(X, Sem, comp(0, f, h), [Node1, Node2])) :-
+  node_co(Node1, X/Y),
+  node_co(Node2, Y),
+  must(sder2node_(Der1, Node1)),
+  must(sder2node_(Der2, Node2)),
+  der_cat(Der2, Cat2),
+  der_ucat(Der1, _/UCat2),
+  co_cat_ucat(Y, Cat2, UCat2).
+sder2node_(ba(_Cat, Sem, ODer, t(TCSem, _/UCat2, 'ø', _)), node(_X, Sem, tc(TCSem), [ONode])) :-
+  !,
+  node_co(ONode, Y),
+  must(sder2node_(ODer, ONode)),
+  der_cat(ODer, Cat2),
+  co_cat_ucat(Y, Cat2, UCat2).
+sder2node_(ba(_Cat, Sem, Der2, Der1), node(Y, Sem, comp(0, b, h), [Node2, Node1])) :-
+  Der1 = t(lam(A, B), C/D, _, _),
+  A == B,
+  C == D,
+  !,
+  node_co(Node2, Y),
+  node_co(Node1, Y\Y),
+  must(sder2node_(Der2, Node2)),
+  must(sder2node_(Der1, Node1)),
+  der_cat(Der2, Cat2),
+  der_ucat(Der1, _/UCat2),
+  co_cat_ucat(Y, Cat2, UCat2).
+sder2node_(ba(_Cat, Sem, Der2, Der1), node(X, Sem, comp(0, b, h), [Node2, Node1])) :-
+  node_co(Node2, Y),
+  node_co(Node1, X\Y),
+  must(sder2node_(Der2, Node2)),
+  must(sder2node_(Der1, Node1)),
+  der_cat(Der2, Cat2),
+  der_ucat(Der1, _/UCat2),
+  co_cat_ucat(Y, Cat2, UCat2).
+sder2node_(fc(_/_, Sem, Der1, Der2), node(X/Z, Sem, comp(1, f, h), [Node1, Node2])) :-
+  node_co(Node1, X/Y),
+  node_co(Node2, Y/Z),
+  must(sder2node_(Der1, Node1)),
+  must(sder2node_(Der2, Node2)),
+  der_cat(Der2, Cat2),
+  topcat(1, Cat2, TopCat),
+  der_ucat(Der1, _/UCat2),
+  co_cat_ucat(Y, TopCat, UCat2).
+sder2node_(bc(_/_, Sem, Der2, Der1), node(X\Z, Sem, comp(1, b, h), [Node2, Node1])) :-
+  node_co(Node2, Y\Z),
+  node_co(Node1, X\Y),
+  must(sder2node_(Der2, Node2)),
+  must(sder2node_(Der1, Node1)),
+  der_cat(Der2, Cat2),
+  topcat(1, Cat2, TopCat),
+  der_ucat(Der1, _/UCat2),
+  co_cat_ucat(Y, TopCat, UCat2).
+sder2node_(gfc((_/_)/_, Sem, Der1, Der2), node((X/Z2)/Z1, Sem, comp(2, f, h), [Node1, Node2])) :-
+  node_co(Node1, X/Y),
+  node_co(Node2, (Y/Z2)/Z1),
+  must(sder2node_(Der1, Node1)),
+  must(sder2node_(Der2, Node2)),
+  der_cat(Der2, Cat2),
+  topcat(2, Cat2, TopCat),
+  der_ucat(Der1, _/UCat2),
+  co_cat_ucat(Y, TopCat, UCat2).
+sder2node_(gfc((_/_)/_, Sem, Der1, Der2), node((X/Z2)\Z1, Sem, comp(2, f, h), [Node1, Node2])) :-
+  node_co(Node1, X/Y),
+  node_co(Node2, (Y/Z2)\Z1),
+  must(sder2node_(Der1, Node1)),
+  must(sder2node_(Der2, Node2)),
+  der_cat(Der2, Cat2),
+  topcat(2, Cat2, TopCat),
+  der_ucat(Der1, _/UCat2),
+  co_cat_ucat(Y, TopCat, UCat2).
+sder2node_(gbc((_/_)/_, Sem, Der2, Der1), node((X\Z2)\Z1, Sem, comp(2, b, h), [Node2, Node1])) :-
+  node_co(Node2, (Y\Z2)\Z1),
+  node_co(Node1, X\Y),
+  must(sder2node_(Der2, Node2)),
+  must(sder2node_(Der1, Node1)),
+  der_cat(Der2, Cat2),
+  topcat(2, Cat2, TopCat),
+  der_ucat(Der1, _/UCat2),
+  co_cat_ucat(Y, TopCat, UCat2).
+sder2node_(gbc((_/_)/_, Sem, Der2, Der1), node((X\Z2)/Z1, Sem, comp(2, b, h), [Node2, Node1])) :-
+  node_co(Node2, (Y\Z2)/Z1),
+  node_co(Node1, X\Y),
+  must(sder2node_(Der2, Node2)),
+  must(sder2node_(Der1, Node1)),
+  der_cat(Der2, Cat2),
+  topcat(2, Cat2, TopCat),
+  der_ucat(Der1, _/UCat2),
+  co_cat_ucat(Y, TopCat, UCat2).
+sder2node_(fxc(_/_, Sem, Der1, Der2), node(X\Z, Sem, comp(1, f, x), [Node1, Node2])) :-
+  node_co(Node1, X/Y),
+  node_co(Node2, Y\Z),
+  must(sder2node_(Der1, Node1)),
+  must(sder2node_(Der2, Node2)),
+  der_cat(Der2, Cat2),
+  topcat(1, Cat2, TopCat),
+  der_ucat(Der1, _/UCat2),
+  co_cat_ucat(Y, TopCat, UCat2).
+sder2node_(bxc(_/_, Sem, Der2, Der1), node(X/Z, Sem, comp(1, b, x), [Node2, Node1])) :-
+  node_co(Node2, Y/Z),
+  node_co(Node1, X\Y),
+  must(sder2node_(Der2, Node2)),
+  must(sder2node_(Der1, Node1)),
+  der_cat(Der2, Cat2),
+  topcat(1, Cat2, TopCat),
+  der_ucat(Der1, _/UCat2),
+  co_cat_ucat(Y, TopCat, UCat2).
+sder2node_(gfxc((_\_)\_, Sem, Der1, Der2), node((X\Z2)\Z1, Sem, comp(2, f, x), [Node1, Node2])) :-
+  node_co(Node1, X/Y),
+  node_co(Node2, (Y\Z2)\Z1),
+  must(sder2node_(Der1, Node1)),
+  must(sder2node_(Der2, Node2)),
+  der_cat(Der2, Cat2),
+  topcat(2, Cat2, TopCat),
+  der_ucat(Der1, _/UCat2),
+  co_cat_ucat(Y, TopCat, UCat2).
+sder2node_(gfxc((_/_)/_, Sem, Der1, Der2), node((X\Z2)/Z1, Sem, comp(2, f, x), [Node1, Node2])) :-
+  node_co(Node1, X/Y),
+  node_co(Node2, (Y\Z2)/Z1),
+  must(sder2node_(Der1, Node1)),
+  must(sder2node_(Der2, Node2)),
+  der_cat(Der2, Cat2),
+  topcat(2, Cat2, TopCat),
+  der_ucat(Der1, _/UCat2),
+  co_cat_ucat(Y, TopCat, UCat2).
+sder2node_(gbxc((_/_)/_, Sem, Der2, Der1), node((X/Z2)/Z1, Sem, comp(2, b, x), [Node2, Node1])) :-
+  node_co(Node2, (Y/Z2)/Z1),
+  node_co(Node1, X\Y),
+  must(sder2node_(Der2, Node2)),
+  must(sder2node_(Der1, Node1)),
+  der_cat(Der2, Cat2),
+  topcat(2, Cat2, TopCat),
+  der_ucat(Der1, _/UCat2),
+  co_cat_ucat(Y, TopCat, UCat2).
+sder2node_(gbxc((_/_)/_, Sem, Der2, Der1), node((X/Z2)\Z1, Sem, comp(2, b, x), [Node2, Node1])) :-
+  node_co(Node2, (Y/Z2)\Z1),
+  node_co(Node1, X\Y),
+  must(sder2node_(Der2, Node2)),
+  must(sder2node_(Der1, Node1)),
+  der_cat(Der2, Cat2),
+  topcat(2, Cat2, TopCat),
+  der_ucat(Der1, _/UCat2),
+  co_cat_ucat(Y, TopCat, UCat2).
+sder2node_(conj(Cat/Cat, CSem, t(TSem, conj:Cat, Form, Atts), Der2), Node) :-
+  must(sder2node_(fa(Cat/Cat, CSem, t(TSem, (Cat/Cat)/Cat, Form, Atts), Der2), Node)). % HACK
+sder2node_(ftr(_Cat, _OldCat, Sem, Der), node(X/(X\Y), Sem, ftr, [Node])) :-
+  node_co(Node, Y),
+  must(sder2node_(Der, Node)).
+sder2node_(btr(_Cat, _OldCat, Sem, Der), node(X\(X/Y), Sem, btr, [Node])) :-
+  node_co(Node, Y),
+  must(sder2node_(Der, Node)).
+sder2node_(t(Sem, _Cat, Form, Atts), node(_, Sem, t(Form, Atts), [])).
 
 der_cat(t(_, Cat0, _, _), Cat) :-
   !,
