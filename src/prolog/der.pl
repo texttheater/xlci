@@ -270,18 +270,18 @@ sder2node_(tc(_NewCat, _OldCat, Sem, ODer), node(_X, Sem, tc(nil), [ONode])) :- 
   must(sder2node_(ODer, ONode)),
   der_cat(ODer, Cat2),
   co_cat_ucat(Y, Cat2, Cat2).
-sder2node_(fa(_Cat, Sem, Der1, Der2), node(Y, Sem, comp(0, f, h), [Node1, Node2])) :-
-  Der1 = t(lam(A, B), C/D, _, _),
-  A == B,
-  C == D,
-  !,
-  node_co(Node1, Y/Y),
-  node_co(Node2, Y),
-  must(sder2node_(Der1, Node1)),
-  must(sder2node_(Der2, Node2)),
-  der_cat(Der2, Cat2),
-  der_ucat(Der1, _/UCat2),
-  co_cat_ucat(Y, Cat2, UCat2).
+%sder2node_(fa(_Cat, Sem, Der1, Der2), node(Y, Sem, comp(0, f, h), [Node1, Node2])) :-
+%  Der1 = t(lam(A, B), C/D, _, _),
+%  A == B,
+%  C == D,
+%  !,
+%  node_co(Node1, Y/Y),
+%  node_co(Node2, Y),
+%  must(sder2node_(Der1, Node1)),
+%  must(sder2node_(Der2, Node2)),
+%  der_cat(Der2, Cat2),
+%  der_ucat(Der1, _/UCat2),
+%  co_cat_ucat(Y, Cat2, UCat2).
 sder2node_(fa(_Cat, Sem, Der1, Der2), node(X, Sem, comp(0, f, h), [Node1, Node2])) :-
   node_co(Node1, X/Y),
   node_co(Node2, Y),
@@ -296,21 +296,21 @@ sder2node_(ba(_Cat, Sem, ODer, t(TCSem, _/UCat2, 'ø', _)), node(_X, Sem, tc(TCS
   must(sder2node_(ODer, ONode)),
   der_cat(ODer, Cat2),
   co_cat_ucat(Y, Cat2, UCat2).
-sder2node_(ba(_Cat, Sem, Der2, Der1), node(Y, Sem, comp(0, b, h), [Node2, Node1])) :-
-  Der1 = t(lam(A, B), C/D, _, _),
-  A == B,
-  C == D,
-  !,
-  node_co(Node2, Y),
-  node_co(Node1, Y\Y),
-  must(sder2node_(Der2, Node2)),
-  must(sder2node_(Der1, Node1)),
-  der_cat(Der2, Cat2),
-  der_ucat(Der1, _/UCat2),
-  co_cat_ucat(Y, Cat2, UCat2).
+%sder2node_(ba(_Cat, Sem, Der2, Der1), node(Y, Sem, comp(0, b, h), [Node2, Node1])) :-
+%  Der1 = t(lam(A, B), C/D, _, _),
+%  A == B,
+%  C == D,
+%  !,
+%  node_co(Node2, Y),
+%  node_co(Node1, Y/Y),
+%  must(sder2node_(Der2, Node2)),
+%  must(sder2node_(Der1, Node1)),
+%  der_cat(Der2, Cat2),
+%  der_ucat(Der1, _/UCat2),
+%  co_cat_ucat(Y, Cat2, UCat2).
 sder2node_(ba(_Cat, Sem, Der2, Der1), node(X, Sem, comp(0, b, h), [Node2, Node1])) :-
   node_co(Node2, Y),
-  node_co(Node1, X\Y),
+  node_co(Node1, X/Y),
   must(sder2node_(Der2, Node2)),
   must(sder2node_(Der1, Node1)),
   der_cat(Der2, Cat2),
@@ -325,9 +325,9 @@ sder2node_(fc(_/_, Sem, Der1, Der2), node(X/Z, Sem, comp(1, f, h), [Node1, Node2
   topcat(1, Cat2, TopCat),
   der_ucat(Der1, _/UCat2),
   co_cat_ucat(Y, TopCat, UCat2).
-sder2node_(bc(_/_, Sem, Der2, Der1), node(X\Z, Sem, comp(1, b, h), [Node2, Node1])) :-
-  node_co(Node2, Y\Z),
-  node_co(Node1, X\Y),
+sder2node_(bc(_/_, Sem, Der2, Der1), node(X/Z, Sem, comp(1, b, h), [Node2, Node1])) :-
+  node_co(Node2, Y/Z),
+  node_co(Node1, X/Y),
   must(sder2node_(Der2, Node2)),
   must(sder2node_(Der1, Node1)),
   der_cat(Der2, Cat2),
@@ -343,36 +343,36 @@ sder2node_(gfc((_/_)/_, Sem, Der1, Der2), node((X/Z2)/Z1, Sem, comp(2, f, h), [N
   topcat(2, Cat2, TopCat),
   der_ucat(Der1, _/UCat2),
   co_cat_ucat(Y, TopCat, UCat2).
-sder2node_(gfc((_/_)/_, Sem, Der1, Der2), node((X/Z2)\Z1, Sem, comp(2, f, h), [Node1, Node2])) :-
+sder2node_(gfc((_/_)/_, Sem, Der1, Der2), node((X/Z2)/Z1, Sem, comp(2, f, h), [Node1, Node2])) :-
   node_co(Node1, X/Y),
-  node_co(Node2, (Y/Z2)\Z1),
+  node_co(Node2, (Y/Z2)/Z1),
   must(sder2node_(Der1, Node1)),
   must(sder2node_(Der2, Node2)),
   der_cat(Der2, Cat2),
   topcat(2, Cat2, TopCat),
   der_ucat(Der1, _/UCat2),
   co_cat_ucat(Y, TopCat, UCat2).
-sder2node_(gbc((_/_)/_, Sem, Der2, Der1), node((X\Z2)\Z1, Sem, comp(2, b, h), [Node2, Node1])) :-
-  node_co(Node2, (Y\Z2)\Z1),
-  node_co(Node1, X\Y),
-  must(sder2node_(Der2, Node2)),
-  must(sder2node_(Der1, Node1)),
-  der_cat(Der2, Cat2),
-  topcat(2, Cat2, TopCat),
-  der_ucat(Der1, _/UCat2),
-  co_cat_ucat(Y, TopCat, UCat2).
-sder2node_(gbc((_/_)/_, Sem, Der2, Der1), node((X\Z2)/Z1, Sem, comp(2, b, h), [Node2, Node1])) :-
-  node_co(Node2, (Y\Z2)/Z1),
-  node_co(Node1, X\Y),
-  must(sder2node_(Der2, Node2)),
-  must(sder2node_(Der1, Node1)),
-  der_cat(Der2, Cat2),
-  topcat(2, Cat2, TopCat),
-  der_ucat(Der1, _/UCat2),
-  co_cat_ucat(Y, TopCat, UCat2).
-sder2node_(fxc(_/_, Sem, Der1, Der2), node(X\Z, Sem, comp(1, f, x), [Node1, Node2])) :-
+sder2node_(gbc((_/_)/_, Sem, Der2, Der1), node((X/Z2)/Z1, Sem, comp(2, b, h), [Node2, Node1])) :-
+  node_co(Node2, (Y/Z2)/Z1),
   node_co(Node1, X/Y),
-  node_co(Node2, Y\Z),
+  must(sder2node_(Der2, Node2)),
+  must(sder2node_(Der1, Node1)),
+  der_cat(Der2, Cat2),
+  topcat(2, Cat2, TopCat),
+  der_ucat(Der1, _/UCat2),
+  co_cat_ucat(Y, TopCat, UCat2).
+sder2node_(gbc((_/_)/_, Sem, Der2, Der1), node((X/Z2)/Z1, Sem, comp(2, b, h), [Node2, Node1])) :-
+  node_co(Node2, (Y/Z2)/Z1),
+  node_co(Node1, X/Y),
+  must(sder2node_(Der2, Node2)),
+  must(sder2node_(Der1, Node1)),
+  der_cat(Der2, Cat2),
+  topcat(2, Cat2, TopCat),
+  der_ucat(Der1, _/UCat2),
+  co_cat_ucat(Y, TopCat, UCat2).
+sder2node_(fxc(_/_, Sem, Der1, Der2), node(X/Z, Sem, comp(1, f, x), [Node1, Node2])) :-
+  node_co(Node1, X/Y),
+  node_co(Node2, Y/Z),
   must(sder2node_(Der1, Node1)),
   must(sder2node_(Der2, Node2)),
   der_cat(Der2, Cat2),
@@ -381,25 +381,25 @@ sder2node_(fxc(_/_, Sem, Der1, Der2), node(X\Z, Sem, comp(1, f, x), [Node1, Node
   co_cat_ucat(Y, TopCat, UCat2).
 sder2node_(bxc(_/_, Sem, Der2, Der1), node(X/Z, Sem, comp(1, b, x), [Node2, Node1])) :-
   node_co(Node2, Y/Z),
-  node_co(Node1, X\Y),
+  node_co(Node1, X/Y),
   must(sder2node_(Der2, Node2)),
   must(sder2node_(Der1, Node1)),
   der_cat(Der2, Cat2),
   topcat(1, Cat2, TopCat),
   der_ucat(Der1, _/UCat2),
   co_cat_ucat(Y, TopCat, UCat2).
-sder2node_(gfxc((_\_)\_, Sem, Der1, Der2), node((X\Z2)\Z1, Sem, comp(2, f, x), [Node1, Node2])) :-
+sder2node_(gfxc((_/_)/_, Sem, Der1, Der2), node((X/Z2)/Z1, Sem, comp(2, f, x), [Node1, Node2])) :-
   node_co(Node1, X/Y),
-  node_co(Node2, (Y\Z2)\Z1),
+  node_co(Node2, (Y/Z2)/Z1),
   must(sder2node_(Der1, Node1)),
   must(sder2node_(Der2, Node2)),
   der_cat(Der2, Cat2),
   topcat(2, Cat2, TopCat),
   der_ucat(Der1, _/UCat2),
   co_cat_ucat(Y, TopCat, UCat2).
-sder2node_(gfxc((_/_)/_, Sem, Der1, Der2), node((X\Z2)/Z1, Sem, comp(2, f, x), [Node1, Node2])) :-
+sder2node_(gfxc((_/_)/_, Sem, Der1, Der2), node((X/Z2)/Z1, Sem, comp(2, f, x), [Node1, Node2])) :-
   node_co(Node1, X/Y),
-  node_co(Node2, (Y\Z2)/Z1),
+  node_co(Node2, (Y/Z2)/Z1),
   must(sder2node_(Der1, Node1)),
   must(sder2node_(Der2, Node2)),
   der_cat(Der2, Cat2),
@@ -408,28 +408,28 @@ sder2node_(gfxc((_/_)/_, Sem, Der1, Der2), node((X\Z2)/Z1, Sem, comp(2, f, x), [
   co_cat_ucat(Y, TopCat, UCat2).
 sder2node_(gbxc((_/_)/_, Sem, Der2, Der1), node((X/Z2)/Z1, Sem, comp(2, b, x), [Node2, Node1])) :-
   node_co(Node2, (Y/Z2)/Z1),
-  node_co(Node1, X\Y),
+  node_co(Node1, X/Y),
   must(sder2node_(Der2, Node2)),
   must(sder2node_(Der1, Node1)),
   der_cat(Der2, Cat2),
   topcat(2, Cat2, TopCat),
   der_ucat(Der1, _/UCat2),
   co_cat_ucat(Y, TopCat, UCat2).
-sder2node_(gbxc((_/_)/_, Sem, Der2, Der1), node((X/Z2)\Z1, Sem, comp(2, b, x), [Node2, Node1])) :-
-  node_co(Node2, (Y/Z2)\Z1),
-  node_co(Node1, X\Y),
+sder2node_(gbxc((_/_)/_, Sem, Der2, Der1), node((X/Z2)/Z1, Sem, comp(2, b, x), [Node2, Node1])) :-
+  node_co(Node2, (Y/Z2)/Z1),
+  node_co(Node1, X/Y),
   must(sder2node_(Der2, Node2)),
   must(sder2node_(Der1, Node1)),
   der_cat(Der2, Cat2),
   topcat(2, Cat2, TopCat),
   der_ucat(Der1, _/UCat2),
   co_cat_ucat(Y, TopCat, UCat2).
-sder2node_(conj(Cat/Cat, CSem, t(TSem, conj:Cat, Form, Atts), Der2), Node) :-
+sder2node_(conj(Cat/Cat, CSem, t(TSem, conj:_, Form, Atts), Der2), Node) :-
   must(sder2node_(fa(Cat/Cat, CSem, t(TSem, (Cat/Cat)/Cat, Form, Atts), Der2), Node)). % HACK
-sder2node_(ftr(_Cat, _OldCat, Sem, Der), node(X/(X\Y), Sem, ftr, [Node])) :-
+sder2node_(ftr(_Cat, _OldCat, Sem, Der), node(X/(X/Y), Sem, ftr, [Node])) :-
   node_co(Node, Y),
   must(sder2node_(Der, Node)).
-sder2node_(btr(_Cat, _OldCat, Sem, Der), node(X\(X/Y), Sem, btr, [Node])) :-
+sder2node_(btr(_Cat, _OldCat, Sem, Der), node(X/(X/Y), Sem, btr, [Node])) :-
   node_co(Node, Y),
   must(sder2node_(Der, Node)).
 sder2node_(t(Sem, _Cat, Form, Atts), node(_, Sem, t(Form, Atts), [])).
@@ -518,4 +518,4 @@ topcat(N, X\_, TopCat) :-
   topcat(M, X, TopCat).
 
 pp_der(Der) :-
-  print_indented(Der, [t(_, _, _, _), lam(_, _), _\_, _/_], [module(slashes), fullstop(true)]).
+  print_indented(Der, [t(_, _, _, _), lam(_, _), app(_, _), _\_, _/_], [module(slashes), fullstop(true)]).
