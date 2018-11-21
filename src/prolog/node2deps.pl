@@ -134,11 +134,11 @@ fix_coord(_, Deps, Deps).
 %      to the arguments.
 
 depdirs(plain, Cat, Dirs) :-
-  depdirs(no, x1_cc___cc_x2, no, no, no, Cat, Dirs).
+  depdirs(no, x1_cc___cc_x2, no, no, no, no, Cat, Dirs).
 depdirs(mod, Cat, Dirs) :-
-  depdirs(feat_sensitive, x1_cc___cc_x2, no, no, no, Cat, Dirs).
+  depdirs(feat_sensitive, x1_cc___cc_x2, no, no, no, no, Cat, Dirs).
 depdirs(det, Cat, Dirs) :-
-  depdirs(feat_sensitive, x1_cc___cc_x2, yes, no, no, Cat, Dirs).
+  depdirs(feat_sensitive, x1_cc___cc_x2, yes, no, no, no, Cat, Dirs).
 depdirs(pascal_arabic, Cat, Dirs) :-
   depdirs(feat_sensitive, cc_x1___cc_x2, yes, no, no, no, Cat, Dirs).
 depdirs(pascal_basque, Cat, Dirs) :-
