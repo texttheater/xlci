@@ -50,15 +50,19 @@ co2cat(X\(X/Y), XCat\(XCat/YCat)) :-
   co2cat(X, XCat),
   co2cat(Y, YCat).
 % Forward modifiers (use YUCat to get back at the original underspecified modifier category):
-co2cat(X/co(_, YCat, YUCat), YUCat/YUCat) :-
+co2cat(X/Y, YUCat/YUCat) :-
   co2cat(X, XCat),
+  co2cat(Y, YCat),
   XCat == YCat,
-  !.
+  !,
+  co_cat_ucat(Y, _, YUCat).
 % Backward modifiers (use YUCat to get back at the original underspecified modifier category):
-co2cat(X\co(_, YCat, YUCat), YUCat\YUCat) :-
+co2cat(X\Y, YUCat\YUCat) :-
   co2cat(X, XCat),
+  co2cat(Y, YCat),
   XCat == YCat,
-  !.
+  !,
+  co_cat_ucat(Y, _, YUCat).
 % Other forward functors:
 co2cat(X/Y, XCat/YCat) :-
   co2cat(X, XCat),
