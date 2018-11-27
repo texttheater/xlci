@@ -40,19 +40,20 @@ if __name__ == '__main__':
         with open(raw_path) as f:
             num_sentences = sum(1 for line in f)
         lang_corpussize[lang] = num_sentences
-    print('\\begin{tabular}{crrrrrrrr}')
+    print('\\begin{tabular}{llrrrrrrrr}')
     print(' \\toprule')
-    print(' language              ', end='')
+    print(' language               &          ', end='')
     for lang in languages:
         print(' & ' + '\\multicolumn{{1}}{{c}}{{{}}}'.format(lang).center(column_width), end='')
     print(' \\\\')
-    print(' sentence pairs        ', end='')
+    print(' sentence pairs         &          ', end='')
     for lang in languages:
         print(' & ' + format_int(lang_corpussize[lang]), end='')
     print(' \\\\')
     for n in range(1, 6):
         print(' \\midrule')
         print(' \\multirow{{2}}{{*}}{{$n={}$}}'.format(n), end='')
+        print(' & projected', end='')
         for lang in languages:
             train_path = 'out/train.{}-eng.trg.proj.{}.feats.parse.tags'.format(lang, n)
             with open(train_path) as f:
@@ -60,7 +61,7 @@ if __name__ == '__main__':
             ratio = num_projected_derivations / lang_corpussize[lang]
             print(' & ' + format_percentage(ratio), end='')
         print(' \\\\')
-        print('                       ', end='')
+        print('                        & UAS      ', end='')
         for lang in languages:
             eval_path = 'out/{}.{}-eng.trg.xl.{}.feats.eval'.format(lang_devportion[lang], lang, n)
             with open(eval_path) as f:
