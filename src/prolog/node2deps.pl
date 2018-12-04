@@ -23,7 +23,7 @@
 
 main :-
   argv([NodeFile, Style]),
-  assertion(member(Style, [plain, mod, det, pascal_arabic, pascal_basque, pascal_czech, pascal_danish, pascal_dutch, pascal_portuguese, pascal_slovene, pascal_swedish])), % TODO ud
+  assertion(member(Style, [plain, mod, det, pascal_arabic, pascal_basque, pascal_czech, pascal_danish, pascal_dutch, pascal_portuguese, pascal_slovene, pascal_swedish, ud])),
   findall(Node, term_in_file(Node, NodeFile, [module(slashes)]), Nodes),
   process(Style, 1, Nodes),
   halt.
@@ -105,11 +105,12 @@ node2deps(Node, Style, Deps) :-
 % The coordination dependency scheme used for Spanish, German and Portuguese
 % cannot be expressed as a special case of our conversion algorithm, so we
 % convert it to UD-style first and then fix it here.
-fix_coord(x1_x2___x2_cc, Deps0, Deps) :-
+fix_coord(Style, Deps0, Deps) :-
+  member(Style, [pascal_german, pascal_portuguese, pascal_spanish]),
   member(dep(X1, X2, X\X), Deps0),
   select(dep(X2, CC, (X\X)/X), Deps0, Deps1),
   !,
-  fix_coord(x1_x2___x2_cc, [dep(X1, CC, (X\X)/X)|Deps1], Deps).
+  fix_coord(Style, [dep(X1, CC, (X\X)/X)|Deps1], Deps).
 fix_coord(_, Deps, Deps).
 
 %%      depdirs(+Style, +Cat, -Dirs)
@@ -150,15 +151,16 @@ depdirs(pascal_danish, Cat, Dirs) :-
 depdirs(pascal_dutch, Cat, Dirs) :-
   depdirs(feat_sensitive, cc_x1___cc_x2, yes, no, no, no, Cat, Dirs).
 depdirs(pascal_portuguese, Cat, Dirs) :-
-  depdirs(feat_sensitive, x1_cc___x1_x2, yes, yes, no, no, Cat, Dirs).
+  depdirs(feat_sensitive, x1_x2___x2_cc, yes, yes, no, no, Cat, Dirs). % coord will be fixed by fix_coord/3
 depdirs(pascal_slovene, Cat, Dirs) :-
   depdirs(feat_sensitive, x1_x2___x2_cc, yes, yes, yes, yes, Cat, Dirs).
 depdirs(pascal_swedish, Cat, Dirs) :-
   depdirs(feat_sensitive, x1_x2___x2_cc, yes, yes, no, no, Cat, Dirs).
+depdirs(ud, Cat, Dirs) :-
+  depdirs(feat_sensitive, x1_x2___x2_cc, yes, yes, yes, yes, Cat, Dirs).
 % TODO get rid of feat_insensitive?
-% TODO ud
 
-%%      depdirs(+Mod, +Coord, +Det, +VPMod, +Subo, +Prep, +Cat, -Dirs)
+%%      depdirs(+Mod, +Coord, +Det, +Subo, +Prep, +Aux, +Cat, -Dirs)
 %
 %       Computes the directions of functor-argument dependencies, depending on
 %       various features:
