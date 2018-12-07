@@ -18,12 +18,13 @@
 :- use_module(slashes).
 :- use_module(util, [
     argv/1,
+    substitute_sub_term/3,
     term_in_file/3,
     write_clause/2]).
 
 main :-
   argv([NodeFile, Style]),
-  assertion(member(Style, [plain, mod, det, pascal_arabic, pascal_basque, pascal_czech, pascal_danish, pascal_dutch, pascal_portuguese, pascal_slovene, pascal_swedish, ud])),
+  assertion(member(Style, [plain, mod, det, pascal_arabic, pascal_basque, pascal_czech, pascal_danish, pascal_dutch, pascal_english, pascal_portuguese, pascal_slovene, pascal_swedish, ud])),
   findall(Node, term_in_file(Node, NodeFile, [module(slashes)]), Nodes),
   process(Style, 1, Nodes),
   halt.
@@ -148,6 +149,8 @@ depdirs(pascal_czech, Cat, Dirs) :-
   depdirs(feat_sensitive, cc_x1___cc_x2, yes, no, no, yes, Cat, Dirs).
 depdirs(pascal_danish, Cat, Dirs) :-
   depdirs(feat_sensitive, x1_cc___cc_x2, no, no, no, no, Cat, Dirs).
+depdirs(pascal_english, Cat, Dirs) :-
+  depdirs(feat_sensitive, cc_x1___cc_x2, yes, yes, no, no, Cat, Dirs).
 depdirs(pascal_dutch, Cat, Dirs) :-
   depdirs(feat_sensitive, cc_x1___cc_x2, yes, no, no, no, Cat, Dirs).
 depdirs(pascal_portuguese, Cat, Dirs) :-
