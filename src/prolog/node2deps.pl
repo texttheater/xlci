@@ -2,7 +2,8 @@
     main/0]).
 
 :- use_module(cat, [
-    strip_features/2]).
+    strip_features/2,
+    strip_var_features/2]).
 :- use_module(catobj, [
     co2cat/2,
     co_res_arg/3,
@@ -71,7 +72,8 @@ write_deps(Node, Deps) :-
 
 write_token(Token) :-
   node_co(Token, CO),
-  co2cat(CO, Cat),
+  co2cat(CO, Cat0),
+  substitute_sub_term(strip_var_features, Cat0, Cat),
   phrase(cat(Cat), CatCodes),
   node_rule(Token, t(Form, Atts)),
   (  atts_tokid(Atts, TokID)
