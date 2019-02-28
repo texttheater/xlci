@@ -1,7 +1,9 @@
 xlci2
 =====
 
-Code accompanying the paper "Cross-lingual CCG Induction".
+Code accompanying the paper:
+
+Kilian Evang (2019): Cross-lingual CCG Induction. In *Proceedings of NAACL*.
 
 Set It Up
 ---------
