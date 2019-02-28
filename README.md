@@ -1,5 +1,5 @@
-xlci2
-=====
+xlci
+====
 
 Code accompanying the paper:
 
