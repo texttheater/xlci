@@ -25,7 +25,7 @@ To evaluate, you need the PASCAL shared task data in a directory at
 `data/NAACL`.
 
 Reproduce the Main Experiments
-==============================
+------------------------------
 
 For example, to run everything on 8 CPU cores:
 
